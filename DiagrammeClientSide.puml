@@ -1,0 +1,14 @@
+@startuml Indie_Studio
+!define DARKBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+namespace Client {
+     class Test<T> {
+
+        -T _x;
+        -T _y;
+    }
+
+}
+
+@enduml
