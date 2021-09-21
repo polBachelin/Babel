@@ -23,7 +23,6 @@ set(SRCS
 add_executable(${NAME} ${SRCS})
 target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
-# conan_target_link_libraries(${NAME} CONAN_PKG::Qt)
 
 # if (MVSVC)
 #         target_compile_options(${NAME} PRIVATE /W4 /WX)
