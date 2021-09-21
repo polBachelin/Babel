@@ -22,10 +22,19 @@ namespace Sound {
             DecodedSound();
             ~DecodedSound();
 
+            int getFrameIndex() const;
+            int getMaxFrameIndex() const;
+            int getSize() const;
+            std::vector<float> getSample() const;
+
+            void setFrameIndex(const int &f);
+            void setMaxFrameIndex(const int &f);
+            void setSize(const int &size);
+            void setSample(const std::vector<float> &);
         protected:
             int _frameIndex;
             int _maxFrameIndex;
-            int size;
+            int _size;
             std::vector<float> _sample;
     };
 }

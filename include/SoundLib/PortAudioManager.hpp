@@ -11,8 +11,17 @@
 #include "ISoundManager.hpp"
 #include "portaudio.h"
 #include "DecodedSound.hpp"
+#include <iostream>
+#include <memory>
 
 class PortAudioManager : public ISoundManager {
+    
+    typedef struct {
+        int frameIndex;
+        int maxFrameIndex;
+        float *recordedSample;
+    } paData;
+
     public:
         PortAudioManager();
         ~PortAudioManager();
@@ -21,10 +30,19 @@ class PortAudioManager : public ISoundManager {
         int playAudio() override;
         bool isStreamActive() override;
 
-        void recordCallback();
-        void playCallback();
+        static int recordCallback(const void *inputBuffer, void *outputBuffer,
+                            unsigned long framesPerBuffer,
+                            const PaStreamCallbackTimeInfo* timeInfo,
+                            PaStreamCallbackFlags statusFlags,
+                            void *userData);
+        static int playCallback(const void *inputBuffer, void *outputBuffer,
+                            unsigned long framesPerBuffer,
+                            const PaStreamCallbackTimeInfo* timeInfo,
+                            PaStreamCallbackFlags statusFlags,
+                            void *userData);
     protected:
-        DecodedSound _sound;
+        paData *_data;
+        Sound::DecodedSound _sound;
         PaStream *_stream;
         PaStreamParameters _outputParameters;
         PaStreamParameters _inputParameters;

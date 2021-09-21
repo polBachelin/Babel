@@ -6,14 +6,12 @@
 */
 
 #include <iostream>
-#include "portaudio.h"
+#include "ISoundManager.hpp"
+#include "DLLoader.hpp"
 
 int main(void)
 {
-    std::cout << "Sa roule ma couille ?\nça farte?";
-      
-    Pa_Initialize();
-    Pa_Terminate();
-      
+    DLLoader<ISoundManager> loader;
+
     return 0;
 }
