@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_MAKEFILE ON)
-set(NAME PortAudioLib)
+set(NAME PortAudio)
 
 project(${NAME}
 LANGUAGES CXX
@@ -17,7 +17,7 @@ include_directories(./)
 set(SRCS
         PortAudioManager.cpp)
 
-include(${CMAKE_BINARY_DIR}/../../../build/conanbuildinfo.cmake)
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})

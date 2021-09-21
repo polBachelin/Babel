@@ -23,7 +23,7 @@ class DLLoader {
             std::shared_ptr<T> ptr = NULL;
             const char *error = NULL;
 
-            handle = dlopen(filePath.c_str(), RTLD_NOW, RTLD_NODELETE, RTLD_GLOBAL);
+            handle = dlopen(filePath.c_str(), RTLD_NOW | RTLD_NODELETE | RTLD_GLOBAL);
             error = dlerror();
             if (!handle) {
                 std::cerr << "Could not retrieve handle from filepath : " << filePath << std::endl;
