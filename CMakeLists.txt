@@ -18,7 +18,7 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 set(SRCS
-    src/main.cpp)
+    src/record_mic.cpp)
 
 add_executable(${NAME} ${SRCS})
 target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS})

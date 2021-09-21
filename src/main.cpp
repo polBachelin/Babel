@@ -13,7 +13,7 @@ int main(void)
     std::cout << "Sa roule ma couille ?\nça farte?";
       
     Pa_Initialize();
-    Pa_Terminate();x
+    Pa_Terminate();
       
     return 0;
 }

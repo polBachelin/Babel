@@ -11,4 +11,22 @@ namespace Client {
 
 }
 
+namespace Sound {
+    class ISoundManager {
+        +int recordAudio() = 0;
+        +int playAudio() = 0;
+        +bool isStreamActive() = 0;
+    }
+
+    class ASoundManager {
+        -std::array<float> _sample;
+    }
+}
+
+namespace SoundLib {
+    class PortAudioManager {}
+}
+
+Sound.ISoundManager->Sound.ASoundManager
+Sound.ASoundManager->SoundLib.PortAudioManager
 @enduml
