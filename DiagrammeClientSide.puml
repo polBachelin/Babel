@@ -12,12 +12,16 @@ namespace Client {
 }
 
 namespace Sound {
-    class EncodedSound {}
+    class EncodedSound {
+        -unsigned char *buffer;
+        -int size;
+    }
 
     class DecodedSound {
         -int _frameIndex;
         -int _maxFrameIndex;
-        -std::array<float> _sample //Sample size is = NUM_SECONS * SAMPLE_RATE * NUM_CHANNELS * sizeof(float)
+        -int size;
+        -std::vector<float> _sample //Sample size is = NUM_SECONS * SAMPLE_RATE * NUM_CHANNELS * sizeof(float)
     }
 
     class ISoundManager {
@@ -46,10 +50,13 @@ namespace SoundLib {
         -PaStreamParameters _inputParameters;
     }
 
-    class OpusEncoder {}
+    class OpusEncoderManager {
+        -OpusEncoder *_encoder;
+        -OpusDecoder *_decoder;
+    }
 }
 
 'Sound.ISoundManager->Sound.ASoundManager
 Sound.ISoundManager->SoundLib.PortAudioManager
-Sound.IEncodeManager->SoundLib.OpusEncoder
+Sound.IEncodeManager->SoundLib.OpusEncoderManager
 @enduml
