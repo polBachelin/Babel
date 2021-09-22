@@ -6,12 +6,9 @@
 */
 
 #include <iostream>
-#include "ISoundManager.hpp"
-#include "DLLoader.hpp"
+#include <QtCore>
+#include <iostream>
 
-int main(void)
-{
-    DLLoader<ISoundManager> loader;
-
-    return 0;
+int main() {
+    std::cout << "Qt version: " << qVersion() << std::endl;
 }

@@ -17,23 +17,30 @@ DESCRIPTION "The new skype"
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-include_directories(./include/DLLoader/)
-include_directories(./include/Sound)
+include_directories(./include/)
 
 set(SRCS
     src/main.cpp)
 
-add_executable(${NAME} ${SRCS})
 
+
+
+
+    add_executable(${NAME} ${SRCS})
+
+#QT lib
+find_package(Qt5Widgets CONFIG REQUIRED)
+target_link_libraries(${NAME} Qt5::Core)
 if (MVSVC)
         target_compile_options(${NAME} PRIVATE /W4 /WX)
 else ()
         target_compile_options(${NAME} PRIVATE -Wall -Wextra -std=c++11)
 endif()
 
+
 #PortAudio Lib
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound/)
-set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound/)
-include_directories(${SOUND_DIR}/)
-target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS} PortAudio)
+#add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound/)
+#set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound/)
+#include_directories(${SOUND_DIR}/)
+#target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS} PortAudio)
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
