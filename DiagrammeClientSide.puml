@@ -11,6 +11,14 @@ namespace Client {
 
 }
 
+namespace Load {
+    class DLLoader<T> {
+        +static std::shared_ptr<T> getEntryPoint(std::string filePath);
+    }
+
+    class ConfigFileParser {}
+}
+
 namespace Sound {
     class EncodedSound {
         -unsigned char *buffer;

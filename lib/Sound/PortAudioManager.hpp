@@ -19,7 +19,7 @@ class PortAudioManager : public ISoundManager {
     typedef struct {
         int frameIndex;
         int maxFrameIndex;
-        float *recordedSample;
+        float *recordedSamples;
     } paData;
 
     public:
