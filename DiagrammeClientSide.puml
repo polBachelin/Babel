@@ -1,4 +1,4 @@
-@startuml Indie_Studio
+@startuml Babel
 !define DARKBLUE
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
@@ -17,4 +17,52 @@ namespace ClientSide {
 
 }
 
+namespace Sound {
+    class EncodedSound {
+        -unsigned char *buffer;
+        -int size;
+    }
+
+    class DecodedSound {
+        -int _frameIndex;
+        -int _maxFrameIndex;
+        -int size;
+        -std::vector<float> _sample //Sample size is = NUM_SECONS * SAMPLE_RATE * NUM_CHANNELS * sizeof(float)
+    }
+
+    class ISoundManager {
+        +int recordAudio() = 0;
+        +int playAudio() = 0;
+        +bool isStreamActive() = 0;
+    }
+
+    ' class ASoundManager {
+    '     -std::array<float> _sample;
+    ' }
+
+    class IEncodeManager {
+        +EncodedSound encode(DecodedSound &sound) = 0;
+        +DecodedSound decode(EncodedSound &sound) = 0;
+    }
+}
+
+namespace SoundLib {
+    class PortAudioManager {
+        +void recordCallback();
+        +void playCallback();
+        -DecodedSound _sound;
+        -PaStream *_stream;
+        -PaStreamParameters _outputParameters;
+        -PaStreamParameters _inputParameters;
+    }
+
+    class OpusEncoderManager {
+        -OpusEncoder *_encoder;
+        -OpusDecoder *_decoder;
+    }
+}
+
+'Sound.ISoundManager->Sound.ASoundManager
+Sound.ISoundManager->SoundLib.PortAudioManager
+Sound.IEncodeManager->SoundLib.OpusEncoderManager
 @enduml
