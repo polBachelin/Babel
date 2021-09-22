@@ -1,0 +1,33 @@
+@startuml Indie_Studio
+!define DARKBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+namespace server {
+    class Tcp_connection {
+        +Tcp_connection(io_context &io)
+        +~Tcp_connection()
+        +typedef shared_ptr<Tcp_connection> ptr
+        +static ptr create(io_context &io)
+        +socket getSocket()
+        +void start()
+        +void handle_write_server(error_code &, size_t bytes_transfered)
+        - socket _sock
+        - string -message
+    }
+
+    class Tcp_Server {
+        +Tcp_Server(io_context &io)
+        +~Tcp_Server()
+        +void accept()
+        +handle_accept(ptr new_connection, error_code &error)
+        -io_context &_io
+        -accpetor _acceptor
+    }
+
+note top of Tcp_connection : : public std::enable_shared_from_this<tcp_connection>
+
+}
+
+
+
+@enduml

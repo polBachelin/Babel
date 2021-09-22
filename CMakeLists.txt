@@ -23,6 +23,7 @@ set(SRCS
 add_executable(${NAME} ${SRCS})
 target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
+target_include_directories(${NAME} PUBLIC ${PROJECT_SOURCE_DIR}/includes)
 
 # if (MVSVC)
 #         target_compile_options(${NAME} PRIVATE /W4 /WX)
