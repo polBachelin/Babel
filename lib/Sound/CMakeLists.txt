@@ -21,9 +21,8 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
-add_library(${NAME} SHARED ${SRCS})
-target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS})
-target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
+add_library(${NAME} ${SRCS})
+conan_target_link_libraries(${NAME} CONAN_PKG::PortAudio)
 
 if (MVSVC)
     target_compile_options(${NAME} PRIVATE /W4 /WX)

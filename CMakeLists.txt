@@ -21,7 +21,9 @@ include_directories(./include/DLLoader/)
 include_directories(./include/Sound)
 
 set(SRCS
-    src/main.cpp)
+    src/main.cpp
+    src/Sound/DecodedSound.cpp
+    src/Sound/EncodedSound.cpp)
 
 add_executable(${NAME} ${SRCS})
 
@@ -33,7 +35,9 @@ endif()
 
 #PortAudio Lib
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound/)
-set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound/)
+set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound)
 include_directories(${SOUND_DIR}/)
-target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS} PortAudio)
+target_link_libraries(${NAME} PortAudio)
+
+target_link_libraries(${NAME} ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)

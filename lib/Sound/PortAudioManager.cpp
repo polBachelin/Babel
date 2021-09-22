@@ -84,7 +84,8 @@ int PortAudioManager::recordAudio()
     _sound.setMaxFrameIndex(NUM_SECONDS * SAMPLE_RATE);
     _inputParameters.device = Pa_GetDefaultInputDevice();
     if (_inputParameters.device == paNoDevice) {
-        std::cout << "Error : No default input device\n" << std::endl;
+        std::cout << "Error : No default input device" << std::endl;
+        return -1;
     }
     _inputParameters.channelCount = NUM_CHANNELS;
     _inputParameters.sampleFormat = PA_SAMPLE_TYPE;
