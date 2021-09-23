@@ -19,23 +19,24 @@
 namespace Sound {
     class DecodedSound {
         public:
-            DecodedSound();
+            DecodedSound(const int &frameIndex = 0, const int &maxFrame = 0, const int &size = 0);
             ~DecodedSound();
 
             int getFrameIndex() const;
             int getMaxFrameIndex() const;
             int getSize() const;
-            std::vector<float> getSample() const;
+            float *getSample() const;
 
             void setFrameIndex(const int &f);
             void setMaxFrameIndex(const int &f);
             void setSize(const int &size);
-            void setSample(const std::vector<float> &);
+            void setSample(float *);
+            void writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels);
         protected:
             int _frameIndex;
             int _maxFrameIndex;
             int _size;
-            std::vector<float> _sample;
+            float *_sample;
     };
 }
 

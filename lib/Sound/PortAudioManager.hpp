@@ -10,7 +10,6 @@
 
 #include "ISoundManager.hpp"
 #include "portaudio.h"
-#include "DecodedSound.hpp"
 #include <iostream>
 #include <memory>
 
@@ -26,8 +25,9 @@ class PortAudioManager : public ISoundManager {
         PortAudioManager();
         ~PortAudioManager();
 
-        int recordAudio() override;
-        int playAudio() override;
+        Sound::DecodedSound recordAudio() override;
+        int playAudio(Sound::DecodedSound &sound) override;
+        Sound::DecodedSound getSound() const override;
         bool isStreamActive() override;
 
         static int recordCallback(const void *inputBuffer, void *outputBuffer,
@@ -40,12 +40,18 @@ class PortAudioManager : public ISoundManager {
                             const PaStreamCallbackTimeInfo* timeInfo,
                             PaStreamCallbackFlags statusFlags,
                             void *userData);
+
+        size_t getNbChannels() const;
+        void setNbChannels(const size_t &nbChannels);
+        static void writeToBuffer(float *rptr, unsigned long framesPerBuffer);
+
     protected:
-        paData *_data;
-        Sound::DecodedSound _sound;
+        paData _data;
+        std::shared_ptr<Sound::DecodedSound> _sound;
         PaStream *_stream;
         PaStreamParameters _outputParameters;
         PaStreamParameters _inputParameters;
+        size_t _nbChannels;
 };
 
 #endif /* !PORTAUDIOMANAGER_HPP_ */

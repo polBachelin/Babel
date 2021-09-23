@@ -8,10 +8,15 @@
 #ifndef ISOUNDMANAGER_HPP_
 #define ISOUNDMANAGER_HPP_
 
+#include "DecodedSound.hpp"
+
 class ISoundManager {
     public:
-        virtual int recordAudio() = 0;
-        virtual int playAudio() = 0;
+        virtual Sound::DecodedSound recordAudio() = 0;
+        virtual int playAudio(Sound::DecodedSound &sound) = 0;
+        virtual Sound::DecodedSound getSound() const = 0;
+        // virtual bool isRecordMuted() = 0;
+        // virtual bool isAudioMuted() = 0;
         virtual bool isStreamActive() = 0;
 };
 
