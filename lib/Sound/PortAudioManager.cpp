@@ -54,7 +54,19 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
 {
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *rptr = (float *)inputBuffer;
-    return data->_sound->writeToSample(rptr, framesPerBuffer, data->getNbChannels());
+    int finished;
+    unsigned long framesLeft = data->_sound->getMaxFrameIndex() - data->_sound->getFrameIndex();
+    (void) outputBuffer; /* Prevent unused variable warnings. */
+    (void) timeInfo;
+    (void) statusFlags;
+    (void) userData;
+
+    data->_sound->writeToSample(rptr, framesPerBuffer, data->getNbChannels());
+    if (framesLeft < framesPerBuffer)
+        finished = paComplete;
+    else
+        finished = paContinue;
+    return finished;
 }
 
 int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
@@ -63,13 +75,12 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
                             PaStreamCallbackFlags statusFlags,
                             void *userData)
 {
-    paData *data = (paData*)userData;
-    float *rptr = &data->recordedSamples[data->frameIndex * NUM_CHANNELS];
+    PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *wptr = (float *)outputBuffer;
-    unsigned int i;
-    int finished;
-    unsigned int framesLeft = data->maxFrameIndex - data->frameIndex;
 
+    data->_sound->readFromSample(wptr, framesPerBuffer, data->getNbChannels());
+    unsigned int framesLeft = data->_sound->getMaxFrameIndex() - data->_sound->getFrameIndex();
+    int finished;
     (void) inputBuffer; /* Prevent unused variable warnings. */
     (void) timeInfo;
     (void) statusFlags;
@@ -77,28 +88,10 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
 
     if( framesLeft < framesPerBuffer )
     {
-        /* final buffer... */
-        for( i=0; i<framesLeft; i++ )
-        {
-            *wptr++ = *rptr++;  /* left */
-            if( NUM_CHANNELS == 2 ) *wptr++ = *rptr++;  /* right */
-        }
-        for( ; i<framesPerBuffer; i++ )
-        {
-            *wptr++ = 0;  /* left */
-            if( NUM_CHANNELS == 2 ) *wptr++ = 0;  /* right */
-        }
-        data->frameIndex += framesLeft;
         finished = paComplete;
     }
     else
     {
-        for( i=0; i<framesPerBuffer; i++ )
-        {
-            *wptr++ = *rptr++;  /* left */
-            if( NUM_CHANNELS == 2 ) *wptr++ = *rptr++;  /* right */
-        }
-        data->frameIndex += framesPerBuffer;
         finished = paContinue;
     }
     return finished;
@@ -109,7 +102,7 @@ int PortAudioManager::recordAudio()
     PaError err = paNoError;
     int i;
     int totalFrames;
-    int numSamples;
+    int numSamples = NUM_SECONDS * SAMPLE_RATE * NUM_CHANNELS;
     int numBytes;
 
     printf("patest_record.c\n"); fflush(stdout);
@@ -117,7 +110,9 @@ int PortAudioManager::recordAudio()
         _sound = std::make_shared<Sound::DecodedSound>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
     _sound->setMaxFrameIndex(NUM_SECONDS * SAMPLE_RATE);
 
-    _inputParameters.device = Pa_GetDefaultInputDevice();
+    _inputParameters.device = 4;
+    std::cout << Pa_GetDeviceCount() << std::endl;
+    std::cout << _inputParameters.device << std::endl;
     if (_inputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default input device.\n");
         return -1;
@@ -142,8 +137,7 @@ int PortAudioManager::recordAudio()
     if(err != paNoError) 
         return -1;
     printf("\n=== Now recording!! Please speak into the microphone. ===\n"); fflush(stdout);
-    while((err = Pa_IsStreamActive(_stream)) == 1)
-    {
+    while((err = Pa_IsStreamActive(_stream)) == 1) {
         Pa_Sleep(1000);
         std::cout << "index = " << _sound->getFrameIndex() << std::endl;
     }
@@ -152,32 +146,32 @@ int PortAudioManager::recordAudio()
     err = Pa_CloseStream(_stream);
     if(err != paNoError)
         return -1;
-       double max = 0;
-       double average = 0.0;
-       for( i=0; i<numSamples; i++ )
-       {
-           double val = _sound->getSample()[i];
-           if( val < 0 ) val = -val; /* ABS */
-           if( val > max )
-           {
-               max = val;
-           }
-           average += val;
-       }
-   
-       average = average / (double)numSamples;
-   
-       printf("sample average = %lf\n", average );
+    float max = 0;
+    double average = 0.0f;
+    float val;
+    // float *c = _sound->getSample();
+    // for( i=0; i<numSamples; i++ ) {
+    //     std::cout << "i == " << i << std::endl;
+    //     val = c[i];
+    //     if( val < 0 ) val = -val; /* ABS */
+    //     if( val > max )
+    //     {
+    //         max = val;
+    //     }
+    //     average += val;
+    // }
+    // average = average / (double)numSamples;
+    // std::cout << numSamples << std::endl;
     return 0;
 }
 
-int PortAudioManager::playAudio(Sound::DecodedSound &sound)
+int PortAudioManager::playAudio()
 {
     PaError err;
 
-    if (_data.recordedSamples == nullptr)
+    if (_sound->getSample() == nullptr)
         return -1;
-    _data.frameIndex = 0;
+    _sound->setFrameIndex(0);
     _outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     if (_outputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default output device.\n");
@@ -197,26 +191,21 @@ int PortAudioManager::playAudio(Sound::DecodedSound &sound)
               FRAMES_PER_BUFFER,
               paClipOff,      /* we won't output out of range samples so don't bother clipping them */
               playCallback,
-              &_data);
+              this);
     if(err != paNoError)
         return -1;
-
-    if(_stream)
-    {
+    if(_stream) {
         err = Pa_StartStream(_stream);
         if(err != paNoError)
             return -1;
-
         printf("Waiting for playback to finish.\n"); fflush(stdout);
         while( ( err = Pa_IsStreamActive(_stream)) == 1)
             Pa_Sleep(100);
         if(err < 0)
             return -1;
-
         err = Pa_CloseStream(_stream);
         if( err != paNoError)
             return -1;
-
         printf("Done.\n"); fflush(stdout);
     }
     return err;

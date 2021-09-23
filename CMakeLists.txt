@@ -15,7 +15,7 @@ DESCRIPTION "The new skype"
 )
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+conan_basic_setup(KEEP_RPATHS)
 
 include_directories(./include/DLLoader/)
 include_directories(./include/Sound)

@@ -13,7 +13,7 @@
 class ISoundManager {
     public:
         virtual int recordAudio() = 0;
-        virtual int playAudio(Sound::DecodedSound &sound) = 0;
+        virtual int playAudio() = 0;
         virtual Sound::DecodedSound getSound() const = 0;
         virtual bool isMicMuted() = 0;
         virtual bool isOutputMuted() = 0;

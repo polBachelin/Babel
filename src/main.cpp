@@ -16,5 +16,6 @@ int main(void)
     PortAudioManager ok;
 
     ok.recordAudio();
+    ok.playAudio();
     return 0;
 }

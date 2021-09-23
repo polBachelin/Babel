@@ -14,7 +14,9 @@ DecodedSound::DecodedSound(const int &size)
 {
     if (size != 0) {
         _sample = new float[size];
-        std::cout << "allocating float\n";
+        for (int i = 0; i < size; i++)
+            _sample[i] = 0;
+        std::cout << "allocating float of size : " << size << std::endl;
     } else
         _sample = nullptr;
 }
@@ -64,36 +66,58 @@ void DecodedSound::setSample(float *s)
     _sample = s;
 }
 
-int DecodedSound::writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels)
+void DecodedSound::writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels)
 {
     unsigned long framesLeft = _maxFrameIndex - _frameIndex;
     long framesToCalc;
     long i;
-    int finished;
     float *wptr = &_sample[_frameIndex * nbChannels];
 
     if (framesLeft < framesPerBuffer) {
         framesToCalc = framesLeft;
-        finished = 1;
     } else {
         framesToCalc = framesPerBuffer;
-        finished = 0;
     }
     if (rptr == NULL) {
         for (i = 0; i < framesToCalc; i++) {
-            *_sample++ = 0.0f;
+            *wptr++ = 0.0f;
             if (nbChannels == 2)
-                *_sample++ = 0.0f;
+                *wptr++ = 0.0f;
         }
-        finished = 1;
     } else {
         for (i = 0; i < framesToCalc; i++) {
-            *_sample++ = *rptr++;
+            *wptr++ = *rptr++;
             if (nbChannels == 2)
-                *_sample++ = *rptr++;
+                *wptr++ = *rptr++;
         }
-        finished = 0;
     }
     _frameIndex += framesToCalc;
-    return finished;
+}
+
+void DecodedSound::readFromSample(float *wptr, unsigned long framesPerBuffer, const size_t &nbChannels)
+{
+    float *rptr = &_sample[_frameIndex * nbChannels];
+    unsigned int i;
+    unsigned int framesLeft = _maxFrameIndex - _frameIndex;
+
+    if (framesLeft < framesPerBuffer) {
+        for (i = 0; i < framesLeft; i++) {
+            *wptr++ = *rptr++;
+            if (nbChannels == 2)
+                *wptr++ = *rptr++;
+        }
+        for (; i < framesPerBuffer; i++) {
+            *wptr++ = 0;
+            if (nbChannels == 2)
+                *wptr++ = 0;
+        }
+        _frameIndex += framesLeft;
+    } else {
+        for (i = 0; i < framesPerBuffer; i++) {
+            *wptr++ = *rptr++;
+            if (nbChannels == 2)
+                *wptr++ = *rptr++;
+        }
+        _frameIndex += framesPerBuffer;
+    }
 }

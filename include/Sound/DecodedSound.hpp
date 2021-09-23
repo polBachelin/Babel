@@ -12,9 +12,9 @@
 #include <vector>
 #include <iostream>
 
-#define SAMPLE_RATE  (44100)
+#define SAMPLE_RATE  (48000)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (5)
+#define NUM_SECONDS     (3)
 #define NUM_CHANNELS    (2)
 
 namespace Sound {
@@ -32,7 +32,8 @@ namespace Sound {
             void setMaxFrameIndex(const int &f);
             void setSize(const int &size);
             void setSample(float *);
-            int writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels);
+            void writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels);
+            void readFromSample(float *wptr, unsigned long framesPerBuffer, const size_t &nbChannels);
         protected:
             int _frameIndex;
             int _maxFrameIndex;

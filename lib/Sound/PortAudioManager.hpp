@@ -26,7 +26,7 @@ class PortAudioManager : public ISoundManager {
         ~PortAudioManager();
 
         int recordAudio() override;
-        int playAudio(Sound::DecodedSound &sound) override;
+        int playAudio() override;
         Sound::DecodedSound getSound() const override;
         bool isStreamActive() override;
         bool isMicMuted() override;
