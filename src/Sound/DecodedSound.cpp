@@ -9,15 +9,20 @@
 
 using namespace Sound;
 
-DecodedSound::DecodedSound(const int &frameIndex, const int &maxFrame, const int &size)
-: _frameIndex(frameIndex), _maxFrameIndex(maxFrame), _size(size)
+DecodedSound::DecodedSound(const int &size)
+: _frameIndex(0), _maxFrameIndex(0), _size(size)
 {
-    _sample = new float[size];
+    if (size != 0) {
+        _sample = new float[size];
+        std::cout << "allocating float\n";
+    } else
+        _sample = nullptr;
 }
 
 DecodedSound::~DecodedSound()
 {
-    delete [] _sample;
+    //if (_sample != nullptr)
+        //delete [] _sample;
 }
 
 int DecodedSound::getFrameIndex() const
@@ -59,7 +64,7 @@ void DecodedSound::setSample(float *s)
     _sample = s;
 }
 
-void DecodedSound::writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels)
+int DecodedSound::writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels)
 {
     unsigned long framesLeft = _maxFrameIndex - _frameIndex;
     long framesToCalc;
@@ -80,12 +85,15 @@ void DecodedSound::writeToSample(float *rptr, unsigned long framesPerBuffer, con
             if (nbChannels == 2)
                 *_sample++ = 0.0f;
         }
+        finished = 1;
     } else {
         for (i = 0; i < framesToCalc; i++) {
             *_sample++ = *rptr++;
             if (nbChannels == 2)
                 *_sample++ = *rptr++;
         }
+        finished = 0;
     }
     _frameIndex += framesToCalc;
+    return finished;
 }

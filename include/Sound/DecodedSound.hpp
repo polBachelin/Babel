@@ -10,6 +10,7 @@
 
 #include <array>
 #include <vector>
+#include <iostream>
 
 #define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
@@ -19,7 +20,7 @@
 namespace Sound {
     class DecodedSound {
         public:
-            DecodedSound(const int &frameIndex = 0, const int &maxFrame = 0, const int &size = 0);
+            DecodedSound(const int &size);
             ~DecodedSound();
 
             int getFrameIndex() const;
@@ -31,7 +32,7 @@ namespace Sound {
             void setMaxFrameIndex(const int &f);
             void setSize(const int &size);
             void setSample(float *);
-            void writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels);
+            int writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels);
         protected:
             int _frameIndex;
             int _maxFrameIndex;

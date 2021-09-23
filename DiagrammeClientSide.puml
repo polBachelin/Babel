@@ -29,18 +29,17 @@ namespace Sound {
         -int _frameIndex;
         -int _maxFrameIndex;
         -int size;
-        -std::vector<float> _sample //Sample size is = NUM_SECONS * SAMPLE_RATE * NUM_CHANNELS * sizeof(float)
+        -float *_sample //Sample size is = NUM_SECONS * SAMPLE_RATE * NUM_CHANNELS * sizeof(float)
     }
 
     class ISoundManager {
         +int recordAudio() = 0;
         +int playAudio() = 0;
         +bool isStreamActive() = 0;
+        +bool isMicMuted() = 0;
+        +bool isOutputMuted() = 0;
+        +DecodedSound getSound() const = 0;
     }
-
-    ' class ASoundManager {
-    '     -std::array<float> _sample;
-    ' }
 
     class IEncodeManager {
         +EncodedSound encode(DecodedSound &sound) = 0;
@@ -52,7 +51,7 @@ namespace SoundLib {
     class PortAudioManager {
         +void recordCallback();
         +void playCallback();
-        -DecodedSound _sound;
+        -std::shared_ptr<DecodedSound> _sound;
         -PaStream *_stream;
         -PaStreamParameters _outputParameters;
         -PaStreamParameters _inputParameters;

@@ -25,10 +25,12 @@ class PortAudioManager : public ISoundManager {
         PortAudioManager();
         ~PortAudioManager();
 
-        Sound::DecodedSound recordAudio() override;
+        int recordAudio() override;
         int playAudio(Sound::DecodedSound &sound) override;
         Sound::DecodedSound getSound() const override;
         bool isStreamActive() override;
+        bool isMicMuted() override;
+        bool isOutputMuted() override;
 
         static int recordCallback(const void *inputBuffer, void *outputBuffer,
                             unsigned long framesPerBuffer,

@@ -18,9 +18,12 @@ extern "C"
     }
 }
 
-PortAudioManager::PortAudioManager() : _sound(nullptr)
+PortAudioManager::PortAudioManager() : _sound(nullptr), _nbChannels(2)
 {
-    Pa_Initialize();
+
+    if (Pa_Initialize() != paNoError)
+        std::cout << "error on init" << std::endl;
+        //throw execption
 }
 
 PortAudioManager::~PortAudioManager()
@@ -51,11 +54,7 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
 {
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *rptr = (float *)inputBuffer;
-
-    if (data->_sound == nullptr) {
-        data->_sound = std::make_shared<Sound::DecodedSound>(framesPerBuffer * data->_nbChannels);
-    }
-    data->_sound->writeToSample(rptr, framesPerBuffer, data->getNbChannels());
+    return data->_sound->writeToSample(rptr, framesPerBuffer, data->getNbChannels());
 }
 
 int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
@@ -105,31 +104,19 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
     return finished;
 }
 
-Sound::DecodedSound PortAudioManager::recordAudio()
+int PortAudioManager::recordAudio()
 {
     PaError err = paNoError;
-    paData  data;
     int i;
     int totalFrames;
     int numSamples;
     int numBytes;
 
     printf("patest_record.c\n"); fflush(stdout);
+    if (_sound == nullptr)
+        _sound = std::make_shared<Sound::DecodedSound>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
+    _sound->setMaxFrameIndex(NUM_SECONDS * SAMPLE_RATE);
 
-    data.maxFrameIndex = totalFrames = NUM_SECONDS * SAMPLE_RATE;
-    data.frameIndex = 0;
-    numSamples = totalFrames * NUM_CHANNELS;
-    numBytes = numSamples * sizeof(float);
-    data.recordedSamples = (float *)malloc(numBytes);
-    if( data.recordedSamples == NULL )
-    {
-        printf("Could not allocate record array.\n");
-        return -1;
-    }
-    for( i=0; i<numSamples; i++ ) data.recordedSamples[i] = 0;
-
-    err = Pa_Initialize();
-    if( err != paNoError ) return -1;
     _inputParameters.device = Pa_GetDefaultInputDevice();
     if (_inputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default input device.\n");
@@ -148,20 +135,40 @@ Sound::DecodedSound PortAudioManager::recordAudio()
               paClipOff,
               recordCallback,
               this);
-    if( err != paNoError ) return -1;
+    if( err != paNoError ) 
+        return -1;
 
     err = Pa_StartStream(_stream);
-    if( err != paNoError ) return -1;
+    if(err != paNoError) 
+        return -1;
     printf("\n=== Now recording!! Please speak into the microphone. ===\n"); fflush(stdout);
-
-    while( ( err = Pa_IsStreamActive(_stream)) == 1 )
+    while((err = Pa_IsStreamActive(_stream)) == 1)
     {
         Pa_Sleep(1000);
-        printf("index = %d\n", data.frameIndex ); fflush(stdout);
+        std::cout << "index = " << _sound->getFrameIndex() << std::endl;
     }
-    if( err < 0 ) return -1;
+    if(err < 0) 
+        return -1;
     err = Pa_CloseStream(_stream);
-    if( err != paNoError ) return -1;
+    if(err != paNoError)
+        return -1;
+       double max = 0;
+       double average = 0.0;
+       for( i=0; i<numSamples; i++ )
+       {
+           double val = _sound->getSample()[i];
+           if( val < 0 ) val = -val; /* ABS */
+           if( val > max )
+           {
+               max = val;
+           }
+           average += val;
+       }
+   
+       average = average / (double)numSamples;
+   
+       printf("sample average = %lf\n", average );
+    return 0;
 }
 
 int PortAudioManager::playAudio(Sound::DecodedSound &sound)
@@ -220,4 +227,14 @@ bool PortAudioManager::isStreamActive()
     if (Pa_IsStreamActive(_stream))
         return 1;
     return 0;
+}
+
+bool PortAudioManager::isMicMuted()
+{
+    return false;
+}
+
+bool PortAudioManager::isOutputMuted()
+{
+    return false;
 }
