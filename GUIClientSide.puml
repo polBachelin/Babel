@@ -1,0 +1,47 @@
+@startuml Babel
+!define DARKBLUE
+!includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
+
+
+namespace GUI {
+    namespace pages {
+        class RegisterWindow extends Qwidget
+        {
+
+        }
+
+        class LoginWindow extends Qwidget
+        {
+
+        }
+
+        class ProfilWindow extends Qwidget
+        {
+
+        }
+    }
+
+    class AppManager
+    {
+        +std::vector<Qwidget> _pages;
+
+        +void setCurrentPage();
+    }
+
+    class ClientException
+    {
+
+    }
+
+    class BabelManager
+    {
+    }
+
+    class CommandFactory
+    {
+    }
+
+}
+
+
+@enduml
