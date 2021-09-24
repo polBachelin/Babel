@@ -9,6 +9,7 @@
 
 #define PA_SAMPLE_TYPE paFloat32
 #define SAMPLE_SILENCE  (0.0f)
+#define INPUT_DEVICE 4
 
 extern "C"
 {
@@ -110,9 +111,7 @@ int PortAudioManager::recordAudio()
         _sound = std::make_shared<Sound::DecodedSound>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
     _sound->setMaxFrameIndex(NUM_SECONDS * SAMPLE_RATE);
 
-    _inputParameters.device = 4;
-    std::cout << Pa_GetDeviceCount() << std::endl;
-    std::cout << _inputParameters.device << std::endl;
+    _inputParameters.device = INPUT_DEVICE;
     if (_inputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default input device.\n");
         return -1;
@@ -146,22 +145,6 @@ int PortAudioManager::recordAudio()
     err = Pa_CloseStream(_stream);
     if(err != paNoError)
         return -1;
-    float max = 0;
-    double average = 0.0f;
-    float val;
-    // float *c = _sound->getSample();
-    // for( i=0; i<numSamples; i++ ) {
-    //     std::cout << "i == " << i << std::endl;
-    //     val = c[i];
-    //     if( val < 0 ) val = -val; /* ABS */
-    //     if( val > max )
-    //     {
-    //         max = val;
-    //     }
-    //     average += val;
-    // }
-    // average = average / (double)numSamples;
-    // std::cout << numSamples << std::endl;
     return 0;
 }
 
