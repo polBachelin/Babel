@@ -18,12 +18,15 @@ include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 set(SRCS
-    src/main.cpp)
+    src/main.cpp
+    src/server/Server_client.cpp
+    src/server/Server_server.cpp)
 
 add_executable(${NAME} ${SRCS})
 target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
 target_include_directories(${NAME} PUBLIC ${PROJECT_SOURCE_DIR}/includes)
+target_include_directories(${NAME} PUBLIC ${PROJECT_SOURCE_DIR}/includes/server)
 
 # if (MVSVC)
 #         target_compile_options(${NAME} PRIVATE /W4 /WX)

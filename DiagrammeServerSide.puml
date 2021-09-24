@@ -11,8 +11,13 @@ namespace server {
         +socket getSocket()
         +void start()
         +void handle_write_server(error_code &, size_t bytes_transfered)
+        +void handle_read_header(error_code &, size_t bytes_transfered)
+        +void handle_read_data(error_code &, size_t bytes_transfered)
+        +void interpret(packet_t *pack)
         - socket _sock
-        - string -message
+        - string _message
+        - void *_receive
+        - packet_t *_packet
     }
 
     class Tcp_Server {
@@ -22,6 +27,7 @@ namespace server {
         +handle_accept(ptr new_connection, error_code &error)
         -io_context &_io
         -accpetor _acceptor
+        -std::deque<tcp_connection::pointer> _clients
     }
 
 note top of Tcp_connection : : public std::enable_shared_from_this<tcp_connection>
