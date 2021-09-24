@@ -14,6 +14,7 @@
 #include <iostream>
 #include <asio.hpp>
 #include <array>
+#include <deque>
 #include <ctime>
 #include <memory>
 
@@ -51,9 +52,11 @@ class tcp_connection : public std::enable_shared_from_this<tcp_connection> {
         asio::ip::tcp::socket &socket();
         void start();
         void handle_write(const asio::error_code& /*error*/, size_t /*bytes_transferred*/);
+        void handle_read(const asio::error_code& /*error*/, size_t /*bytes_transferred*/);
     private:
         asio::ip::tcp::socket _socket;
         std::string _message;
+        std::string _receive;
 };
 
 class tcp_server {
@@ -65,4 +68,5 @@ class tcp_server {
     private:
         asio::io_context &_io;
         asio::ip::tcp::acceptor _acceptor;
+        std::deque<tcp_connection::pointer> _clients;
 };

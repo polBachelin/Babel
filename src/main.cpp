@@ -26,15 +26,25 @@ asio::ip::tcp::socket &tcp_connection::socket()
 
 void tcp_connection::handle_write(const asio::error_code &e, size_t size)
 {
-    std::cout << "salut" << std::endl;
+    std::cout << "salut eroor : " << e << " size " << size << std::endl;
 }
+
+void tcp_connection::handle_read(const asio::error_code &e, size_t size)
+{
+    if (!e && size > 0)
+        std::cout << "message received : " << _receive.data() << std::endl;
+    else
+        std::cout << "An error occur " << e << std::endl;
+}
+
 
 void tcp_connection::start()
 {
     _message = make_daytime_string();
-    asio::async_write(_socket, asio::buffer(_message),
-        std::bind(&tcp_connection::handle_write, shared_from_this(), std::placeholders::_1, std::placeholders::_2));
-
+    // asio::async_write(_socket, asio::buffer(_message),
+    //     std::bind(&tcp_connection::handle_write, shared_from_this(), std::placeholders::_1, std::placeholders::_2));
+    asio::async_read(_socket, asio::buffer(_receive), asio::transfer_all(),
+        std::bind(&tcp_connection::handle_read, shared_from_this(), std::placeholders::_1, std::placeholders::_2));
 }
 
 void tcp_server::start_accept()
@@ -43,6 +53,7 @@ void tcp_server::start_accept()
 
     _acceptor.async_accept(new_connection->socket(),
         std::bind(&tcp_server::handle_accept, this, new_connection, std::placeholders::_1));
+    _clients.push_back(new_connection);
 }
 
 tcp_server::tcp_server(asio::io_context &io) : _io(io), _acceptor(io, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 5000))
@@ -58,7 +69,11 @@ tcp_server::~tcp_server()
 void tcp_server::handle_accept(tcp_connection::pointer new_connection, const asio::error_code& error)
 {
     if (!error) {
-        new_connection->start();
+            new_connection->start();
+    }
+    std::cout << _clients.size() << std::endl;
+    for (auto it = _clients.begin(); it != _clients.end(); ++it) {
+        (*(*it)).start();
     }
     tcp_server::start_accept();
 }
