@@ -20,11 +20,17 @@
 
 #define MAGIC 12324342212
 
+typedef struct packet_info {
+    int magic;
+    int code;
+    int data_size;
+} packet_info_t;
+
 typedef struct packet {
     int magic;
     int code;
     int data_size;
-    char *data;
+    char data[256] = {0};
 } packet_t;
 
 class TcpConnection : public std::enable_shared_from_this<TcpConnection> {
@@ -43,5 +49,6 @@ class TcpConnection : public std::enable_shared_from_this<TcpConnection> {
         asio::ip::tcp::socket _socket;
         std::string _message;
         void *_receive;
-        packet_t *_packet;
+        packet_info_t *_packet;
+        char test[256] = {0};
 };

@@ -44,38 +44,36 @@ void TcpConnection::handle_read_header(const asio::error_code &e, std::size_t si
 {
     packet_t *tmp;
 
-    std::cout << "receive_header : " << _receive  << " size " << size << std::endl;
     if (size > 0) {
-        std::cout << "message received : " << std::endl;
-        tmp = (packet_t *)_receive;
+        tmp = (packet_t *)test;
+        std::cout << "Magic: " << tmp->magic << " Code: " << tmp->code << " data_size: " << tmp->data_size << std::endl; 
         auto handler = std::bind(&TcpConnection::handle_read_data, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-        _socket.async_read_some(asio::buffer(_packet, tmp->data_size), handler);
+        _socket.async_read_some(asio::buffer(test, tmp->data_size), handler);
         return;
     } else if (e)
         std::cout << "An error occur " << e.message() << std::endl;
     auto handler = std::bind(&TcpConnection::handle_read_header, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-    _socket.async_read_some(asio::buffer(_packet, 3 * sizeof(int)), handler);
+    _socket.async_read_some(asio::buffer(test, sizeof(packet_info_t)), handler);
 }
 
 void TcpConnection::handle_read_data(const asio::error_code &e, std::size_t size)
 {
     packet_t *tmp;
 
-    std::cout << "receive_data : " << _receive  << " size " << size << std::endl;
     if (size > 0) {
-        std::cout << "message received : " << std::endl;
-        tmp = (packet_t *)_receive;
+        //tmp = (packet_t *)test;
+        std::cout << "Data : " << test << std::endl;
         interpret(tmp);
         auto handler = std::bind(&TcpConnection::handle_read_header, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-        _socket.async_read_some(asio::buffer(_packet, tmp->data_size), handler);
+        _socket.async_read_some(asio::buffer(test, tmp->data_size), handler);
         return;
     } else if (e)
-        std::cout << "An error occur " << e.message() << std::endl;
+        std::cout << "An error occur data :" << e.message() << std::endl;
     auto handler = std::bind(&TcpConnection::handle_read_header, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-    _socket.async_read_some(asio::buffer(_packet, 3 * sizeof(int)), handler);
+    _socket.async_read_some(asio::buffer(test, sizeof(packet_info_t)), handler);
 }
 
-TcpConnection::TcpConnection(asio::io_context& io_context) : _socket(io_context)
+TcpConnection::TcpConnection(asio::io_context& io_context) : _socket(io_context), _packet(nullptr), _receive(nullptr)
 {
 }
 
@@ -85,5 +83,5 @@ void TcpConnection::start()
     // asio::async_write(_socket, asio::buffer(_message),
     //     std::bind(&tcp_connection::handle_write, shared_from_this(), std::placeholders::_1, std::placeholders::_2));
     auto handler = std::bind(&TcpConnection::handle_read_header, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-    _socket.async_read_some(asio::buffer(_packet, sizeof(int) * 3), handler);
+    _socket.async_read_some(asio::buffer(test, sizeof(packet_info_t)), handler);
 }
