@@ -24,7 +24,7 @@ typedef struct packet {
     int magic;
     int code;
     int data_size;
-    void *data;
+    char *data;
 } packet_t;
 
 class TcpConnection : public std::enable_shared_from_this<TcpConnection> {
