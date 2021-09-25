@@ -25,11 +25,23 @@ namespace Sound {
         -int size;
     }
 
+    class CircularBuffer {
+        -void *buf;
+        -int _length;
+        -int tail;
+        -int head;
+
+        +void cleanup();
+        +void clear();
+        +void *getHead() const;
+        +void *getTail() const;
+        +void freeBytes(int amount);
+        +void allocateBytes(int amount);
+        +int writeToBuffer(const void *src, int len);
+    }
+
     class DecodedSound {
-        -int _frameIndex;
-        -int _maxFrameIndex;
-        -int size;
-        -float *_sample //Sample size is = NUM_SECONS * SAMPLE_RATE * NUM_CHANNELS * sizeof(float)
+        -CircularBuffer _soundBuffer;
     }
 
     class ISoundManager {

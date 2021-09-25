@@ -87,12 +87,9 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
     (void) statusFlags;
     (void) userData;
 
-    if( framesLeft < framesPerBuffer )
-    {
+    if( framesLeft < framesPerBuffer ) {
         finished = paComplete;
-    }
-    else
-    {
+    } else {
         finished = paContinue;
     }
     return finished;
@@ -101,10 +98,6 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
 int PortAudioManager::recordAudio()
 {
     PaError err = paNoError;
-    int i;
-    int totalFrames;
-    int numSamples = NUM_SECONDS * SAMPLE_RATE * NUM_CHANNELS;
-    int numBytes;
 
     printf("patest_record.c\n"); fflush(stdout);
     if (_sound == nullptr)
@@ -139,7 +132,6 @@ int PortAudioManager::recordAudio()
     printf("\n=== Now recording!! Please speak into the microphone. ===\n"); fflush(stdout);
     while((err = Pa_IsStreamActive(_stream)) == 1) {
         Pa_Sleep(1000);
-        std::cout << "index = " << _sound->getFrameIndex() << std::endl;
     }
     if(err < 0) 
         return -1;

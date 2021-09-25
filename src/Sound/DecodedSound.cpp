@@ -16,7 +16,6 @@ DecodedSound::DecodedSound(const int &size)
         _sample = new float[size];
         for (int i = 0; i < size; i++)
             _sample[i] = 0;
-        std::cout << "allocating float of size : " << size << std::endl;
     } else
         _sample = nullptr;
 }
