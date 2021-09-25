@@ -27,11 +27,11 @@ typedef struct packet {
     void *data;
 } packet_t;
 
-class tcp_connection : public std::enable_shared_from_this<tcp_connection> {
+class TcpConnection : public std::enable_shared_from_this<TcpConnection> {
     public:
-        tcp_connection(asio::io_context& io_context);
-        ~tcp_connection() {}
-        typedef std::shared_ptr<tcp_connection> pointer;
+        TcpConnection(asio::io_context& io_context);
+        ~TcpConnection() {}
+        typedef std::shared_ptr<TcpConnection> pointer;
         static pointer create(asio::io_context& io_context);
         asio::ip::tcp::socket &socket();
         void start();
@@ -44,16 +44,4 @@ class tcp_connection : public std::enable_shared_from_this<tcp_connection> {
         std::string _message;
         void *_receive;
         packet_t *_packet;
-};
-
-class tcp_server {
-    public:
-        void start_accept();
-        tcp_server(asio::io_context &);
-        ~tcp_server();
-        void handle_accept(tcp_connection::pointer new_connection, const asio::error_code& error);
-    private:
-        asio::io_context &_io;
-        asio::ip::tcp::acceptor _acceptor;
-        std::deque<tcp_connection::pointer> _clients;
 };

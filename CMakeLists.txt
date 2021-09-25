@@ -20,8 +20,8 @@ conan_basic_setup()
 
 set(SRCS_SERV
     src/server/main.cpp
-    src/server/Server_client.cpp
-    src/server/Server_server.cpp)
+    src/server/TcpConnection.cpp
+    src/server/TcpServer.cpp)
 
 set(SRCS_CLI
     src/client/main.cpp)

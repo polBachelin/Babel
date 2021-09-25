@@ -5,13 +5,13 @@
 ** main
 */
 
-#include "class.hpp"
+#include "TcpServer.hpp"
 
 int main(int ac, char **av)
 {
     try {
         asio::io_context io;
-        tcp_server server(io);
+        TcpServer server(io);
         io.run();
     } catch(const std::exception& e) {
         std::cerr << e.what() << std::endl;

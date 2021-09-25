@@ -5,40 +5,51 @@
 ** main
 */
 
-#include "class.hpp"
+#include "TcpServer.hpp"
 
-int main(int ac, char **av)
+using asio::ip::tcp;
+
+int main(int argc, char* argv[])
 {
-    int sock = 0, valread;
-    struct sockaddr_in serv_addr;
-    char *hello = "Hello from client";
-    packet_t buffer = {0};
-    
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+  try
+  {
+    if (argc != 2)
     {
-        printf("\n Socket creation error \n");
-        return -1;
+      std::cerr << "Usage: client <host>" << std::endl;
+      return 1;
     }
-   
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(5000);
-       
-    // Convert IPv4 and IPv6 addresses from text to binary form
-    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) 
+
+    asio::io_context io_context;
+
+    tcp::resolver resolver(io_context);
+    tcp::resolver::results_type endpoints =
+      resolver.resolve(argv[1], "daytime");
+
+    tcp::socket socket(io_context);
+    asio::connect(socket, endpoints);
+
+    packet_t *tmp;
+    tmp->code = 3;
+    tmp->magic = 562;
+    tmp->data = (void *)"salut";
+    tmp->data_size = 6;
+    for (;;)
     {
-        printf("\nInvalid address/ Address not supported \n");
-        return -1;
+      std::array<char, 128> buf;
+      asio::error_code error;
+
+      asio::write(socket, asio::buffer(&tmp, sizeof(tmp)), error);
+
+      if (error == asio::error::eof)
+        break; // Connection closed cleanly by peer.
+      else if (error)
+        throw asio::system_error(error); // Some other error.
     }
-   
-    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-    {
-        printf("\nConnection Failed \n");
-        return -1;
-    }
-    buffer.code = 2;
-    buffer.data_size = 6;
-    buffer.magic = 12324342212;
-    buffer.data = (void *)"salut";
-    send(sock , &buffer , strlen(hello) , 0 );
-    printf("Hello message sent\n");
-    return 0;}
+  }
+  catch (std::exception& e)
+  {
+    std::cerr << e.what() << std::endl;
+  }
+
+  return 0;
+}
