@@ -111,8 +111,9 @@ int PortAudioManager::recordAudio()
         _sound = std::make_shared<Sound::DecodedSound>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
     _sound->setMaxFrameIndex(NUM_SECONDS * SAMPLE_RATE);
 
-    _inputParameters.device = INPUT_DEVICE;
-    if (_inputParameters.device == paNoDevice) {
+    _inputParameters.device = Pa_GetDefaultInputDevice();
+    if (_inputParameters.device == paNoDevice)
+    {
         fprintf(stderr,"Error: No default input device.\n");
         return -1;
     }
