@@ -35,9 +35,8 @@ namespace Sound {
         +void clear();
         +void *getHead() const;
         +void *getTail() const;
-        +void freeBytes(int amount);
-        +void allocateBytes(int amount);
         +int writeToBuffer(const void *src, int len);
+        +int read(const void *ptr, int len);
     }
 
     class DecodedSound {
