@@ -14,11 +14,9 @@ std::string make_daytime_string()
     return std::ctime(&now);
 }
 
-void TcpConnection::interpret(packet_t *pack)
+void TcpConnection::interpret()
 {
-    if (pack) {
-        Commands::redirect(*pack);
-    }
+    Commands::redirect(_packet);
 }
 
 TcpConnection::pointer TcpConnection::create(asio::io_context& io_context)
@@ -40,10 +38,10 @@ void TcpConnection::handle_read_header(const asio::error_code &e, std::size_t si
     packet_t *tmp;
 
     if (size > 0) {
-        tmp = (packet_t *)test;
-        std::cout << "Magic: " << tmp->magic << " Code: " << tmp->code << " data_size: " << tmp->data_size << std::endl; 
+        _packet = *(packet_t *)test;
+        std::cout << "Magic: " << _packet.magic << " Code: " << _packet.code << " data_size: " << _packet.data_size << std::endl; 
         auto handler = std::bind(&TcpConnection::handle_read_data, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-        _socket.async_read_some(asio::buffer(test, tmp->data_size), handler);
+        _socket.async_read_some(asio::buffer(test, _packet.data_size), handler);
         return;
     } else if (e)
         std::cout << "An error occur " << e.message() << std::endl;
@@ -56,11 +54,11 @@ void TcpConnection::handle_read_data(const asio::error_code &e, std::size_t size
     packet_t *tmp;
 
     if (size > 0) {
-        //tmp = (packet_t *)test;
-        std::cout << "Data : " << test << std::endl;
-        interpret(tmp);
+        strcpy(_packet.data, test);
+        std::cout << "Data : " << _packet.data << std::endl;
+        interpret();
         auto handler = std::bind(&TcpConnection::handle_read_header, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-        _socket.async_read_some(asio::buffer(test, tmp->data_size), handler);
+        _socket.async_read_some(asio::buffer(test, sizeof(packet_info_t)), handler);
         return;
     } else if (e)
         std::cout << "An error occur data :" << e.message() << std::endl;
@@ -68,8 +66,11 @@ void TcpConnection::handle_read_data(const asio::error_code &e, std::size_t size
     _socket.async_read_some(asio::buffer(test, sizeof(packet_info_t)), handler);
 }
 
-TcpConnection::TcpConnection(asio::io_context& io_context) : _socket(io_context), _packet(nullptr), _receive(nullptr)
+TcpConnection::TcpConnection(asio::io_context& io_context) : _socket(io_context), _receive(nullptr)
 {
+    _packet.code = 84;
+    _packet.magic = 0;
+    _packet.data_size = 0;
 }
 
 void TcpConnection::start()

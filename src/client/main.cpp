@@ -31,7 +31,6 @@ int main(int argc, char* argv[])
     asio::error_code error;
     std::size_t size = asio::write(socket, asio::buffer(tmp, sizeof(packet_t)), error);
     std::cout << "message sent " << size << "  " << sizeof(packet_t) << std::endl;
-    sleep(60);
   }
   catch (std::exception& e)
   {

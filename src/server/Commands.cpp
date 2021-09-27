@@ -16,7 +16,11 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
 
 void Commands::redirect(packet_t &pck)
 {
-    _cmd_map.at(pck.code)(pck);
+    try {
+        _cmd_map.at(pck.code)(pck);
+    } catch (std::exception &e) {
+        std::cout << e.what() << std::endl;
+    }
 }
 
 void Commands::login(packet_t &pck)
@@ -36,5 +40,4 @@ void Commands::add_contact(packet_t &pck)
 
 void Commands::call_X(packet_t &pck)
 {
-
 }

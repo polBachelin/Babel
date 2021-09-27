@@ -8,10 +8,30 @@
 #ifndef COMMANDS_HPP_
 #define COMMANDS_HPP_
 
-#include "TcpConnection.hpp"
 #include <map>
 #include <functional>
 #include <utility>
+#include <iostream>
+#include <asio.hpp>
+#include <array>
+#include <deque>
+#include <ctime>
+#include <memory>
+
+#define MAGIC 12324342212
+
+typedef struct packet_info {
+    int magic;
+    int code;
+    int data_size;
+} packet_info_t;
+
+typedef struct packet {
+    int magic;
+    int code;
+    int data_size;
+    char data[256] = {0};
+} packet_t;
 
 class Commands;
 typedef std::function<void(packet_t &pck)> cmd_ptr;
