@@ -46,14 +46,13 @@ std::pair<ConfigFileParser::LIB_TYPE, std::vector<std::string>> ConfigFileParser
     std::string c_line = "";
     std::vector<std::string> lib;
     std::pair<ConfigFileParser::LIB_TYPE, std::vector<std::string>> res;
-    std::regex reg("Babel_.+.so");
+    std::regex reg(".+libBabel_.+.so");
 
     if (line.find('{') == std::string::npos)
         throw FileException("Badly formatted configuration file on line " + line);
     while (c_line.find("}") == std::string::npos) {
         if (!std::getline(stream, c_line))
             throw FileException("No closing brackets found");
-        std::cout << "Line == " << c_line << std::endl;
         removeWhiteSpaces(c_line);
         removeComment(c_line);
         if (std::regex_match(c_line, reg))

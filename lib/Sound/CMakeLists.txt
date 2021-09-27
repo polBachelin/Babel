@@ -15,7 +15,7 @@ DESCRIPTION "PortAudio Lib"
 include_directories(./)
 
 set(SRCS
-        PortAudioManager.cpp)
+    PortAudioManager.cpp)
 
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)

@@ -15,6 +15,7 @@ int main(void)
 {
     std::unordered_map<ConfigFileParser::LIB_TYPE, std::vector<std::string>> _libs = ConfigFileParser::parseFile();
 
-    std::cout << _libs[ConfigFileParser::LIB_TYPE::SOUND].size() << std::endl;
+    std::cout << _libs[ConfigFileParser::LIB_TYPE::SOUND].front() << std::endl;
+
     return 0;
-} 
+}

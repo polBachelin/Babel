@@ -31,7 +31,7 @@ class ConfigFileParser {
 			ENCODE
         };
 
-        static std::unordered_map<LIB_TYPE, std::vector<std::string>> parseFile(const std::string &fileName = "./configFile.babel");
+        static std::unordered_map<LIB_TYPE, std::vector<std::string>> parseFile(const std::string &fileName = "./lib/configFile.babel");
 		static std::pair<ConfigFileParser::LIB_TYPE, std::vector<std::string>> parseLib(const std::string &line, ConfigFileParser::LIB_TYPE type, std::ifstream &stream);
 		static void removeComment(std::string &line);
 };
