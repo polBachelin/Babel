@@ -22,9 +22,11 @@ include_directories(./include/Sound)
 
 set(SRCS
     src/main.cpp
+    src/Sound/CircularBuffer.cpp
     src/Sound/DecodedSound.cpp
     src/Sound/EncodedSound.cpp)
 
+configure_file(${PROJECT_SOURCE_DIR}/lib/configFile.babel ${CMAKE_BINARY_DIR}/bin COPYONLY)
 add_executable(${NAME} ${SRCS})
 
 if (MVSVC)
