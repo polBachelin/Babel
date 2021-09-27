@@ -5,14 +5,7 @@
 ** Server_client
 */
 
-/*
-** EPITECH PROJECT, 2021
-** Babel
-** File description:
-** main
-*/
-
-#include "TcpServer.hpp"
+#include "TcpConnection.hpp"
 
 std::string make_daytime_string()
 {
@@ -23,7 +16,9 @@ std::string make_daytime_string()
 
 void TcpConnection::interpret(packet_t *pack)
 {
-
+    if (pack) {
+        Commands::redirect(*pack);
+    }
 }
 
 TcpConnection::pointer TcpConnection::create(asio::io_context& io_context)

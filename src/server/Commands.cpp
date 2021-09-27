@@ -14,22 +14,27 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
     {003, Commands::call_X},
 };
 
-void Commands::login(packet_t *pck)
+void Commands::redirect(packet_t &pck)
+{
+    _cmd_map.at(pck.code)(pck);
+}
+
+void Commands::login(packet_t &pck)
 {
 
 }
 
-void Commands::register_(packet_t *pck)
+void Commands::register_(packet_t &pck)
 {
 
 }
 
-void Commands::add_contact(packet_t *pck)
+void Commands::add_contact(packet_t &pck)
 {
 
 }
 
-void Commands::call_X(packet_t *pck)
+void Commands::call_X(packet_t &pck)
 {
 
 }

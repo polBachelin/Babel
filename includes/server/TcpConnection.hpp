@@ -17,6 +17,7 @@
 #include <deque>
 #include <ctime>
 #include <memory>
+#include "Commands.hpp"
 
 #define MAGIC 12324342212
 
