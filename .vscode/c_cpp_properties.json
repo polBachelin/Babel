@@ -3,7 +3,9 @@
         {
             "name": "Linux",
             "includePath": [
-                "/home/evan/.conan/data/**"
+                "/home/evan/.conan/data/**",
+                "${workspaceFolder}/client/include/**",
+                "${workspaceFolder}/client/include/pages/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

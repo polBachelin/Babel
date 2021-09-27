@@ -2,6 +2,7 @@
 !define DARKBLUE
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
+namespace Client {
 
 namespace GUI {
     namespace pages {
@@ -24,13 +25,7 @@ namespace GUI {
     class AppManager
     {
         +std::vector<Qwidget> _pages;
-
         +void setCurrentPage();
-    }
-
-    class ClientException
-    {
-
     }
 
     class BabelManager
@@ -39,7 +34,39 @@ namespace GUI {
 
     class CommandFactory
     {
+
     }
+
+}
+
+namespace Audio {
+
+}
+
+namespace Network {
+
+}
+
+namespace Exceptions {
+
+class ClientException extends std::exception
+{
+    +const char *what() const noexcept override;
+}
+
+class CommandError extends ClientException
+{
+
+}
+
+class CommandError
+{
+
+}
+
+}
+
+
 
 }
 
