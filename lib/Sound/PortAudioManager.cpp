@@ -19,7 +19,7 @@ extern "C"
     }
 }
 
-PortAudioManager::PortAudioManager() : _sound(nullptr), _nbChannels(2)
+PortAudioManager::PortAudioManager() : _buffer(nullptr), _nbChannels(2)
 {
 
     if (Pa_Initialize() != paNoError)
@@ -42,11 +42,6 @@ void PortAudioManager::setNbChannels(const size_t &nbChannels)
     _nbChannels = nbChannels;
 }
 
-Sound::DecodedSound PortAudioManager::getSound() const
-{
-    return *_sound;
-}
-
 int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer,
                             unsigned long framesPerBuffer,
                             const PaStreamCallbackTimeInfo* timeInfo,
@@ -61,9 +56,10 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
-
-    data->_sound->writeToSample(rptr, framesPerBuffer, data->getNbChannels());
-    if (data->_sound->getBytesLeft() < (int)framesPerBuffer)
+    void *n = rptr;
+    unsigned char *t = static_cast<unsigned char *>(n);
+    data->_buffer->write(t, framesPerBuffer);
+    if (data->_buffer->getBytesLeft() < (int)framesPerBuffer)
         finished = paComplete;
     else
         finished = paContinue;
@@ -78,15 +74,15 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
 {
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *wptr = (float *)outputBuffer;
-
     int finished;
     (void) inputBuffer; /* Prevent unused variable warnings. */
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
-
-    data->_sound->readFromSample(wptr, framesPerBuffer, data->getNbChannels());
-    if (data->_sound->getBytesLeft() < (int)framesPerBuffer)
+    void *n = wptr;
+    unsigned char *t = static_cast<unsigned char *>(n);
+    data->_buffer->read(t, framesPerBuffer);
+    if (data->_buffer->getBytesLeft() < (int)framesPerBuffer)
         finished = paComplete;
     else
         finished = paContinue;
@@ -98,8 +94,8 @@ int PortAudioManager::recordAudio()
     PaError err = paNoError;
 
     printf("patest_record.c\n"); fflush(stdout);
-    if (_sound == nullptr)
-        _sound = std::make_shared<Sound::DecodedSound>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
+    if (_buffer == nullptr)
+        _buffer = std::make_shared<CircularBuffer>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
 
     _inputParameters.device = Pa_GetDefaultInputDevice();
     if (_inputParameters.device == paNoDevice)
@@ -142,7 +138,7 @@ int PortAudioManager::playAudio()
 {
     PaError err;
 
-    if (_sound->getSample() == nullptr)
+    if (_buffer == nullptr)
         return -1;
     _outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     if (_outputParameters.device == paNoDevice) {

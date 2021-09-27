@@ -9,9 +9,15 @@
 #define PORTAUDIOMANAGER_HPP_
 
 #include "ISoundManager.hpp"
+#include "CircularBuffer.hpp"
 #include "portaudio.h"
 #include <iostream>
 #include <memory>
+
+#define SAMPLE_RATE  (48000)
+#define FRAMES_PER_BUFFER (512)
+#define NUM_SECONDS     (3)
+#define NUM_CHANNELS    (2)
 
 class PortAudioManager : public ISoundManager {
     
@@ -27,7 +33,6 @@ class PortAudioManager : public ISoundManager {
 
         int recordAudio() override;
         int playAudio() override;
-        Sound::DecodedSound getSound() const override;
         bool isStreamActive() override;
         bool isMicMuted() override;
         bool isOutputMuted() override;
@@ -49,7 +54,7 @@ class PortAudioManager : public ISoundManager {
 
     protected:
         paData _data;
-        std::shared_ptr<Sound::DecodedSound> _sound;
+        std::shared_ptr<CircularBuffer> _buffer;
         PaStream *_stream;
         PaStreamParameters _outputParameters;
         PaStreamParameters _inputParameters;

@@ -24,7 +24,7 @@ include_directories(./src/Exception)
 include_directories(./src/Exception/Error)
 
 set(SRCS
-    src/main.cpp
+    src/device_info.cpp
     src/Sound/CircularBuffer.cpp
     src/Sound/DecodedSound.cpp
     src/Sound/EncodedSound.cpp

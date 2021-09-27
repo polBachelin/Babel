@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.17)
 
+# if(UNIX)
+#     add_definitions("-fPIC -Wall -Wextra -Wshadow -Wnon-virtual-dtor -Wuninitialized -Wunreachable-code")
+# endif(UNIX)
+
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -15,6 +19,7 @@ DESCRIPTION "PortAudio Lib"
 include_directories(./)
 
 set(SRCS
+    CircularBuffer.cpp
     PortAudioManager.cpp)
 
 
@@ -23,10 +28,12 @@ conan_basic_setup()
 
 #set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
 add_library(${NAME} SHARED ${SRCS})
-conan_target_link_libraries(${NAME} CONAN_PKG::PortAudio)
+
+target_link_libraries(${NAME} ${CONAN_LIBS})
+target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
 
 if (MVSVC)
     target_compile_options(${NAME} PRIVATE /W4 /WX)
 else()
-    target_compile_options(${NAME} PRIVATE -Wall -Wextra -std=c++11)
+    target_compile_options(${NAME} PRIVATE -fPIC -Wall -Wextra -std=c++11)
 endif()

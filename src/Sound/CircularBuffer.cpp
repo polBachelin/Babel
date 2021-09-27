@@ -6,6 +6,7 @@
 */
 
 #include "CircularBuffer.hpp"
+#include <iostream>
 
 CircularBuffer::CircularBuffer(const size_t &size) : _len(size), _headPtr(0), _tailPtr(0), _bytesLeft(size)
 {
@@ -86,5 +87,8 @@ int CircularBuffer::read(unsigned char *src, size_t len)
 		std::memcpy(_buf, src + _tailPtr, len);
 	_tailPtr = (_tailPtr + len) % _len;
 	_bytesLeft += len;
+	for (size_t i = 0; i < _len; i++) {
+		std::cout << _buf[i] << std::endl;
+	}
 	return len;
 }

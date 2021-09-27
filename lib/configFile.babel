@@ -1,5 +1,5 @@
 SOUND_LIB: {
-	build/BabelLibs/lib/libBabel_PortAudio.so
+	./build/BabelLibs/lib/libBabel_PortAudio.so
 }
 
 NETWORK_LIB: {
