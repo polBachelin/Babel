@@ -11,12 +11,13 @@
 #include <QtWidgets/QApplication>
 #include <QPushButton>
 #include "Loginpage.hpp"
+#include "MainWindow.hpp"
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
-    LoginPage toto;
+    Client::GUI::MainWindow mainWindow;
 
-    toto.show();
+    mainWindow.show();
     return app.exec();
 }
