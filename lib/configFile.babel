@@ -1,0 +1,11 @@
+SOUND_LIB {
+	build/bin/lib/Sound/lib/PortAudioManager.so
+}
+
+NETWORK_LIB {
+	./Network/AsioTcp.so
+}
+
+ENCODING_LIB {
+	./Encode/OpusEncode.so
+}
