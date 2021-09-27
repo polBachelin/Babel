@@ -7,7 +7,7 @@
 
 #include "CircularBuffer.hpp"
 
-CircularBuffer::CircularBuffer(const int &size) : _len(size), _headPtr(0), _tailPtr(0), _bytesLeft(size)
+CircularBuffer::CircularBuffer(const size_t &size) : _len(size), _headPtr(0), _tailPtr(0), _bytesLeft(size)
 {
 	if (size != 0) {
 	_buf = new unsigned char[size];
@@ -55,11 +55,11 @@ int CircularBuffer::getBytesLeft() const
 	return _bytesLeft;
 }
 
-int CircularBuffer::write(const unsigned char *src, int len)
+int CircularBuffer::write(const unsigned char *src, size_t len)
 {
 	if (src == nullptr || len == 0 || _bytesLeft <= 0)
 		return 0;
-	if (len > _bytesLeft)
+	if ((int)len > _bytesLeft)
 		len = _bytesLeft;
 	if (len > _len - _headPtr) {
 		int newLen = _len - _headPtr;
@@ -72,9 +72,9 @@ int CircularBuffer::write(const unsigned char *src, int len)
 	return len;
 }
 
-int CircularBuffer::read(unsigned char *src, int len)
+int CircularBuffer::read(unsigned char *src, size_t len)
 {
-	if (src == nullptr || len <= 0 || _bytesLeft == _len)
+	if (src == nullptr || len <= 0 || _bytesLeft == (int)_len)
 		return 0;
 	if (len > _len - _bytesLeft)
 		len = _len - _bytesLeft;

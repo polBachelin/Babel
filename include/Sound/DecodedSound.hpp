@@ -11,6 +11,7 @@
 #include <array>
 #include <vector>
 #include <iostream>
+#include "CircularBuffer.hpp"
 
 #define SAMPLE_RATE  (48000)
 #define FRAMES_PER_BUFFER (512)
@@ -23,21 +24,17 @@ namespace Sound {
             DecodedSound(const int &size);
             ~DecodedSound();
 
-            int getFrameIndex() const;
-            int getMaxFrameIndex() const;
             int getSize() const;
+            int getBytesLeft() const;
             float *getSample() const;
 
-            void setFrameIndex(const int &f);
-            void setMaxFrameIndex(const int &f);
             void setSize(const int &size);
             void setSample(float *);
-            void writeToSample(float *rptr, unsigned long framesPerBuffer, const size_t &nbChannels);
-            void readFromSample(float *wptr, unsigned long framesPerBuffer, const size_t &nbChannels);
+            void writeToSample(const void *rptr, unsigned long framesPerBuffer, const size_t &nbChannels);
+            void readFromSample(void *wptr, unsigned long framesPerBuffer, const size_t &nbChannels);
         protected:
-            int _frameIndex;
-            int _maxFrameIndex;
             int _size;
+            CircularBuffer _buffer;
             float *_sample;
     };
 }

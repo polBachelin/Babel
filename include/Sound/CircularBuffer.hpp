@@ -13,7 +13,7 @@
 
 class CircularBuffer {
   public:
-	CircularBuffer(const int &size);
+	  CircularBuffer(const size_t &size);
     ~CircularBuffer();
 
     void cleanup();
@@ -22,14 +22,14 @@ class CircularBuffer {
     void *getTail() const;
     int getLen() const;
     int getBytesLeft() const;
-    int write(const unsigned char *src, int len);
-    int read(unsigned char *src, int len);
+    int write(const unsigned char *src, size_t len);
+    int read(unsigned char *src, size_t len);
 
   protected:
     unsigned char *_buf;
-    int _len;
-    int _tailPtr;
+    size_t _len;
     int _headPtr;
+    int _tailPtr;
     int _bytesLeft;
   private:
 };

@@ -19,14 +19,22 @@ conan_basic_setup(KEEP_RPATHS)
 
 include_directories(./include/DLLoader/)
 include_directories(./include/Sound)
+include_directories(./include/Parser)
+include_directories(./src/Exception)
+include_directories(./src/Exception/Error)
 
 set(SRCS
     src/main.cpp
     src/Sound/CircularBuffer.cpp
     src/Sound/DecodedSound.cpp
-    src/Sound/EncodedSound.cpp)
+    src/Sound/EncodedSound.cpp
+    src/Exception/Error/Error.cpp
+    src/Parser/ConfigFileParser.cpp)
 
-configure_file(${PROJECT_SOURCE_DIR}/lib/configFile.babel ${CMAKE_BINARY_DIR}/bin COPYONLY)
+set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
+set(LIBRARY_OUTPUT_PATH "${EXECUTABLE_OUTPUT_PATH}")
+
+configure_file(${PROJECT_SOURCE_DIR}/lib/configFile.babel ${CMAKE_BINARY_DIR}/bin/configFile.babel COPYONLY)
 add_executable(${NAME} ${SRCS})
 
 if (MVSVC)
@@ -36,10 +44,10 @@ else ()
 endif()
 
 #PortAudio Lib
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound/)
-set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound)
-include_directories(${SOUND_DIR}/)
-target_link_libraries(${NAME} PortAudio)
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound)
+#set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound)
+#include_directories(${SOUND_DIR}/)
+#target_link_libraries(${NAME} Babel_PortAudio)
 
 target_link_libraries(${NAME} ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)

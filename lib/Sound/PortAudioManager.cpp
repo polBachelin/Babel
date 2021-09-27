@@ -56,14 +56,14 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *rptr = (float *)inputBuffer;
     int finished;
-    unsigned long framesLeft = data->_sound->getMaxFrameIndex() - data->_sound->getFrameIndex();
+
     (void) outputBuffer; /* Prevent unused variable warnings. */
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
 
     data->_sound->writeToSample(rptr, framesPerBuffer, data->getNbChannels());
-    if (framesLeft < framesPerBuffer)
+    if (data->_sound->getBytesLeft() < (int)framesPerBuffer)
         finished = paComplete;
     else
         finished = paContinue;
@@ -79,19 +79,17 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *wptr = (float *)outputBuffer;
 
-    data->_sound->readFromSample(wptr, framesPerBuffer, data->getNbChannels());
-    unsigned int framesLeft = data->_sound->getMaxFrameIndex() - data->_sound->getFrameIndex();
     int finished;
     (void) inputBuffer; /* Prevent unused variable warnings. */
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
 
-    if( framesLeft < framesPerBuffer ) {
+    data->_sound->readFromSample(wptr, framesPerBuffer, data->getNbChannels());
+    if (data->_sound->getBytesLeft() < (int)framesPerBuffer)
         finished = paComplete;
-    } else {
+    else
         finished = paContinue;
-    }
     return finished;
 }
 
@@ -102,7 +100,6 @@ int PortAudioManager::recordAudio()
     printf("patest_record.c\n"); fflush(stdout);
     if (_sound == nullptr)
         _sound = std::make_shared<Sound::DecodedSound>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
-    _sound->setMaxFrameIndex(NUM_SECONDS * SAMPLE_RATE);
 
     _inputParameters.device = Pa_GetDefaultInputDevice();
     if (_inputParameters.device == paNoDevice)
@@ -147,7 +144,6 @@ int PortAudioManager::playAudio()
 
     if (_sound->getSample() == nullptr)
         return -1;
-    _sound->setFrameIndex(0);
     _outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     if (_outputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default output device.\n");

@@ -7,9 +7,9 @@
 
 #include "ConfigFileParser.hpp"
 
-static const std::string SOUND_LIB = "SOUND_LIBS:";
-static const std::string NETWORK_LIB = "NETWORK_LIBS:";
-static const std::string ENCODE_LIB = "ENCODE_LIBS:";
+static const std::string SOUND_LIB = "SOUND_LIB:";
+static const std::string NETWORK_LIB = "NETWORK_LIB:";
+static const std::string ENCODE_LIB = "ENCODE_LIB:";
 
 static void removeWhiteSpaces(std::string &str)
 {
@@ -25,7 +25,7 @@ std::unordered_map<ConfigFileParser::LIB_TYPE, std::vector<std::string>> ConfigF
 
     fileStream.open(fileName);
     if (!fileStream.is_open())
-        throw FileException("Could not open file");
+        throw FileException(std::string("Could not open file : " + fileName));
     while (std::getline(fileStream, line)) {
         if (line.find(SOUND_LIB) != std::string::npos)
             res.insert(parseLib(line, ConfigFileParser::SOUND, fileStream));
@@ -46,13 +46,14 @@ std::pair<ConfigFileParser::LIB_TYPE, std::vector<std::string>> ConfigFileParser
     std::string c_line = "";
     std::vector<std::string> lib;
     std::pair<ConfigFileParser::LIB_TYPE, std::vector<std::string>> res;
-    std::regex reg("arcade_.+\\.so");
+    std::regex reg("Babel_.+.so");
 
     if (line.find('{') == std::string::npos)
         throw FileException("Badly formatted configuration file on line " + line);
     while (c_line.find("}") == std::string::npos) {
         if (!std::getline(stream, c_line))
             throw FileException("No closing brackets found");
+        std::cout << "Line == " << c_line << std::endl;
         removeWhiteSpaces(c_line);
         removeComment(c_line);
         if (std::regex_match(c_line, reg))

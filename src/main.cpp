@@ -8,14 +8,13 @@
 #include <iostream>
 #include "ISoundManager.hpp"
 #include "DLLoader.hpp"
-#include "PortAudioManager.hpp"
+#include "ConfigFileParser.hpp"
+#include <unordered_map>
 
 int main(void)
 {
-    DLLoader<ISoundManager> loader;
-    PortAudioManager ok;
+    std::unordered_map<ConfigFileParser::LIB_TYPE, std::vector<std::string>> _libs = ConfigFileParser::parseFile();
 
-    ok.recordAudio();
-    ok.playAudio();
+    std::cout << _libs[ConfigFileParser::LIB_TYPE::SOUND].size() << std::endl;
     return 0;
-}
+} 

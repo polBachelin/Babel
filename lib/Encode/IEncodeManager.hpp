@@ -1,0 +1,1 @@
+../../include/Sound/IEncodeManager.hpp

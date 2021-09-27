@@ -4,7 +4,7 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_COLOR_MAKEFILE ON)
-set(NAME PortAudio)
+set(NAME Babel_PortAudio)
 
 project(${NAME}
 LANGUAGES CXX
@@ -17,11 +17,12 @@ include_directories(./)
 set(SRCS
         PortAudioManager.cpp)
 
+
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
-add_library(${NAME} ${SRCS})
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(${NAME} SHARED ${SRCS})
 conan_target_link_libraries(${NAME} CONAN_PKG::PortAudio)
 
 if (MVSVC)

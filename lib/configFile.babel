@@ -1,11 +1,9 @@
-SOUND_LIB {
-	build/bin/lib/Sound/lib/PortAudioManager.so
+SOUND_LIB: {
+	../lib/Sound/lib/libBabel_PortAudio.so
 }
 
-NETWORK_LIB {
-	./Network/AsioTcp.so
+NETWORK_LIB: {
 }
 
-ENCODING_LIB {
-	./Encode/OpusEncode.so
+ENCODING_LIB: {
 }
