@@ -30,7 +30,7 @@ typedef struct packet {
     int magic;
     int code;
     int data_size;
-    char data[256] = {0};
+    char data[2048] = {0};
 } packet_t;
 
 class Commands;

@@ -11,16 +11,22 @@
 
 #endif /* !CLASS_HPP_ */
 
+#include "ITcpServer.hpp"
 #include "TcpConnection.hpp"
+#include "Database.hpp"
 
-class TcpServer {
+class TcpServer : public ITcpServer {
     public:
-        void start_accept();
+        void startAccept() override;
+        void initServer(int port) override;
         TcpServer(asio::io_context &);
         ~TcpServer();
-        void handle_accept(TcpConnection::pointer new_connection, const asio::error_code& error);
+        void handleAccept(TcpConnection::pointer new_connection, const asio::error_code& error);
     private:
         asio::io_context &_io;
+        int _port;
         asio::ip::tcp::acceptor _acceptor;
         std::deque<TcpConnection::pointer> _clients;
+        Database _db;
+
 };

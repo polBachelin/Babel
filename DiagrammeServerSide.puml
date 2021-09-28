@@ -3,7 +3,68 @@
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
 namespace server {
-    class Tcp_connection {
+    entity CallBackData {
+        +int ac
+        +std::deque<std::string> av
+        +std::deque<std::string> c_name
+    }
+
+    entity packet {
+        +int magic
+        +int code
+        +int data_size
+        +char data[2048]
+    }
+
+    class Commands {
+        +Commands() = default;
+        +~Commands() = default;
+        +static void redirect(packet_t &pck);
+        -static void login(packet_t &pck);
+        -static void register_(packet_t &pck);
+        -static void add_contact(packet_t &pck);
+        -static void call_X(packet_t &pck);
+        -static const std::map<std::size_t, cmd_ptr> _cmd_map;
+    }
+
+    interface IDatabase {
+        +virtual int open(const std::string &filename) = 0
+        +virtual int close() = 0
+        +virtual int insert(const std::string &t_name, const std::string &c_name, const std::string &value) = 0
+        +virtual int createTable(const std::string &name, const std::string &columns) = 0
+        +virtual CallBackData_t getInfo(const std::string &t_name, const std::string &c_name) = 0
+        +virtual int update(const std::string &t_name, const std::string &c_name, const std::string &id, const std::string &value) = 0
+        +virtual int deleteId(const std::string &t_name, const std::string &id) = 0
+        +virtual int custom(const std::string &req) = 0
+    }
+
+    class Database  {
+        +Database()
+        +Database(const std::string &filename)
+        +~Database()
+        +int open(const std::string &filename) override
+        +int close() override
+        +int insert(const std::string &t_name, const std::string &c_name, const std::string &value) override
+        +int createTable(const std::string &name, const std::string &columns) override
+        +CallBackData_t getInfo(const std::string &t_name, const std::string &c_name) override
+        +int update(const std::string &t_name, const std::string &c_name, const std::string &id, const std::string &value) override
+        +int deleteId(const std::string &t_name, const std::string &id) 
+        +int custom(const std::string &req) override
+        -sqlite3 *_db
+        -char *_err_msg
+        -CallBackData_t _data
+    }
+
+    interface ITcpServer {
+        +virtual void start_accept() = 0
+    }
+
+    interface ITcpConnection {
+        +virtual void start() = 0
+        +virtual void interpret() = 0
+    }
+
+    class TcpConnection {
         +Tcp_connection(io_context &io)
         +~Tcp_connection()
         +typedef shared_ptr<Tcp_connection> ptr
@@ -20,7 +81,7 @@ namespace server {
         - packet_t *_packet
     }
 
-    class Tcp_Server {
+    class TcpServer {
         +Tcp_Server(io_context &io)
         +~Tcp_Server()
         +void accept()
@@ -30,8 +91,10 @@ namespace server {
         -std::deque<tcp_connection::pointer> _clients
     }
 
-note top of Tcp_connection : : public std::enable_shared_from_this<tcp_connection>
-
+note top of TcpConnection : : public std::enable_shared_from_this<tcp_connection>
+ITcpConnection-->TcpConnection
+ITcpServer-->TcpServer
+IDatabase-->Database
 }
 
 

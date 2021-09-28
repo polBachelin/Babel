@@ -7,19 +7,30 @@
 
 #include "TcpServer.hpp"
 
-void TcpServer::start_accept()
+void TcpServer::startAccept()
 {
     TcpConnection::pointer new_connection = TcpConnection::create(_io);
 
     _acceptor.async_accept(new_connection->socket(),
-        std::bind(&TcpServer::handle_accept, this, new_connection, std::placeholders::_1));
+        std::bind(&TcpServer::handleAccept, this, new_connection, std::placeholders::_1));
     _clients.push_back(new_connection);
 }
 
-TcpServer::TcpServer(asio::io_context &io) : _io(io), _acceptor(io, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 5000))
+void TcpServer::initServer(int port)
 {
     _acceptor.set_option(asio::ip::tcp::acceptor::reuse_address(true));
-    start_accept();
+}
+
+TcpServer::TcpServer(asio::io_context &io) : _io(io), _port(5000), _acceptor(io, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), _port))
+{
+    _db.open("db/database.db");
+    _db.createTable("Contact", "ID INTEGER PRIMARY KEY AUTOINCREMENT," \
+                                "NAME TEXT NOT NULL," \
+                                "FRIEND TEXT NOT NULL");
+    _db.insert("Contact", "ID, NAME, FRIEND", "1, \'Pol\', \'Simon\'");
+    auto tmp = _db.getInfo("Contact", "*");
+    initServer(_port);
+    startAccept();
 }
 
 TcpServer::~TcpServer()
@@ -27,10 +38,10 @@ TcpServer::~TcpServer()
 
 }
 
-void TcpServer::handle_accept(TcpConnection::pointer new_connection, const asio::error_code& error)
+void TcpServer::handleAccept(TcpConnection::pointer new_connection, const asio::error_code& error)
 {
     if (!error) {
             new_connection->start();
     }
-    TcpServer::start_accept();
+    TcpServer::startAccept();
 }
