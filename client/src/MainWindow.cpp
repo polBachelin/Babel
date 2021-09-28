@@ -6,7 +6,7 @@
 */
 
 #include "MainWindow.hpp"
-#include "Loginpage.hpp"
+#include "LoginPage.hpp"
 
 Client::GUI::MainWindow::MainWindow()
 {
@@ -14,4 +14,25 @@ Client::GUI::MainWindow::MainWindow()
 
     this->setFixedSize({800, 600});
     this->setCentralWidget(this->mainContainer.get());
+}
+
+
+void Client::GUI::MainWindow::setCurrentPage()
+{
+
+}
+
+void Client::GUI::MainWindow::goNextPage()
+{
+
+}
+
+void Client::GUI::MainWindow::goPreviousPage()
+{
+
+}
+
+void Client::GUI::MainWindow::getCurrentPage()
+{
+
 }

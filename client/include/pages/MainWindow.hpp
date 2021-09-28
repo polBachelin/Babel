@@ -10,6 +10,7 @@
 
 #include <QtWidgets>
 #include <memory>
+#include "PageManager.hpp"
 
 namespace Client {
 namespace GUI {
@@ -18,9 +19,18 @@ class MainWindow : public QMainWindow
 {
     public:
         MainWindow();
+        void setCurrentPage();
+        void goNextPage();
+        void goPreviousPage();
+        void getCurrentPage();
+
+    public slots:
+        void setCurrentPage(QString);
+
 
     private:
         std::unique_ptr<QWidget> mainContainer;
+        //PageManager pages;
 };
 
 }
