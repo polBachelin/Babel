@@ -8,7 +8,7 @@
 #include "ContactPage.hpp"
 #include <iostream>
 
-ContactPage::ContactPage(QWidget *parent) : QWidget()
+Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(WIDTH, HEIGHT);
     _calling = false;
@@ -20,7 +20,7 @@ ContactPage::ContactPage(QWidget *parent) : QWidget()
 
 // LOARDERS
 
-void ContactPage::loadPage()
+void Client::GUI::ContactPage::loadPage()
 {
     callLoader();
     labelLoader();
@@ -29,13 +29,13 @@ void ContactPage::loadPage()
     formLoader();
 }
 
-void ContactPage::formLoader()
+void Client::GUI::ContactPage::formLoader()
 {
     _contactSearch = std::make_unique<QLineEdit>();
     _writeMsg = std::make_unique<QLineEdit>();
 }
 
-void ContactPage::labelLoader()
+void Client::GUI::ContactPage::labelLoader()
 {
     _imgLogo = std::make_unique<QImage>(LOGO_PATH);
     _labelLogo = std::make_unique<QLabel>();
@@ -50,7 +50,7 @@ void ContactPage::labelLoader()
     _labelContactName->setText("Contact list");
 }
 
-void ContactPage::callLoader()
+void Client::GUI::ContactPage::callLoader()
 {
     _imgCall = std::make_unique<QPixmap>(CALL_PATH);
     _call = std::make_unique<QPushButton>();
@@ -65,7 +65,7 @@ void ContactPage::callLoader()
     _call->hide();
 }
 
-void ContactPage::contactLoader()
+void Client::GUI::ContactPage::contactLoader()
 {
     std::size_t nbContact(5);
     std::string name;
@@ -78,7 +78,7 @@ void ContactPage::contactLoader()
     }
 }
 
-void ContactPage::delimLoader()
+void Client::GUI::ContactPage::delimLoader()
 {
     _delim["horizontal"] = std::make_unique<QFrame>();
     _delim["horizontal2"] = std::make_unique<QFrame>();
@@ -95,7 +95,7 @@ void ContactPage::delimLoader()
     _delim["vertical"]->setFrameShape(QFrame::VLine);
 }
 
-void ContactPage::layoutLoader()
+void Client::GUI::ContactPage::layoutLoader()
 {
     _layout = std::make_unique<QGridLayout>();
 
@@ -114,19 +114,19 @@ void ContactPage::layoutLoader()
         _layout->addWidget(_contacts[i].get(), 8 + i * 2, 2, 3, 10);
 
     this->setLayout(_layout.get());
-    connexionHandler();
+    initConnections();
 }
 
 // CONEXION -- EVENT HANDLER
 
-void ContactPage::connexionHandler()
+void Client::GUI::ContactPage::initConnections()
 {
     for (auto &contact : _contacts)
         QObject::connect(contact.get(), SIGNAL(clicked()), this, SLOT(contactClicked()));
     QObject::connect(_call.get(), SIGNAL(clicked()), this, SLOT(callClicked()));
 }
 
-void ContactPage::contactClicked()
+void Client::GUI::ContactPage::contactClicked()
 {
     QPushButton* buttonSender = qobject_cast<QPushButton*>(sender());
     _calling = false;
@@ -141,7 +141,7 @@ void ContactPage::contactClicked()
     _labelContactSelected->setText(_contactSelected);
 }
 
-void ContactPage::callClicked()
+void Client::GUI::ContactPage::callClicked()
 {
     if (_calling)
         _calling = false;

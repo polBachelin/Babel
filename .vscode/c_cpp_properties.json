@@ -9,7 +9,7 @@
                 "${workspaceFolder}/build/babel_client_autogen/include/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
             "intelliSenseMode": "linux-clang-x64",
             "compilerArgs": [],

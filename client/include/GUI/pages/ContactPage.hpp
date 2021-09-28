@@ -19,22 +19,26 @@
 #include <QtCore/QObject>
 #include <QPixmap>
 #include <vector>
+#include "APage.hpp"
 
 #define LOGO_PATH "./assets/babelLogo_48x48.png"
 #define CALL_PATH "./assets/acceptCall_48x48.png"
 #define WIDTH     800
 #define HEIGHT    600
 
-class ContactPage : public QWidget
+namespace Client {
+namespace GUI {
+class ContactPage : public APage
 {
     Q_OBJECT
 
     public:
         // Ctor / Dtor
-        ContactPage(QWidget *parent = nullptr);
+        ContactPage(Client::ClientInfos infos, QWidget *parent = nullptr);
         ~ContactPage() = default;
 
         // member functions
+        void initConnections() override;
         void loadPage();
         void layoutLoader();
 
@@ -44,9 +48,6 @@ class ContactPage : public QWidget
         void labelLoader();
         void callLoader();
         void formLoader();
-
-        // event handlers
-        void connexionHandler();
 
     public slots:
         void contactClicked();
@@ -79,5 +80,7 @@ class ContactPage : public QWidget
         QString _contactSelected;
         bool _calling;
 };
+}
+}
 
 #endif

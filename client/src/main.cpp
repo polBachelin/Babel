@@ -5,19 +5,11 @@
 ** main
 */
 
-#include <iostream>
-#include <QtCore>
-
-#include <QtWidgets/QApplication>
-#include <QPushButton>
-#include "Loginpage.hpp"
-#include "MainWindow.hpp"
+#include "BabelClient.hpp"
 
 int main(int argc, char *argv[])
 {
-    QApplication app(argc, argv);
-    Client::GUI::MainWindow mainWindow;
+    Client::BabelClient client(argc, argv);
 
-    mainWindow.show();
-    return app.exec();
+    return client.start();
 }

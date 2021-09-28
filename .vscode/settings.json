@@ -60,6 +60,7 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "qpushbutton": "cpp",
-        "qobject": "cpp"
+        "qobject": "cpp",
+        "qapplication": "cpp"
     }
 }
