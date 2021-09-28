@@ -56,7 +56,8 @@ namespace server {
     }
 
     interface ITcpServer {
-        +virtual void start_accept() = 0
+        +virtual void startAccept() = 0
+        +virtual void initServer(int port) = 0
     }
 
     interface ITcpConnection {
@@ -82,19 +83,20 @@ namespace server {
     }
 
     class TcpServer {
-        +Tcp_Server(io_context &io)
-        +~Tcp_Server()
-        +void accept()
-        +handle_accept(ptr new_connection, error_code &error)
+        +TcpServer(asio::io_context &)
+        +~TcpServer()
+        +void startAccept() override
+        +void initServer(int port) override
+        +void handleAccept(TcpConnection::pointer new_connection, const asio::error_code& error)
         -io_context &_io
         -accpetor _acceptor
         -std::deque<tcp_connection::pointer> _clients
     }
 
 note top of TcpConnection : : public std::enable_shared_from_this<tcp_connection>
-ITcpConnection-->TcpConnection
-ITcpServer-->TcpServer
-IDatabase-->Database
+ITcpConnection<--TcpConnection
+ITcpServer<--TcpServer
+IDatabase<-- Database
 }
 
 
