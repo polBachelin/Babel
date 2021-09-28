@@ -24,12 +24,12 @@ class Database : public IDatabase {
         CallBackData_t getInfo(const std::string &t_name, const std::string &c_name) override;
         int update(const std::string &t_name, const std::string &c_name, const std::string &id, const std::string &value) override;
         int deleteId(const std::string &t_name, const std::string &id) ;
-        int custom(const std::string &req) override;
+        CallBackData_t custom(const std::string &req) override;
     protected:
     private:
         sqlite3 *_db;
         char *_err_msg;
-        CallBackData_t _data;
+        CallBackData_t _data = {0};
 };
 
 #endif /* !Database_h */

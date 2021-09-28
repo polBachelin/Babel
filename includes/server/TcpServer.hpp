@@ -13,7 +13,7 @@
 
 #include "ITcpServer.hpp"
 #include "TcpConnection.hpp"
-#include "Database.hpp"
+#include "ContactManager.hpp"
 
 class TcpServer : public ITcpServer {
     public:
@@ -27,6 +27,5 @@ class TcpServer : public ITcpServer {
         int _port;
         asio::ip::tcp::acceptor _acceptor;
         std::deque<TcpConnection::pointer> _clients;
-        Database _db;
 
 };

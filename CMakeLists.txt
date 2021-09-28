@@ -23,7 +23,9 @@ set(SRCS_SERV
     src/server/TcpConnection.cpp
     src/server/TcpServer.cpp
     src/server/Commands.cpp
-    src/server/Database.cpp)
+    src/server/Database.cpp
+    src/server/ContactManager.cpp)
+
 
 set(SRCS_CLI
     src/client/main.cpp)

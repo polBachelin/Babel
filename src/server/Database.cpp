@@ -19,11 +19,11 @@ int callForSelect(void *data, int argc, char **argv, char **columnName)
 {
     CallBackData_t *tmp = (CallBackData_t *)data;
 
+    // for (std::size_t i = 0; i < argc; i++) {
+    //     std::cout << columnName[i] << " = " <<  (argv[i] ? argv[i] : "NULL") << std::endl;
+    // }
     for (std::size_t i = 0; i < argc; i++) {
-        std::cout << columnName[i] << " = " <<  (argv[i] ? argv[i] : "NULL") << std::endl;
-    }
-    tmp->ac = argc;
-    for (std::size_t i = 0; i < argc; i++) {
+        tmp->ac++;
         tmp->av.push_back(argv[i] ? argv[i] : "NULL");
         tmp->c_name.push_back(columnName[i]);
     }
@@ -93,6 +93,7 @@ int Database::createTable(const std::string &name, const std::string &columns)
 CallBackData_t Database::getInfo(const std::string &t_name, const std::string &c_name)
 {
     CallBackData_t data;
+    data.ac = 0;
     std::string req = "SELECT " + c_name + " FROM " + t_name + ";";
     int tmp = sqlite3_exec(_db, req.c_str(), callForSelect, &data, &_err_msg);
 
@@ -134,15 +135,18 @@ int Database::deleteId(const std::string &t_name, const std::string &id)
     return tmp;
 }
 
-int Database::custom(const std::string &req)
+CallBackData_t Database::custom(const std::string &req)
 {
-    int tmp = sqlite3_exec(_db, req.c_str(), verify, nullptr, &_err_msg);
+    CallBackData_t data;
+    data.ac = 0;
+    int tmp = sqlite3_exec(_db, req.c_str(), callForSelect, &data, &_err_msg);
 
     if (tmp != SQLITE_OK) {
         std::cerr << "SQL ERROR: " << _err_msg <<  std::endl;
         sqlite3_free(_err_msg);
-        return tmp;
+        return _data;
     }
+    _data = data;
     std::cout << "Custom request succeed" << std::endl;
-    return tmp;
+    return _data;
 }

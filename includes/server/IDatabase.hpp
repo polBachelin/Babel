@@ -26,7 +26,7 @@ class IDatabase {
         virtual CallBackData_t getInfo(const std::string &t_name, const std::string &c_name) = 0;
         virtual int update(const std::string &t_name, const std::string &c_name, const std::string &id, const std::string &value) = 0;
         virtual int deleteId(const std::string &t_name, const std::string &id) = 0;
-        virtual int custom(const std::string &req) = 0;
+        virtual CallBackData_t custom(const std::string &req) = 0;
     protected:
     private:
 };

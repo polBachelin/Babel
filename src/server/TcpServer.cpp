@@ -23,12 +23,6 @@ void TcpServer::initServer(int port)
 
 TcpServer::TcpServer(asio::io_context &io) : _io(io), _port(5000), _acceptor(io, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), _port))
 {
-    _db.open("db/database.db");
-    _db.createTable("Contact", "ID INTEGER PRIMARY KEY AUTOINCREMENT," \
-                                "NAME TEXT NOT NULL," \
-                                "FRIEND TEXT NOT NULL");
-    _db.insert("Contact", "ID, NAME, FRIEND", "1, \'Pol\', \'Simon\'");
-    auto tmp = _db.getInfo("Contact", "*");
     initServer(_port);
     startAccept();
 }
