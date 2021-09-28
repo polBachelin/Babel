@@ -8,16 +8,30 @@
 #ifndef BABELCLIENT_HPP_
 #define BABELCLIENT_HPP_
 
-class IBabelClient
+
+#include <QApplication>
+#include "PageManager.hpp"
+#include "MainWindow.hpp"
+#include <iostream>
+
+
+namespace Client {
+class BabelClient : public QApplication
 {
+
     public:
-        IBabelClient(int ac, const char **av);
-        virtual void start() = 0;
+        BabelClient(int argc, char *argv[]);
+        ~BabelClient();
+        int start();
+
 
     private:
+        Client::GUI::MainWindow mainWindow;
         //TODO: Network infos(Myip, port, ip server)
         //TODO: Interface Ipage
         //TODO: IPageManager
 };
+
+}
 
 #endif /* !BABELCLIENT_HPP_ */

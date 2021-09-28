@@ -36,7 +36,8 @@ add_executable(babel_client ${SRC_CLIENT})
 
 include_directories(${CMAKE_INCLUDE_PATH})
 target_include_directories(babel_client BEFORE PUBLIC ${PROJECT_SOURCE_DIR}/client/include)
-target_include_directories(babel_client BEFORE PUBLIC ${PROJECT_SOURCE_DIR}/client/include/pages)
+target_include_directories(babel_client BEFORE PUBLIC ${PROJECT_SOURCE_DIR}/client/include/GUI/pages)
+target_include_directories(babel_client BEFORE PUBLIC ${PROJECT_SOURCE_DIR}/client/include/GUI/)
 
 target_link_libraries(babel_client ${CONAN_LIBS} Qt5::Network Qt5::Widgets)
 

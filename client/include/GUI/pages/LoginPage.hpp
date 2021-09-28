@@ -20,16 +20,16 @@ class LoginPage : public APage
     Q_OBJECT
 
     public:
-        LoginPage(QWidget *parent = nullptr);
+        LoginPage(ClientInfos infos, QWidget *parent = nullptr);
         ~LoginPage() = default;
 
-    //public signals:
-    //    void changePageSignIn();
+        void initConnections() override;
+
 
     public slots:
         void changeWidth(int width);
         void changeUsername(QString username);
-        void initConnections() override;
+        void signIn();
 
     private:
         std::unique_ptr<QPushButton> _signButton;
@@ -37,8 +37,6 @@ class LoginPage : public APage
         std::unique_ptr<QLineEdit> _passwordForm;
         std::unique_ptr<QFormLayout> _formLayout;
 
-        QSlider *m_slider;
-        QWidget *parent;
         std::string username;
 };
 

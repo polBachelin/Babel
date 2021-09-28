@@ -1,45 +1,48 @@
 #include "LoginPage.hpp"
 #include <iostream>
 
-Client::GUI::LoginPage::LoginPage(QWidget *parent) : APage(parent)
+Client::GUI::LoginPage::LoginPage(Client::ClientInfos infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(200, 100);
 
     _usernameForm = std::make_unique<QLineEdit>();
     _passwordForm = std::make_unique<QLineEdit>();
-
+    _signButton = std::make_unique<QPushButton>("Sign In");
     _formLayout = std::make_unique<QFormLayout>();
+
     _formLayout->addRow("Username", _usernameForm.get());
     _formLayout->addRow("Password", _passwordForm.get());
-    this->setLayout(layout.get());
+    _formLayout->addRow(_signButton.get());
+
+
+    this->setLayout(_formLayout.get());
     this->setObjectName("TOTO");
     std::cout << "Nom: "<< this->objectName().toStdString() << std::endl;
 
-    //m_slider = new QSlider(Qt::Horizontal, this);
-    //m_slider->setRange(200, 600);
-    //m_slider->setGeometry(10, 60, 150, 20);
-
-    //QObject::connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(changeWidth(int)));
-    // ? (Component qui send le signal, signal type, component qui reçoit le signal, slot fonction)
-    //TODO: id de l'objet cliqué
-    QObject::connect(_usernameForm.get(), SIGNAL(textChanged(QString)), this, SLOT(changeUsername(QString)));
+    initConnections();
 }
 
 void Client::GUI::LoginPage::initConnections()
 {
-    //QObject::connect(.get(), SIGNAL(buttonPush(QString)), parent, SLOT(changePage(QString)));
+    QObject::connect(_usernameForm.get(), SIGNAL(textChanged(QString)), this, SLOT(changeUsername(QString)));
+    QObject::connect(_signButton.get(), SIGNAL(clicked()), this, SLOT(signIn()));
 }
+
+
 
 void Client::GUI::LoginPage::changeWidth(int width)
 {
     this->setFixedSize(width, 100);
 }
 
-
-
 void Client::GUI::LoginPage::changeUsername(QString username)
 {
     this->username = username.toStdString();
+}
+
+void Client::GUI::LoginPage::signIn()
+{
+    emit changePage(NEXT);
 }
 
 #include "moc_LoginPage.cpp"

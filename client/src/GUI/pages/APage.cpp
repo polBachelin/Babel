@@ -8,7 +8,8 @@
 #include "APage.hpp"
 
 
-Client::GUI::APage::APage(QWidget *parent)
+Client::GUI::APage::APage(ClientInfos infos, QWidget *parent) : _parent(parent), _infos(infos)
 {
-    
 }
+
+#include "moc_APage.cpp"
