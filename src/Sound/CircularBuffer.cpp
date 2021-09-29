@@ -56,39 +56,35 @@ int CircularBuffer::getBytesLeft() const
 	return _bytesLeft;
 }
 
-int CircularBuffer::write(const unsigned char *src, size_t len)
+bool CircularBuffer::NoMoreBytes()
+{
+	if (_bytesLeft == 0)
+		return true;
+	return false;
+}
+
+int CircularBuffer::write(const void *src, size_t len)
 {
 	if (src == nullptr || len == 0 || _bytesLeft <= 0)
 		return 0;
-	if ((int)len > _bytesLeft)
-		len = _bytesLeft;
-	if (len > _len - _headPtr) {
-		int newLen = _len - _headPtr;
-		std::memcpy(_buf + _headPtr, src, newLen);
-		std::memcpy(_buf, src + newLen, len - newLen);
-	} else
-		std::memcpy(_buf + _headPtr, src, len);
-	_headPtr = (_headPtr + len) % _len;
+	const unsigned char *t = static_cast<const unsigned char *>(src);
+	for (size_t i = 0; i < len; i++) {
+		_buf[_headPtr] = t[i];
+		_headPtr = (_headPtr + 1) % _len;
+	}
 	_bytesLeft -= len;
 	return len;
 }
 
-int CircularBuffer::read(unsigned char *src, size_t len)
+int CircularBuffer::read(void *src, size_t len)
 {
 	if (src == nullptr || len <= 0 || _bytesLeft == (int)_len)
 		return 0;
-	if (len > _len - _bytesLeft)
-		len = _len - _bytesLeft;
-	if (len > _len - _tailPtr) {
-		int newLen = _len - _tailPtr;
-		std::memcpy(_buf, src + _tailPtr, newLen);
-		std::memcpy(_buf + newLen, src, len - newLen);
-	} else
-		std::memcpy(_buf, src + _tailPtr, len);
-	_tailPtr = (_tailPtr + len) % _len;
-	_bytesLeft += len;
-	for (size_t i = 0; i < _len; i++) {
-		std::cout << _buf[i] << std::endl;
+	unsigned char *t = static_cast<unsigned char *>(src);
+	for (size_t i = 0; i < len; i++) {
+		t[i] = _buf[_tailPtr];
+		_tailPtr = (_tailPtr + 1) % _len;
 	}
+	_bytesLeft += len;
 	return len;
 }

@@ -9,7 +9,6 @@
 
 #define PA_SAMPLE_TYPE paFloat32
 #define SAMPLE_SILENCE  (0.0f)
-#define INPUT_DEVICE 4
 
 extern "C"
 {
@@ -24,7 +23,7 @@ PortAudioManager::PortAudioManager() : _buffer(nullptr), _nbChannels(2)
 
     if (Pa_Initialize() != paNoError)
         std::cout << "error on init" << std::endl;
-        //throw execption
+        //TODO add an exception
 }
 
 PortAudioManager::~PortAudioManager()
@@ -49,21 +48,16 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
                             void *userData)
 {
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
-    float *rptr = (float *)inputBuffer;
-    int finished;
+    const float *rptr = static_cast<const float *>(inputBuffer);
+    //int finished;
 
     (void) outputBuffer; /* Prevent unused variable warnings. */
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
-    void *n = rptr;
-    unsigned char *t = static_cast<unsigned char *>(n);
-    data->_buffer->write(t, framesPerBuffer);
-    if (data->_buffer->getBytesLeft() < (int)framesPerBuffer)
-        finished = paComplete;
-    else
-        finished = paContinue;
-    return finished;
+
+    data->_buffer->write(rptr, framesPerBuffer * data->_nbChannels * sizeof(float));
+    return paContinue;
 }
 
 int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
@@ -79,11 +73,9 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
-    void *n = wptr;
-    unsigned char *t = static_cast<unsigned char *>(n);
-    data->_buffer->read(t, framesPerBuffer);
+    data->_buffer->read(wptr, framesPerBuffer);
     if (data->_buffer->getBytesLeft() < (int)framesPerBuffer)
-        finished = paComplete;
+        finished = paComplete;  
     else
         finished = paContinue;
     return finished;
@@ -93,13 +85,31 @@ int PortAudioManager::recordAudio()
 {
     PaError err = paNoError;
 
-    printf("patest_record.c\n"); fflush(stdout);
     if (_buffer == nullptr)
         _buffer = std::make_shared<CircularBuffer>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
+    if( err != paNoError ) 
+        return -1;
+    err = Pa_StartStream(_inputStream);
+    if(err != paNoError) 
+        return -1;
+    printf("\n=== Now recording!! Please speak into the microphone. ===\n"); fflush(stdout);
+    while((err = Pa_IsStreamActive(_inputStream)) == 1) {
+        Pa_Sleep(1000);
+    }
+    if(err < 0) 
+        return -1;
+    err = Pa_CloseStream(_inputStream);
+    if(err != paNoError)
+        return -1;
+    return 0;
+}
+
+int PortAudioManager::openInputStream()
+{
+    PaError err = paNoError;
 
     _inputParameters.device = Pa_GetDefaultInputDevice();
-    if (_inputParameters.device == paNoDevice)
-    {
+    if (_inputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default input device.\n");
         return -1;
     }
@@ -108,30 +118,15 @@ int PortAudioManager::recordAudio()
     _inputParameters.suggestedLatency = Pa_GetDeviceInfo( _inputParameters.device )->defaultLowInputLatency;
     _inputParameters.hostApiSpecificStreamInfo = NULL;
     err = Pa_OpenStream(
-              &_stream,
-              &_inputParameters,
-              NULL,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff,
-              recordCallback,
-              this);
-    if( err != paNoError ) 
-        return -1;
-
-    err = Pa_StartStream(_stream);
-    if(err != paNoError) 
-        return -1;
-    printf("\n=== Now recording!! Please speak into the microphone. ===\n"); fflush(stdout);
-    while((err = Pa_IsStreamActive(_stream)) == 1) {
-        Pa_Sleep(1000);
-    }
-    if(err < 0) 
-        return -1;
-    err = Pa_CloseStream(_stream);
-    if(err != paNoError)
-        return -1;
-    return 0;
+            &_inputStream,
+            &_inputParameters,
+            NULL,
+            SAMPLE_RATE,
+            FRAMES_PER_BUFFER,
+            paClipOff,
+            recordCallback,
+            this);
+    
 }
 
 int PortAudioManager::playAudio()

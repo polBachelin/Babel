@@ -49,6 +49,10 @@ namespace Sound {
         +bool isStreamActive() = 0;
         +bool isMicMuted() = 0;
         +bool isOutputMuted() = 0;
+        +void setDefaultInputDevice() = 0;
+        +void setDefaultOutputDevice() = 0;
+        +std::vector<string> getInputDeviceNames() = 0;
+        +std::vector<string> getOutputDeviceNames() = 0;
         +DecodedSound getSound() const = 0;
     }
 
@@ -62,7 +66,7 @@ namespace SoundLib {
     class PortAudioManager {
         +void recordCallback();
         +void playCallback();
-        -std::shared_ptr<DecodedSound> _sound;
+        -std::shared_ptr<CircularBuffer> _sound;
         -PaStream *_stream;
         -PaStreamParameters _outputParameters;
         -PaStreamParameters _inputParameters;

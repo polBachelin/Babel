@@ -17,7 +17,7 @@
 #define SAMPLE_RATE  (48000)
 #define FRAMES_PER_BUFFER (512)
 #define NUM_SECONDS     (3)
-#define NUM_CHANNELS    (2)
+#define NUM_CHANNELS    (1)
 
 class PortAudioManager : public ISoundManager {
     
@@ -32,7 +32,13 @@ class PortAudioManager : public ISoundManager {
         ~PortAudioManager();
 
         int recordAudio() override;
+        int openInputStream();
+        
         int playAudio() override;
+        void setDefaultInputDevice() override;
+        void setDefaultOutputDevice() override;
+        std::vector<std::string> getInputDeviceNames() override;
+        std::vector<std::string> getOutputDeviceNames() override;
         bool isStreamActive() override;
         bool isMicMuted() override;
         bool isOutputMuted() override;
@@ -55,7 +61,8 @@ class PortAudioManager : public ISoundManager {
     protected:
         paData _data;
         std::shared_ptr<CircularBuffer> _buffer;
-        PaStream *_stream;
+        PaStream *_inputStream;
+        PaStream *_outputStream;
         PaStreamParameters _outputParameters;
         PaStreamParameters _inputParameters;
         size_t _nbChannels;

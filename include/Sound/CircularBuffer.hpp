@@ -10,6 +10,7 @@
 
 #include <cstddef>
 #include <cstring>
+#include <cstdint>
 
 class CircularBuffer {
   public:
@@ -18,12 +19,13 @@ class CircularBuffer {
 
     void cleanup();
     void clear();
+    bool NoMoreBytes();
     void *getHead() const;
     void *getTail() const;
     int getLen() const;
     int getBytesLeft() const;
-    int write(const unsigned char *src, size_t len);
-    int read(unsigned char *src, size_t len);
+    int write(const void *src, size_t len);
+    int read(void *src, size_t len);
 
   protected:
     unsigned char *_buf;

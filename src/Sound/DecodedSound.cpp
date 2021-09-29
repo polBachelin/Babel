@@ -48,11 +48,11 @@ void DecodedSound::setSample(float *s)
 void DecodedSound::writeToSample(const void *rptr, unsigned long framesPerBuffer, const size_t &nbChannels)
 {
 	const unsigned char *t = static_cast<const unsigned char *>(rptr);
-	_buffer.write(t, framesPerBuffer);
+//	_buffer.write(t, framesPerBuffer);
 }
 
 void DecodedSound::readFromSample(void *wptr, unsigned long framesPerBuffer, const size_t &nbChannels)
 {
 	unsigned char *t = static_cast<unsigned char *>(wptr);
-	_buffer.read(t, framesPerBuffer);
+//	_buffer.read(t, framesPerBuffer);
 }

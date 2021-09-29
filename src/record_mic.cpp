@@ -233,8 +233,8 @@ int main(void)
 
     if( err != paNoError ) goto done;
 
-    inputParameters.device = 4; /* default input device */
-    std::cout << inputParameters.device << std::endl;
+    inputParameters.device = Pa_GetDefaultInputDevice(); /* default input device */
+    std::cout << "Input : " << inputParameters.device << std::endl;
     if (inputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default input device.\n");
         goto done;
