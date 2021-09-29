@@ -1,7 +1,7 @@
 #include "LoginPage.hpp"
 #include <iostream>
 
-Client::GUI::LoginPage::LoginPage(Client::ClientInfos infos, QWidget *parent) : APage(infos, parent)
+Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(200, 100);
 
@@ -42,7 +42,7 @@ void Client::GUI::LoginPage::changeUsername(QString username)
 
 void Client::GUI::LoginPage::signIn()
 {
-    emit changePage(NEXT);
+    emit changePage(CONTACTS);
 }
 
 #include "moc_LoginPage.cpp"

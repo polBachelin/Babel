@@ -3,12 +3,13 @@
         {
             "name": "Linux",
             "includePath": [
-                "/home/evan/.conan/data/**",
+                "/home/sim/.conan/data/**",
                 "${workspaceFolder}/client/include/**",
-                "${workspaceFolder}/client/include/pages/**"
+                "${workspaceFolder}/client/include/pages/**",
+                "${workspaceFolder}/build/babel_client_autogen/include/**"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
+            "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
             "intelliSenseMode": "linux-clang-x64",
             "compilerArgs": [],
@@ -16,7 +17,7 @@
             "configurationProvider": "ms-vscode.cmake-tools",
             "browse": {
                 "path": [
-                    "/home/evan/.conan/data/**",
+                    "/home/sim/.conan/data/**",
                     "${workspaceFolder}"
                 ],
                 "limitSymbolsToIncludedHeaders": true

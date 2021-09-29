@@ -36,6 +36,9 @@ void MainWindow::initConnections(void)
     QObject::connect(
         _pages.getPage(NEXT), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
+    QObject::connect(
+        _pages.getPage(CONTACTS), SIGNAL(changePage(pageNames)),
+        this, SLOT(changeCurrentPage(pageNames)));
 }
 
 #include "moc_MainWindow.cpp"

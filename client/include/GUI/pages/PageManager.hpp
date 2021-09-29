@@ -14,6 +14,7 @@
 #include <iostream>
 #include "LoginPage.hpp"
 #include "NextPage.hpp"
+#include "ContactPage.hpp"
 
 namespace Client
 {

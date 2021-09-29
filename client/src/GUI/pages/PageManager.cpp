@@ -13,6 +13,7 @@ PageManager::PageManager(QWidget *parent) : _parent(parent)
 {
     this->addPage(LOGIN);
     this->addPage(NEXT);
+    this->addPage(CONTACTS);
     std::cout << "Page manager created" << std::endl;
 }
 
@@ -30,6 +31,9 @@ void PageManager::addPage(pageNames name)
             break;
         case NEXT:
             this->_pages.emplace(NEXT, std::make_unique<NextPage>(_infos, _parent));
+            break;
+        case CONTACTS:
+            this->_pages.emplace(CONTACTS, std::make_unique<ContactPage>(_infos, _parent));
             break;
         default:
             break;
