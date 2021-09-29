@@ -11,6 +11,7 @@
 #include "ISoundManager.hpp"
 #include "CircularBuffer.hpp"
 #include "portaudio.h"
+#include "PortAudioException.hpp"
 #include <iostream>
 #include <memory>
 
@@ -31,9 +32,9 @@ class PortAudioManager : public ISoundManager {
         PortAudioManager();
         ~PortAudioManager();
 
-        int recordAudio() override;
         int openInputStream();
-        
+        int openOutputStream();
+        int recordAudio() override;
         int playAudio() override;
         void setDefaultInputDevice() override;
         void setDefaultOutputDevice() override;
@@ -43,6 +44,8 @@ class PortAudioManager : public ISoundManager {
         bool isOutputStreamActive() override;
         bool isMicMuted() override;
         bool isOutputMuted() override;
+        void closeOutputStream() override;
+        void closeInputStream() override;
 
         static int recordCallback(const void *inputBuffer, void *outputBuffer,
                             unsigned long framesPerBuffer,

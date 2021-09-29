@@ -9,6 +9,7 @@
 #include "ISoundManager.hpp"
 #include "DLLoader.hpp"
 #include "ConfigFileParser.hpp"
+#include "Error.hpp"
 #include <unordered_map>
 
 int main(void)
@@ -19,8 +20,11 @@ int main(void)
     std::shared_ptr<ISoundManager> ptr = DLLoader<ISoundManager>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::SOUND].front());
     
     if (ptr) {
-        ptr->recordAudio();
-        ptr->playAudio();
+        try {
+            ptr->recordAudio();
+        } catch (std::exception &e) {
+            std::cout << e.what() << std::endl;
+        }
     }
     return 0;
 }

@@ -33,7 +33,6 @@ class CircularBuffer {
     int _headPtr;
     int _tailPtr;
     int _bytesLeft;
-  private:
 };
 
 #endif /* !CIRCULARBUFFER_HPP_ */

@@ -65,7 +65,6 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
 {
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     const float *rptr = static_cast<const float *>(inputBuffer);
-    //int finished;
 
     (void) outputBuffer; /* Prevent unused variable warnings. */
     (void) timeInfo;
@@ -89,40 +88,14 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
 {
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *wptr = (float *)outputBuffer;
-    int finished;
+
     (void) inputBuffer; /* Prevent unused variable warnings. */
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
+
     data->_buffer->read(wptr, framesPerBuffer);
-    if (data->_buffer->getBytesLeft() < (int)framesPerBuffer)
-        finished = paComplete;  
-    else
-        finished = paContinue;
-    return finished;
-}
-
-int PortAudioManager::recordAudio()
-{
-    PaError err = paNoError;
-
-    if (_buffer == nullptr)
-        _buffer = std::make_shared<CircularBuffer>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
-    if( err != paNoError ) 
-        return -1;
-    err = Pa_StartStream(_inputStream);
-    if(err != paNoError) 
-        return -1;
-    printf("\n=== Now recording!! Please speak into the microphone. ===\n"); fflush(stdout);
-    while((err = Pa_IsStreamActive(_inputStream)) == 1) {
-        Pa_Sleep(1000);
-    }
-    if(err < 0) 
-        return -1;
-    err = Pa_CloseStream(_inputStream);
-    if(err != paNoError)
-        return -1;
-    return 0;
+    return paContinue;
 }
 
 int PortAudioManager::openInputStream()
@@ -147,14 +120,13 @@ int PortAudioManager::openInputStream()
             paClipOff,
             recordCallback,
             this);
+    return 0;
 }
 
-int PortAudioManager::playAudio()
+int PortAudioManager::openOutputStream()
 {
     PaError err;
 
-    if (_buffer == nullptr)
-        return -1;
     _outputParameters.device = Pa_GetDefaultOutputDevice(); /* default output device */
     if (_outputParameters.device == paNoDevice) {
         fprintf(stderr,"Error: No default output device.\n");
@@ -164,39 +136,71 @@ int PortAudioManager::playAudio()
     _outputParameters.sampleFormat =  PA_SAMPLE_TYPE;
     _outputParameters.suggestedLatency = Pa_GetDeviceInfo(_outputParameters.device )->defaultLowOutputLatency;
     _outputParameters.hostApiSpecificStreamInfo = NULL;
-
-    printf("\n=== Now playing back. ===\n"); fflush(stdout);
     err = Pa_OpenStream(
-              &_outputStream,
-              NULL, /* no input */
-              &_outputParameters,
-              SAMPLE_RATE,
-              FRAMES_PER_BUFFER,
-              paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-              playCallback,
-              this);
-    if(err != paNoError)
-        return -1;
-    if(_outputStream) {
-        err = Pa_StartStream(_outputStream);
-        if(err != paNoError)
+            &_outputStream,
+            NULL, /* no input */
+            &_outputParameters,
+            SAMPLE_RATE,
+            FRAMES_PER_BUFFER,
+            paClipOff,      /* we won't output out of range samples so don't bother clipping them */
+            playCallback,
+            this);
+    return 0;
+}
+
+
+int PortAudioManager::recordAudio()
+{
+    PaError err = paNoError;
+
+    if (_inputStream) {
+        try {
+            closeInputStream();
+        } catch (PortAudioException &e) {
+            std::cerr << e.what() << std::endl;
             return -1;
-        printf("Waiting for playback to finish.\n"); fflush(stdout);
-        while( ( err = Pa_IsStreamActive(_outputStream)) == 1)
-            Pa_Sleep(100);
-        if(err < 0)
-            return -1;
-        err = Pa_CloseStream(_outputStream);
-        if( err != paNoError)
-            return -1;
-        printf("Done.\n"); fflush(stdout);
+        }
     }
-    return err;
+    if (_buffer == nullptr)
+        _buffer = std::make_shared<CircularBuffer>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
+    openInputStream();
+    if (_inputStream)
+        err = Pa_StartStream(_inputStream);
+    if(err != paNoError) 
+        return -1;
+    return 0;
+}
+
+int PortAudioManager::playAudio()
+{
+    PaError err;
+
+    if (_outputStream) {
+        try {
+            closeOutputStream();
+        } catch (PortAudioException &e) {
+            std::cerr << e.what() << std::endl;
+            return -1;
+        }
+    }
+    openOutputStream();
+    if (_outputStream)
+        err = Pa_StartStream(_outputStream);
+    if(err != paNoError) 
+        return -1;
+    return 0;
 }
 
 bool PortAudioManager::isInputStreamActive()
 {
     if (Pa_IsStreamActive(_inputStream))
+        return 1;
+    return 0;
+}
+
+bool PortAudioManager::isOutputStreamActive()
+{
+    if (Pa_IsStreamActive(_outputStream))
         return 1;
     return 0;
 }
@@ -209,4 +213,32 @@ bool PortAudioManager::isMicMuted()
 bool PortAudioManager::isOutputMuted()
 {
     return false;
+}
+
+void PortAudioManager::closeOutputStream()
+{
+    PaError err;
+
+    if (_outputStream) {
+        err = Pa_AbortStream(_outputStream);
+        if (err != paNoError)
+            throw PortAudioException("Could not abort output stream");
+        err = Pa_CloseStream(_outputStream);
+        if (err != paNoError)
+            throw PortAudioException("Could not close output stream");
+    }
+}
+
+void PortAudioManager::closeInputStream()
+{
+    PaError err;
+
+    if (_inputStream) {
+        err = Pa_AbortStream(_inputStream);
+        if (err != paNoError)
+            throw PortAudioException("Could not abort input stream");
+        err = Pa_CloseStream(_inputStream);
+        if (err != paNoError)
+            throw PortAudioException("Could not close input stream");
+    }
 }

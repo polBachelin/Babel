@@ -24,6 +24,8 @@ class ISoundManager {
         virtual std::vector<std::string> getOutputDeviceNames() const = 0;
         virtual bool isInputStreamActive() = 0;
         virtual bool isOutputStreamActive() = 0;
+        virtual void closeOutputStream() = 0;
+        virtual void closeInputStream() = 0;
 };
 
 #endif /* !ISOUNDMANAGER_HPP_ */

@@ -17,9 +17,11 @@ DESCRIPTION "PortAudio Lib"
 )
 
 include_directories(./)
+include_directories(./Exception)
 
 set(SRCS
     CircularBuffer.cpp
+    Exception/Error.cpp
     PortAudioManager.cpp)
 
 
