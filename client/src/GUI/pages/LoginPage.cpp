@@ -34,7 +34,9 @@ void Client::GUI::LoginPage::btnLoader()
     _signButton = std::make_unique<QPushButton>("Sign In");
     _registerButton = std::make_unique<QPushButton>("Create an account");
 
+    _registerButton->setStyleSheet("QPushButton { text-decoration: underline; } QPushButton:hover { color: blue; text-decoration: underline; }");
     _registerButton->setFlat(true);
+    _signButton->setDefault(true);
 }
 
 void Client::GUI::LoginPage::labelLoader()
