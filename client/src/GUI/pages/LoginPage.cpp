@@ -141,7 +141,7 @@ void Client::GUI::LoginPage::signIn()
         return;
     }
 
-    std::cout << "GOTO - contact page" << std::endl;
+    std::cout << "GOTO - contact page" << std::endl << std::endl;
 
     _username = "";
     _password = "";

@@ -162,7 +162,7 @@ void Client::GUI::RegisterPage::createAccount()
         return;
     }
 
-    std::cout << "GOTO - contact page" << std::endl;
+    std::cout << "GOTO - contact page" << std::endl << std::endl;
 
     _username = "";
     _password = "";

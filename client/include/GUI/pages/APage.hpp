@@ -35,8 +35,8 @@ namespace GUI {
         {
             LOGIN,
             REGISTER,
-            CONTACTS,
-            NEXT
+            CONTACTS
+            // NEXT
         };
 
 class APage : public QWidget
