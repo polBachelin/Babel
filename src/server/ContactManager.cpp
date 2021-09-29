@@ -12,7 +12,6 @@ ContactManager::ContactManager() : _db("db/database.db"), _tableName("Contact")
     _db.createTable("Contact", "ID INTEGER PRIMARY KEY AUTOINCREMENT," \
                                 "NAME TEXT NOT NULL," \
                                 "FRIEND TEXT NOT NULL");
-    auto tmp = _db.getInfo("Contact", "*");
 }
 
 ContactManager::ContactManager(const std::string &name) : _myName(name), _db("db/database.db"), _tableName("Contact")
@@ -24,6 +23,7 @@ ContactManager::ContactManager(const std::string &name) : _myName(name), _db("db
 
 ContactManager::~ContactManager()
 {
+    _db.close();
 }
 
 
@@ -72,4 +72,9 @@ std::string ContactManager::getContactList(const std::string &your_name)
         }
     }
     return res;
+}
+
+void ContactManager::setName(const std::string &name)
+{
+    _myName = name;
 }
