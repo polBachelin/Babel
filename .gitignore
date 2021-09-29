@@ -2,3 +2,4 @@ build/
 Dockerfile
 build.sh
 compiler.sh
+.vscode

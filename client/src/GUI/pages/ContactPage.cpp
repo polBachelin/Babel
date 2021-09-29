@@ -54,6 +54,7 @@ void Client::GUI::ContactPage::callLoader()
 {
     _imgCall = std::make_unique<QPixmap>(CALL_PATH);
     _call = std::make_unique<QPushButton>();
+    _backButton = std::make_unique<QPushButton>("Log Out");
 
     QIcon icon(*_imgCall);
     QSize iconSize(_imgCall->width(), _imgCall->height());
@@ -110,6 +111,8 @@ void Client::GUI::ContactPage::layoutLoader()
     _layout->addWidget(_delim["vertical"].get(), 4, 15, HEIGHT / 20, 1);
     _layout->addWidget(_contactSearch.get(), 6, 2, 2, 10);
     _layout->addWidget(_writeMsg.get(), 29, 16, 2, WIDTH / 20 - 15);
+    _layout->addWidget(_backButton.get(), 4, WIDTH / 20, 3, 1);
+
     for (std::size_t i = 0; i < _contacts.size(); i++)
         _layout->addWidget(_contacts[i].get(), 8 + i * 2, 2, 3, 10);
 
@@ -124,6 +127,7 @@ void Client::GUI::ContactPage::initConnections()
     for (auto &contact : _contacts)
         QObject::connect(contact.get(), SIGNAL(clicked()), this, SLOT(contactClicked()));
     QObject::connect(_call.get(), SIGNAL(clicked()), this, SLOT(callClicked()));
+    QObject::connect(_backButton.get(), SIGNAL(clicked()), this, SLOT(logOut()));
 }
 
 void Client::GUI::ContactPage::contactClicked()
@@ -148,6 +152,11 @@ void Client::GUI::ContactPage::callClicked()
     else if (!_contactSelected.isEmpty())
         _calling = true;
     _labelCalling->setText((!_contactSelected.isEmpty() && _calling ? "calling..." : ""));
+}
+
+void Client::GUI::ContactPage::logOut()
+{
+    emit changePage(LOGIN);
 }
 
 #include "moc_ContactPage.cpp"

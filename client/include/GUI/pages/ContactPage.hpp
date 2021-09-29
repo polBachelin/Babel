@@ -52,6 +52,8 @@ class ContactPage : public APage
     public slots:
         void contactClicked();
         void callClicked();
+        void logOut();
+
 
     private:
         // Layout
@@ -72,6 +74,7 @@ class ContactPage : public APage
         // Widget lists
         std::map<std::string, std::unique_ptr<QFrame>> _delim;
         std::vector<std::shared_ptr<QPushButton>> _contacts;
+        std::unique_ptr<QPushButton> _backButton;
 
         // member variables
         QSlider *   _m_slider;
