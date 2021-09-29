@@ -24,7 +24,8 @@ class NextPage : public APage
         ~NextPage();
 
         void initConnections() override;
-
+        void loadPage() override;
+        void layoutLoader() override;
 
     public slots:
         void goBack();

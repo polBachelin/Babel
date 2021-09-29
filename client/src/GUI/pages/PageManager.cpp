@@ -43,9 +43,8 @@ void PageManager::addPage(pageNames name)
 
 void PageManager::setCurrentPage(pageNames name)
 {
-        APage *page = getPage(name);
-        page->initConnections();
-        this->setCurrentWidget(page);
+    APage *page = getPage(name);
+    this->setCurrentWidget(page);
 }
 
 APage *PageManager::getPage(pageNames name)

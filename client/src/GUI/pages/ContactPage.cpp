@@ -33,6 +33,9 @@ void Client::GUI::ContactPage::formLoader()
 {
     _contactSearch = std::make_unique<QLineEdit>();
     _writeMsg = std::make_unique<QLineEdit>();
+
+    _contactSearch->setPlaceholderText("search . . .");
+    _writeMsg->setPlaceholderText("write a mesage . . .");
 }
 
 void Client::GUI::ContactPage::labelLoader()
@@ -98,20 +101,25 @@ void Client::GUI::ContactPage::delimLoader()
 
 void Client::GUI::ContactPage::layoutLoader()
 {
+    _emptyLabel = std::make_unique<QLabel>();
     _layout = std::make_unique<QGridLayout>();
 
+    for (std::size_t i = 0; i < HEIGHT / 20; i++)
+        _layout->addWidget(_emptyLabel.get(), i, 0);
+    for (std::size_t i = 0; i < WIDTH / 20; i++)
+        _layout->addWidget(_emptyLabel.get(), 0, i);
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
     _layout->addWidget(_labelPageName.get(), 0, 4, 3, 10);
     _layout->addWidget(_labelContactName.get(), 5, 3, 1, 5);
     _layout->addWidget(_labelContactSelected.get(), 4, 16, 1, 10);
-    _layout->addWidget(_labelCalling.get(), 5, WIDTH / 20 - 5, 1, 5);
+    _layout->addWidget(_labelCalling.get(), 5, WIDTH / 20 - 5, 2, 5);
     _layout->addWidget(_call.get(), 4, WIDTH / 20, 3, 1);
     _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
     _layout->addWidget(_delim["horizontal2"].get(), 7, 16, 1, WIDTH / 20 - 15);
     _layout->addWidget(_delim["vertical"].get(), 4, 15, HEIGHT / 20, 1);
     _layout->addWidget(_contactSearch.get(), 6, 2, 2, 10);
-    _layout->addWidget(_writeMsg.get(), 29, 16, 2, WIDTH / 20 - 15);
-    _layout->addWidget(_backButton.get(), 10, WIDTH / 20, 3, 1);
+    _layout->addWidget(_writeMsg.get(), 28, 16, 2, WIDTH / 20 - 15);
+    _layout->addWidget(_backButton.get(), 0, WIDTH / 20, 2, 2);
 
     for (std::size_t i = 0; i < _contacts.size(); i++)
         _layout->addWidget(_contacts[i].get(), 8 + i * 2, 2, 3, 10);
@@ -132,7 +140,7 @@ void Client::GUI::ContactPage::initConnections()
 
 void Client::GUI::ContactPage::contactClicked()
 {
-    QPushButton* buttonSender = qobject_cast<QPushButton*>(sender());
+    QPushButton *buttonSender = qobject_cast<QPushButton *>(sender());
 
     _calling = false;
     _labelCalling->setText("");

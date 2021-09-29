@@ -22,6 +22,13 @@ Client::GUI::NextPage::~NextPage()
     std::cout << "NextPage détruit" << std::endl;
 }
 
+void Client::GUI::NextPage::loadPage()
+{
+}
+
+void Client::GUI::NextPage::layoutLoader()
+{
+}
 
 void Client::GUI::NextPage::initConnections()
 {
