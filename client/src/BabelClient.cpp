@@ -9,7 +9,7 @@
 
 using namespace Client;
 
-BabelClient::BabelClient(int argc, char *argv[]) : QApplication(argc, argv)
+BabelClient::BabelClient(int &argc, char **argv) : QApplication(argc, argv)
 {
 }
 
@@ -24,5 +24,6 @@ BabelClient::~BabelClient()
 int BabelClient::start()
 {
     mainWindow.show();
+
     return this->exec();
 }

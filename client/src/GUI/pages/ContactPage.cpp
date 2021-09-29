@@ -111,7 +111,7 @@ void Client::GUI::ContactPage::layoutLoader()
     _layout->addWidget(_delim["vertical"].get(), 4, 15, HEIGHT / 20, 1);
     _layout->addWidget(_contactSearch.get(), 6, 2, 2, 10);
     _layout->addWidget(_writeMsg.get(), 29, 16, 2, WIDTH / 20 - 15);
-    _layout->addWidget(_backButton.get(), 4, WIDTH / 20, 3, 1);
+    _layout->addWidget(_backButton.get(), 10, WIDTH / 20, 3, 1);
 
     for (std::size_t i = 0; i < _contacts.size(); i++)
         _layout->addWidget(_contacts[i].get(), 8 + i * 2, 2, 3, 10);
@@ -124,15 +124,16 @@ void Client::GUI::ContactPage::layoutLoader()
 
 void Client::GUI::ContactPage::initConnections()
 {
+    QObject::connect(_backButton.get(), SIGNAL(clicked()), this, SLOT(logOut()));
     for (auto &contact : _contacts)
         QObject::connect(contact.get(), SIGNAL(clicked()), this, SLOT(contactClicked()));
     QObject::connect(_call.get(), SIGNAL(clicked()), this, SLOT(callClicked()));
-    QObject::connect(_backButton.get(), SIGNAL(clicked()), this, SLOT(logOut()));
 }
 
 void Client::GUI::ContactPage::contactClicked()
 {
     QPushButton* buttonSender = qobject_cast<QPushButton*>(sender());
+
     _calling = false;
     _labelCalling->setText("");
     if (_contactSelected == buttonSender->text()) {

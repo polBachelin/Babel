@@ -20,7 +20,7 @@ class BabelClient : public QApplication
 {
 
     public:
-        BabelClient(int argc, char *argv[]);
+        BabelClient(int &argc, char **argv);
         ~BabelClient();
         int start();
 
