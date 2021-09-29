@@ -34,7 +34,9 @@ class RegisterPage : public APage
 
     public slots:
         void changeWidth(int width);
-        void changeUsername(QString username);
+        void changeUsername(QString);
+        void changePassword(QString);
+        void changeConfirmPassword(QString);
         void createAccount();
         void signIn();
 
@@ -49,15 +51,23 @@ class RegisterPage : public APage
         std::unique_ptr<QLabel> _emptyLabel;
         std::unique_ptr<QLabel> _textLabel;
         std::unique_ptr<QPushButton> _signButton;
-        std::unique_ptr<QPushButton> _registerButton;
+
+        // FORM
         std::unique_ptr<QLineEdit> _usernameForm;
+        std::unique_ptr<QLabel> _errorUsername;
         std::unique_ptr<QLineEdit> _passwordForm;
+        std::unique_ptr<QLabel> _errorPassword;
         std::unique_ptr<QLineEdit> _confirmPasswordForm;
+        std::unique_ptr<QLabel> _errorConfirmPassword;
+        std::unique_ptr<QPushButton> _registerButton;
 
         // Widget lists
         std::map<std::string, std::unique_ptr<QFrame>> _delim;
 
         std::string _username;
+        std::string _password;
+        std::string _confirmPassword;
+        bool _formError;
 };
 
 }}

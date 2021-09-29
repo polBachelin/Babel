@@ -165,6 +165,15 @@ void Client::GUI::ContactPage::callClicked()
 
 void Client::GUI::ContactPage::logOut()
 {
+    std::cout << "GOTO - login page" << std::endl << std::endl;
+
+    _contactSelected = "";
+    _username = "";
+    _calling = false;
+    _labelContactSelected->setText(_contactSelected);
+    _labelCalling->setText((!_contactSelected.isEmpty() && _calling ? "calling..." : ""));
+    _call->hide();
+
     emit changePage(LOGIN);
 }
 
