@@ -147,7 +147,6 @@ int PortAudioManager::openInputStream()
             paClipOff,
             recordCallback,
             this);
-    
 }
 
 int PortAudioManager::playAudio()
@@ -195,9 +194,9 @@ int PortAudioManager::playAudio()
     return err;
 }
 
-bool PortAudioManager::isStreamActive()
+bool PortAudioManager::isInputStreamActive()
 {
-    if (Pa_IsStreamActive(_outputStream))
+    if (Pa_IsStreamActive(_inputStream))
         return 1;
     return 0;
 }
