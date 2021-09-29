@@ -37,8 +37,8 @@ class PortAudioManager : public ISoundManager {
         int playAudio() override;
         void setDefaultInputDevice() override;
         void setDefaultOutputDevice() override;
-        std::vector<std::string> getInputDeviceNames() override;
-        std::vector<std::string> getOutputDeviceNames() override;
+        std::vector<std::string> getInputDeviceNames() const override;
+        std::vector<std::string> getOutputDeviceNames() const override;
         bool isStreamActive() override;
         bool isMicMuted() override;
         bool isOutputMuted() override;

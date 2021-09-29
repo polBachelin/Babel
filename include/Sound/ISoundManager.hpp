@@ -20,8 +20,8 @@ class ISoundManager {
         virtual bool isOutputMuted() = 0;
         virtual void setDefaultInputDevice() = 0;
         virtual void setDefaultOutputDevice() = 0;
-        virtual std::vector<std::string> getInputDeviceNames() = 0;
-        virtual std::vector<std::string> getOutputDeviceNames() = 0;
+        virtual std::vector<std::string> getInputDeviceNames() const = 0;
+        virtual std::vector<std::string> getOutputDeviceNames() const = 0;
         virtual bool isStreamActive() = 0;
 };
 

@@ -41,6 +41,22 @@ void PortAudioManager::setNbChannels(const size_t &nbChannels)
     _nbChannels = nbChannels;
 }
 
+void PortAudioManager::setDefaultInputDevice()
+{
+    _inputParameters.device = Pa_GetDefaultInputDevice();
+}
+
+void PortAudioManager::setDefaultOutputDevice()
+{
+    _outputParameters.device = Pa_GetDefaultOutputDevice();
+}
+
+std::vector<std::string> PortAudioManager::getInputDeviceNames() const
+{}
+
+std::vector<std::string> PortAudioManager::getOutputDeviceNames() const
+{}
+
 int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer,
                             unsigned long framesPerBuffer,
                             const PaStreamCallbackTimeInfo* timeInfo,
@@ -56,6 +72,11 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     (void) statusFlags;
     (void) userData;
 
+    // if (data->isMicMuted()) {
+
+    //     std::memset(, SAMPLE_SILENCE, framesPerBuffer * data->_nbChannels * sizeof(float));
+
+    // } else
     data->_buffer->write(rptr, framesPerBuffer * data->_nbChannels * sizeof(float));
     return paContinue;
 }
@@ -147,7 +168,7 @@ int PortAudioManager::playAudio()
 
     printf("\n=== Now playing back. ===\n"); fflush(stdout);
     err = Pa_OpenStream(
-              &_stream,
+              &_outputStream,
               NULL, /* no input */
               &_outputParameters,
               SAMPLE_RATE,
@@ -157,16 +178,16 @@ int PortAudioManager::playAudio()
               this);
     if(err != paNoError)
         return -1;
-    if(_stream) {
-        err = Pa_StartStream(_stream);
+    if(_outputStream) {
+        err = Pa_StartStream(_outputStream);
         if(err != paNoError)
             return -1;
         printf("Waiting for playback to finish.\n"); fflush(stdout);
-        while( ( err = Pa_IsStreamActive(_stream)) == 1)
+        while( ( err = Pa_IsStreamActive(_outputStream)) == 1)
             Pa_Sleep(100);
         if(err < 0)
             return -1;
-        err = Pa_CloseStream(_stream);
+        err = Pa_CloseStream(_outputStream);
         if( err != paNoError)
             return -1;
         printf("Done.\n"); fflush(stdout);
@@ -176,7 +197,7 @@ int PortAudioManager::playAudio()
 
 bool PortAudioManager::isStreamActive()
 {
-    if (Pa_IsStreamActive(_stream))
+    if (Pa_IsStreamActive(_outputStream))
         return 1;
     return 0;
 }
