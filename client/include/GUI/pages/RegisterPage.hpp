@@ -2,24 +2,24 @@
 ** EPITECH PROJECT, 2021
 ** Babel
 ** File description:
-** LoginPage
+** RegisterPage
 */
 
-#ifndef DEF_MAFENETRE
-#define DEF_MAFENETRE
+#ifndef DEF_REGISTERPAGE
+#define DEF_REGISTERPAGE
 
 #include "APage.hpp"
 
 namespace Client {
 namespace GUI {
 
-class LoginPage : public APage
+class RegisterPage : public APage
 {
     Q_OBJECT
 
     public:
-        LoginPage(ClientInfos infos, QWidget *parent = nullptr);
-        ~LoginPage() = default;
+        RegisterPage(ClientInfos infos, QWidget *parent = nullptr);
+        ~RegisterPage() = default;
 
         // member functions
         void initConnections() override;
@@ -35,8 +35,8 @@ class LoginPage : public APage
     public slots:
         void changeWidth(int width);
         void changeUsername(QString username);
-        void signIn();
         void createAccount();
+        void signIn();
 
     private:
         // Layout
@@ -52,6 +52,7 @@ class LoginPage : public APage
         std::unique_ptr<QPushButton> _registerButton;
         std::unique_ptr<QLineEdit> _usernameForm;
         std::unique_ptr<QLineEdit> _passwordForm;
+        std::unique_ptr<QLineEdit> _confirmPasswordForm;
 
         // Widget lists
         std::map<std::string, std::unique_ptr<QFrame>> _delim;

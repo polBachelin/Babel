@@ -19,6 +19,7 @@
 #include <QtCore/QObject>
 #include <QPixmap>
 #include <vector>
+#include <iostream>
 #include "structs.hpp"
 
 #define LOGO_PATH "./assets/babelLogo_48x48.png"
@@ -33,6 +34,7 @@ namespace GUI {
     enum pageNames
         {
             LOGIN,
+            REGISTER,
             CONTACTS,
             NEXT
         };

@@ -2,12 +2,12 @@
 ** EPITECH PROJECT, 2021
 ** Babel
 ** File description:
-** LoginPage
+** RegisterPage
 */
 
-#include "LoginPage.hpp"
+#include "RegisterPage.hpp"
 
-Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(infos, parent)
+Client::GUI::RegisterPage::RegisterPage(ClientInfos infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(WIDTH, HEIGHT);
 
@@ -20,7 +20,7 @@ Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(in
 
 // LOADERS
 
-void Client::GUI::LoginPage::loadPage()
+void Client::GUI::RegisterPage::loadPage()
 {
     btnLoader();
     labelLoader();
@@ -28,15 +28,15 @@ void Client::GUI::LoginPage::loadPage()
     delimLoader();
 }
 
-void Client::GUI::LoginPage::btnLoader()
+void Client::GUI::RegisterPage::btnLoader()
 {
-    _signButton = std::make_unique<QPushButton>("Sign In");
-    _registerButton = std::make_unique<QPushButton>("Create an account");
+    _registerButton = std::make_unique<QPushButton>("Register");
+    _signButton = std::make_unique<QPushButton>("Log in");
 
-    _registerButton->setFlat(true);
+    _signButton->setFlat(true);
 }
 
-void Client::GUI::LoginPage::labelLoader()
+void Client::GUI::RegisterPage::labelLoader()
 {
     _imgLogo = std::make_unique<QImage>(LOGO_PATH);
     _textLabel = std::make_unique<QLabel>();
@@ -45,20 +45,22 @@ void Client::GUI::LoginPage::labelLoader()
 
     _labelLogo->setPixmap(QPixmap::fromImage(*_imgLogo));
     _labelLogo->setToolTip("logo du babel des boss du jeu");
-    _labelPageName->setText("Babel :: Login Page");
+    _labelPageName->setText("Babel :: Register Page");
     _textLabel->setText("or");
 }
 
-void Client::GUI::LoginPage::formLoader()
+void Client::GUI::RegisterPage::formLoader()
 {
     _usernameForm = std::make_unique<QLineEdit>();
     _passwordForm = std::make_unique<QLineEdit>();
+    _confirmPasswordForm = std::make_unique<QLineEdit>();
 
     _usernameForm->setPlaceholderText("Username");
     _passwordForm->setPlaceholderText("Password");
+    _confirmPasswordForm->setPlaceholderText("confirm your password");
 }
 
-void Client::GUI::LoginPage::delimLoader()
+void Client::GUI::RegisterPage::delimLoader()
 {
     _delim["horizontal"] = std::make_unique<QFrame>();
 
@@ -67,7 +69,7 @@ void Client::GUI::LoginPage::delimLoader()
     _delim["horizontal"]->setFrameShape(QFrame::HLine);
 }
 
-void Client::GUI::LoginPage::layoutLoader()
+void Client::GUI::RegisterPage::layoutLoader()
 {
     _emptyLabel = std::make_unique<QLabel>();
     _layout = std::make_unique<QGridLayout>();
@@ -81,9 +83,10 @@ void Client::GUI::LoginPage::layoutLoader()
     _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
     _layout->addWidget(_usernameForm.get(), 10, 12, 4, 15);
     _layout->addWidget(_passwordForm.get(), 13, 12, 4, 15);
-    _layout->addWidget(_signButton.get(), 18, 8, 2, 10);
-    _layout->addWidget(_textLabel.get(), 18, 20, 2, 2);
-    _layout->addWidget(_registerButton.get(), 18, 22, 2, 10);
+    _layout->addWidget(_confirmPasswordForm.get(), 16, 12, 4, 15);
+    _layout->addWidget(_registerButton.get(), 21, 8, 2, 10);
+    _layout->addWidget(_textLabel.get(), 21, 20, 2, 2);
+    _layout->addWidget(_signButton.get(), 21, 21, 2, 10);
 
     this->setLayout(_layout.get());
     initConnections();
@@ -91,31 +94,31 @@ void Client::GUI::LoginPage::layoutLoader()
 
 // CONEXION -- EVENT HANDLER
 
-void Client::GUI::LoginPage::initConnections()
+void Client::GUI::RegisterPage::initConnections()
 {
     QObject::connect(_usernameForm.get(), SIGNAL(textChanged(QString)), this, SLOT(changeUsername(QString)));
-    QObject::connect(_signButton.get(), SIGNAL(clicked()), this, SLOT(signIn()));
     QObject::connect(_registerButton.get(), SIGNAL(clicked()), this, SLOT(createAccount()));
+    QObject::connect(_signButton.get(), SIGNAL(clicked()), this, SLOT(signIn()));
 }
 
-void Client::GUI::LoginPage::changeWidth(int width)
+void Client::GUI::RegisterPage::changeWidth(int width)
 {
     this->setFixedSize(width, 100);
 }
 
-void Client::GUI::LoginPage::changeUsername(QString username)
+void Client::GUI::RegisterPage::changeUsername(QString username)
 {
     this->_username = username.toStdString();
 }
 
-void Client::GUI::LoginPage::signIn()
+void Client::GUI::RegisterPage::createAccount()
 {
     emit changePage(CONTACTS);
 }
 
-void Client::GUI::LoginPage::createAccount()
+void Client::GUI::RegisterPage::signIn()
 {
-    emit changePage(REGISTER);
+    emit changePage(LOGIN);
 }
 
-#include "moc_LoginPage.cpp"
+#include "moc_RegisterPage.cpp"
