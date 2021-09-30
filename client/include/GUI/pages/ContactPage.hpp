@@ -50,7 +50,6 @@ class ContactPage : public APage
         std::unique_ptr<QLabel> _labelPageName;
         std::unique_ptr<QLabel> _labelContactName;
         std::unique_ptr<QLabel> _labelContactSelected;
-        std::unique_ptr<QLabel> _labelCalling;
         std::unique_ptr<QLabel> _emptyLabel;
         std::unique_ptr<QPushButton> _call;
         std::unique_ptr<QLineEdit> _contactSearch;
@@ -66,7 +65,6 @@ class ContactPage : public APage
         QWidget *   _parent;
         std::string _username;
         QString _contactSelected;
-        bool _calling;
 };
 
 }}

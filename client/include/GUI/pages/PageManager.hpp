@@ -13,7 +13,7 @@
 #include "APage.hpp"
 #include <iostream>
 #include "LoginPage.hpp"
-// #include "NextPage.hpp"
+#include "CallPage.hpp"
 #include "ContactPage.hpp"
 #include "RegisterPage.hpp"
 

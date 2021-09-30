@@ -15,8 +15,8 @@ Client::GUI::RegisterPage::RegisterPage(ClientInfos infos, QWidget *parent) : AP
     loadPage();
     layoutLoader();
 
-    this->setObjectName("TOTO");
-    std::cout << "Nom: "<< this->objectName().toStdString() << std::endl;
+    // this->setObjectName("TOTO");
+    // std::cout << "Nom: "<< this->objectName().toStdString() << std::endl;
 }
 
 // LOADERS

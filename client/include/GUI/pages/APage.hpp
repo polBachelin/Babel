@@ -22,11 +22,19 @@
 #include <iostream>
 #include "structs.hpp"
 
-#define LOGO_PATH "./assets/babelLogo_48x48.png"
-#define CALL_PATH "./assets/acceptCall_48x48.png"
+#define LOGO_PATH      "./assets/babelLogo_48x48.png"
+#define PROFILE48_PATH "./assets/profile_48x48.png"
+#define PROFILE96_PATH "./assets/profile_96x96.png"
 
-#define WIDTH     800
-#define HEIGHT    600
+#define CALLON_PATH   "./assets/callOn_48x48.png"
+#define CALLOFF_PATH  "./assets/callOff_48x48.png"
+#define SOUNDON_PATH  "./assets/soundOn_48x48.png"
+#define SOUNDOFF_PATH "./assets/soundOff_48x48.png"
+#define MICON_PATH    "./assets/micOn_48x48.png"
+#define MICOFF_PATH   "./assets/micOff_48x48.png"
+
+#define WIDTH  800
+#define HEIGHT 600
 
 namespace Client {
 namespace GUI {
@@ -35,8 +43,8 @@ namespace GUI {
         {
             LOGIN,
             REGISTER,
-            CONTACTS
-            // NEXT
+            CONTACTS,
+            CALL
         };
 
 class APage : public QWidget

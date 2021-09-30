@@ -15,8 +15,8 @@ Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(in
     loadPage();
     layoutLoader();
 
-    this->setObjectName("TOTO");
-    std::cout << "Nom: "<< this->objectName().toStdString() << std::endl;
+    // this->setObjectName("TOTO");
+    // std::cout << "Nom: "<< this->objectName().toStdString() << std::endl;
 }
 
 // LOADERS

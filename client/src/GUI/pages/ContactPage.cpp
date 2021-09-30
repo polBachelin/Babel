@@ -6,12 +6,10 @@
 */
 
 #include "ContactPage.hpp"
-#include <iostream>
 
 Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(WIDTH, HEIGHT);
-    _calling = false;
     _contactSelected = "";
 
     loadPage();
@@ -45,7 +43,6 @@ void Client::GUI::ContactPage::labelLoader()
     _labelPageName = std::make_unique<QLabel>();
     _labelContactName = std::make_unique<QLabel>();
     _labelContactSelected = std::make_unique<QLabel>();
-    _labelCalling = std::make_unique<QLabel>();
 
     _labelLogo->setPixmap(QPixmap::fromImage(*_imgLogo));
     _labelLogo->setToolTip("logo du babel des boss du jeu");
@@ -55,7 +52,7 @@ void Client::GUI::ContactPage::labelLoader()
 
 void Client::GUI::ContactPage::callLoader()
 {
-    _imgCall = std::make_unique<QPixmap>(CALL_PATH);
+    _imgCall = std::make_unique<QPixmap>(CALLON_PATH);
     _call = std::make_unique<QPushButton>();
     _backButton = std::make_unique<QPushButton>("Log Out");
 
@@ -112,7 +109,6 @@ void Client::GUI::ContactPage::layoutLoader()
     _layout->addWidget(_labelPageName.get(), 0, 4, 3, 10);
     _layout->addWidget(_labelContactName.get(), 5, 3, 1, 5);
     _layout->addWidget(_labelContactSelected.get(), 4, 16, 1, 10);
-    _layout->addWidget(_labelCalling.get(), 5, WIDTH / 20 - 5, 2, 5);
     _layout->addWidget(_call.get(), 4, WIDTH / 20, 3, 1);
     _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
     _layout->addWidget(_delim["horizontal2"].get(), 7, 16, 1, WIDTH / 20 - 15);
@@ -142,8 +138,6 @@ void Client::GUI::ContactPage::contactClicked()
 {
     QPushButton *buttonSender = qobject_cast<QPushButton *>(sender());
 
-    _calling = false;
-    _labelCalling->setText("");
     if (_contactSelected == buttonSender->text()) {
         _contactSelected = "";
         _call->hide();
@@ -156,11 +150,9 @@ void Client::GUI::ContactPage::contactClicked()
 
 void Client::GUI::ContactPage::callClicked()
 {
-    if (_calling)
-        _calling = false;
-    else if (!_contactSelected.isEmpty())
-        _calling = true;
-    _labelCalling->setText((!_contactSelected.isEmpty() && _calling ? "calling..." : ""));
+    std::cout << "GOTO - call page" << std::endl << std::endl;
+
+    emit changePage(CALL);
 }
 
 void Client::GUI::ContactPage::logOut()
@@ -169,9 +161,7 @@ void Client::GUI::ContactPage::logOut()
 
     _contactSelected = "";
     _username = "";
-    _calling = false;
     _labelContactSelected->setText(_contactSelected);
-    _labelCalling->setText((!_contactSelected.isEmpty() && _calling ? "calling..." : ""));
     _call->hide();
 
     emit changePage(LOGIN);
