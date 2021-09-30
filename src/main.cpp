@@ -22,6 +22,15 @@ int main(void)
     if (ptr) {
         try {
             ptr->recordAudio();
+            std::cout << "==== Recording now ! ====" << std::endl;
+            if (ptr->isInputStreamActive())
+                sleep(3);
+            ptr->closeInputStream();
+            ptr->playAudio();
+            std::cout << "==== Playing audio ! ====" << std::endl;
+            if (ptr->isOutputStreamActive())
+                sleep(3);
+            ptr->closeOutputStream();
         } catch (std::exception &e) {
             std::cout << e.what() << std::endl;
         }

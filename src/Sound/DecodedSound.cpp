@@ -12,6 +12,7 @@ using namespace Sound;
 DecodedSound::DecodedSound(const int &size)
 : _size(size), _buffer(size)
 {
+	_alignedBuffer = new float[size];
 }
 
 DecodedSound::~DecodedSound()
@@ -25,34 +26,33 @@ int DecodedSound::getSize() const
 	return _size;
 }
 
-float *DecodedSound::getSample() const
-{
-	return _sample;
-}
-
 int DecodedSound::getBytesLeft() const
 {
 	return _buffer.getBytesLeft();
 }
 
-void DecodedSound::setSize(const int &size)
+CircularBuffer DecodedSound::getBuffer() const
 {
-	_size = size;
+	return _buffer;
 }
 
-void DecodedSound::setSample(float *s)
+float *DecodedSound::getAlignedBuffer() const
 {
-	_sample = s;
+	return _alignedBuffer;
 }
 
-void DecodedSound::writeToSample(const void *rptr, unsigned long framesPerBuffer, const size_t &nbChannels)
+size_t DecodedSound::write(const void *rptr, unsigned long len)
 {
-	const unsigned char *t = static_cast<const unsigned char *>(rptr);
-//	_buffer.write(t, framesPerBuffer);
+	return _buffer.write(rptr, len);
 }
 
-void DecodedSound::readFromSample(void *wptr, unsigned long framesPerBuffer, const size_t &nbChannels)
+size_t DecodedSound::read(void *wptr, unsigned long len)
 {
-	unsigned char *t = static_cast<unsigned char *>(wptr);
-//	_buffer.read(t, framesPerBuffer);
+	return _buffer.read(wptr, len);
+}
+
+size_t DecodedSound::alignSample(unsigned long len)
+{
+	int ok = _buffer.read(_alignedBuffer, len);
+	return ok;
 }

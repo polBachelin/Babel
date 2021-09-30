@@ -9,7 +9,7 @@
 #define PORTAUDIOMANAGER_HPP_
 
 #include "ISoundManager.hpp"
-#include "CircularBuffer.hpp"
+#include "DecodedSound.hpp"
 #include "portaudio.h"
 #include "PortAudioException.hpp"
 #include <iostream>
@@ -64,12 +64,13 @@ class PortAudioManager : public ISoundManager {
 
     protected:
         paData _data;
-        std::shared_ptr<CircularBuffer> _buffer;
+        std::shared_ptr<Sound::DecodedSound> _inputBuffer;
+        std::shared_ptr<Sound::DecodedSound> _outputBuffer;
         PaStream *_inputStream;
         PaStream *_outputStream;
-        PaStreamParameters _outputParameters;
-        PaStreamParameters _inputParameters;
         size_t _nbChannels;
+        PaStreamParameters _inputParameters;
+        PaStreamParameters _outputParameters;
 };
 
 #endif /* !PORTAUDIOMANAGER_HPP_ */

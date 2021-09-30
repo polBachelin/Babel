@@ -21,6 +21,7 @@ include_directories(./Exception)
 
 set(SRCS
     CircularBuffer.cpp
+    DecodedSound.cpp
     Exception/Error.cpp
     PortAudioManager.cpp)
 

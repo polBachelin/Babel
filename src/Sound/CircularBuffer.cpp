@@ -20,8 +20,8 @@ CircularBuffer::CircularBuffer(const size_t &size) : _len(size), _headPtr(0), _t
 
 CircularBuffer::~CircularBuffer()
 {
-	if (_buf)
-		delete [] _buf;
+	// if (_buf)
+	// 	delete [] _buf;
 }
 
 void CircularBuffer::cleanup()
@@ -54,6 +54,11 @@ int CircularBuffer::getLen() const
 int CircularBuffer::getBytesLeft() const
 {
 	return _bytesLeft;
+}
+
+int CircularBuffer::size() const
+{
+	return _len - _bytesLeft;
 }
 
 bool CircularBuffer::NoMoreBytes()

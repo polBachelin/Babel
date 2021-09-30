@@ -24,6 +24,7 @@ class CircularBuffer {
     void *getTail() const;
     int getLen() const;
     int getBytesLeft() const;
+    int size() const;
     int write(const void *src, size_t len);
     int read(void *src, size_t len);
 

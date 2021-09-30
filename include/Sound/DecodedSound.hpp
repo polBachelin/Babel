@@ -27,14 +27,15 @@ namespace Sound {
             int getSize() const;
             int getBytesLeft() const;
             float *getSample() const;
-
-            void write(const void *rptr, unsigned long framesPerBuffer);
-            void read(void *wptr, unsigned long framesPerBuffer);
-            void alignSample(unsigned long framesPerBuffer);
+            CircularBuffer getBuffer() const;
+            float *getAlignedBuffer() const;
+            size_t write(const void *rptr, unsigned long len);
+            size_t read(void *wptr, unsigned long len);
+            size_t alignSample(unsigned long len);
         protected:
             int _size;
             CircularBuffer _buffer;
-            float *_alignedBuffer;
+            float *_alignedBuffer = nullptr;
     };
 }
 

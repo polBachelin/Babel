@@ -18,7 +18,8 @@ extern "C"
     }
 }
 
-PortAudioManager::PortAudioManager() : _buffer(nullptr), _nbChannels(2)
+PortAudioManager::PortAudioManager() : 
+_inputBuffer(nullptr), _outputBuffer(nullptr), _inputStream(nullptr), _outputStream(nullptr), _nbChannels(2)
 {
 
     if (Pa_Initialize() != paNoError)
@@ -76,7 +77,7 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     //     std::memset(, SAMPLE_SILENCE, framesPerBuffer * data->_nbChannels * sizeof(float));
 
     // } else
-    data->_buffer->write(rptr, framesPerBuffer * data->_nbChannels * sizeof(float));
+    data->_inputBuffer->write(rptr, framesPerBuffer * data->_nbChannels * sizeof(float));
     return paContinue;
 }
 
@@ -94,7 +95,11 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
     (void) statusFlags;
     (void) userData;
 
-    data->_buffer->read(wptr, framesPerBuffer);
+    data->_inputBuffer->read(wptr, framesPerBuffer);
+    size_t bufferSize = data->_inputBuffer->getBuffer().size();
+    size_t toRead = (bufferSize > framesPerBuffer * data->_nbChannels * sizeof(float)) ? framesPerBuffer * data->_nbChannels * sizeof(float) : bufferSize;
+    size_t read = data->_inputBuffer->alignSample(toRead);
+    std::memcpy(wptr, data->_inputBuffer->getAlignedBuffer(), framesPerBuffer * data->_nbChannels * sizeof(float));
     return paContinue;
 }
 
@@ -161,8 +166,8 @@ int PortAudioManager::recordAudio()
             return -1;
         }
     }
-    if (_buffer == nullptr)
-        _buffer = std::make_shared<CircularBuffer>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
+    if (_inputBuffer == nullptr)
+        _inputBuffer = std::make_shared<Sound::DecodedSound>(NUM_SECONDS * SAMPLE_RATE * _nbChannels);
     openInputStream();
     if (_inputStream)
         err = Pa_StartStream(_inputStream);
