@@ -85,13 +85,10 @@ void Client::GUI::ContactPage::delimLoader()
     _delim["horizontal2"] = std::make_unique<QFrame>();
     _delim["vertical"] = std::make_unique<QFrame>();
 
-    _delim["horizontal"]->setFrameShape(QFrame::HLine);
     _delim["horizontal"]->setFrameShadow(QFrame::Sunken);
     _delim["horizontal"]->setFrameShape(QFrame::HLine);
-    _delim["horizontal2"]->setFrameShape(QFrame::HLine);
     _delim["horizontal2"]->setFrameShadow(QFrame::Sunken);
     _delim["horizontal2"]->setFrameShape(QFrame::HLine);
-    _delim["vertical"]->setFrameShape(QFrame::HLine);
     _delim["vertical"]->setFrameShadow(QFrame::Sunken);
     _delim["vertical"]->setFrameShape(QFrame::VLine);
 }
@@ -138,11 +135,14 @@ void Client::GUI::ContactPage::contactClicked()
 {
     QPushButton *buttonSender = qobject_cast<QPushButton *>(sender());
 
+    for (auto &contact : _contacts)
+        contact->setFlat(true);
     if (_contactSelected == buttonSender->text()) {
         _contactSelected = "";
         _call->hide();
     } else {
         _contactSelected = buttonSender->text();
+        buttonSender->setFlat(false);
         _call->show();
     }
     _labelContactSelected->setText(_contactSelected);

@@ -84,7 +84,6 @@ void Client::GUI::CallPage::delimLoader()
 {
     _delim["horizontal"] = std::make_unique<QFrame>();
 
-    _delim["horizontal"]->setFrameShape(QFrame::HLine);
     _delim["horizontal"]->setFrameShadow(QFrame::Sunken);
     _delim["horizontal"]->setFrameShape(QFrame::HLine);
 }
