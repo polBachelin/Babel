@@ -84,13 +84,10 @@ void Client::GUI::ContactPage::contactLoader()
 void Client::GUI::ContactPage::delimLoader()
 {
     _delim["horizontal"] = std::make_unique<QFrame>();
-    _delim["horizontal2"] = std::make_unique<QFrame>();
     _delim["vertical"] = std::make_unique<QFrame>();
 
     _delim["horizontal"]->setFrameShadow(QFrame::Sunken);
     _delim["horizontal"]->setFrameShape(QFrame::HLine);
-    _delim["horizontal2"]->setFrameShadow(QFrame::Sunken);
-    _delim["horizontal2"]->setFrameShape(QFrame::HLine);
     _delim["vertical"]->setFrameShadow(QFrame::Sunken);
     _delim["vertical"]->setFrameShape(QFrame::VLine);
 }
@@ -109,8 +106,8 @@ void Client::GUI::ContactPage::layoutLoader()
     _layout->addWidget(_labelContactName.get(), 5, 4, 1, 5);
     _layout->addWidget(_labelContactSelected.get(), 5, 16, 1, 10);
     _layout->addWidget(_call.get(), 5, WIDTH / 20, 3, 1);
-    // _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
-    _layout->addWidget(_delim["horizontal2"].get(), 8, 16, 1, WIDTH / 20 - 15);
+
+    _layout->addWidget(_delim["horizontal"].get(), 8, 16, 1, WIDTH / 20 - 15);
     _layout->addWidget(_delim["vertical"].get(), 4, 15, HEIGHT / 20, 1);
     _layout->addWidget(_contactSearch.get(), 6, 2, 2, 10);
     _layout->addWidget(_writeMsg.get(), 28, 16, 2, WIDTH / 20 - 15);

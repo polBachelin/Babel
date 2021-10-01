@@ -79,9 +79,7 @@ class CallPage : public APage
         std::unique_ptr<QPushButton> _refuse;
         std::unique_ptr<QLabel> _labelContact;
 
-        // Widget lists
-        std::map<std::string, std::unique_ptr<QFrame>> _delim;
-
+        // member variables
         std::string _username;
         bool _calling;
 };

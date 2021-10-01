@@ -58,9 +58,7 @@ class LoginPage : public APage
         std::unique_ptr<QLabel> _errorPassword;
         std::unique_ptr<QPushButton> _signButton;
 
-        // Widget lists
-        std::map<std::string, std::unique_ptr<QFrame>> _delim;
-
+        // member variables
         std::string _username;
         std::string _password;
         bool _formError;

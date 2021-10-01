@@ -106,10 +106,6 @@ void Client::GUI::CallPage::labelLoader()
 
 void Client::GUI::CallPage::delimLoader()
 {
-    _delim["horizontal"] = std::make_unique<QFrame>();
-
-    _delim["horizontal"]->setFrameShadow(QFrame::Sunken);
-    _delim["horizontal"]->setFrameShape(QFrame::HLine);
 }
 
 void Client::GUI::CallPage::layoutLoader()
@@ -126,7 +122,6 @@ void Client::GUI::CallPage::layoutLoader()
 
     inCall(true);
     incomingCall(true);
-    // _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
 
     this->setLayout(_layout.get());
     initConnections();

@@ -65,10 +65,6 @@ void Client::GUI::LoginPage::formLoader()
 
 void Client::GUI::LoginPage::delimLoader()
 {
-    _delim["horizontal"] = std::make_unique<QFrame>();
-
-    _delim["horizontal"]->setFrameShadow(QFrame::Sunken);
-    _delim["horizontal"]->setFrameShape(QFrame::HLine);
 }
 
 void Client::GUI::LoginPage::layoutLoader()
@@ -82,7 +78,6 @@ void Client::GUI::LoginPage::layoutLoader()
         _layout->addWidget(_emptyLabel.get(), 0, i);
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
     _layout->addWidget(_labelPageName.get(), 0, 15, 3, 10);
-    // _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
 
     _layout->addWidget(_errorUsername.get(), 9, 12, 4, 15); // -- error
     _layout->addWidget(_errorPassword.get(), 12, 12, 4, 15); // -- error

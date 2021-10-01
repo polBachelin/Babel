@@ -61,9 +61,7 @@ class RegisterPage : public APage
         std::unique_ptr<QLabel> _errorConfirmPassword;
         std::unique_ptr<QPushButton> _registerButton;
 
-        // Widget lists
-        std::map<std::string, std::unique_ptr<QFrame>> _delim;
-
+        // member variables
         std::string _username;
         std::string _password;
         std::string _confirmPassword;
