@@ -6,15 +6,20 @@
 */
 
 #include "MainWindow.hpp"
-#include "LoginPage.hpp"
+#include "APage.hpp"
 
 using namespace Client::GUI;
 
 MainWindow::MainWindow() : _pages(this)
 {
-    this->setFixedSize({800, 600});
+    this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
     this->setCentralWidget(&_pages);
+    this->setStyleSheet(
+        "background-image:url("
+        BACKGROUND_PATH
+        "); background-position: center;");
+
     initConnections();
 }
 

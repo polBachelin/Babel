@@ -14,9 +14,6 @@ Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(in
 
     loadPage();
     layoutLoader();
-
-    // this->setObjectName("TOTO");
-    // std::cout << "Nom: "<< this->objectName().toStdString() << std::endl;
 }
 
 // LOADERS
@@ -53,6 +50,7 @@ void Client::GUI::LoginPage::labelLoader()
     _labelLogo->setPixmap(QPixmap::fromImage(*_imgLogo));
     _labelLogo->setToolTip("logo du babel des boss du jeu");
     _labelPageName->setText("Babel :: Login Page");
+    _labelPageName->setStyleSheet("QLabel { color : white; }");
     _textLabel->setText("or");
 }
 
@@ -84,7 +82,7 @@ void Client::GUI::LoginPage::layoutLoader()
         _layout->addWidget(_emptyLabel.get(), 0, i);
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
     _layout->addWidget(_labelPageName.get(), 0, 4, 3, 10);
-    _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
+    // _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
 
     _layout->addWidget(_errorUsername.get(), 9, 12, 4, 15); // -- error
     _layout->addWidget(_errorPassword.get(), 12, 12, 4, 15); // -- error

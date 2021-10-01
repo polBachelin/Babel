@@ -47,6 +47,7 @@ void Client::GUI::ContactPage::labelLoader()
     _labelLogo->setPixmap(QPixmap::fromImage(*_imgLogo));
     _labelLogo->setToolTip("logo du babel des boss du jeu");
     _labelPageName->setText("Babel :: Contact Page");
+    _labelPageName->setStyleSheet("QLabel { color : white; }");
     _labelContactName->setText("Contact list");
 }
 
@@ -107,7 +108,7 @@ void Client::GUI::ContactPage::layoutLoader()
     _layout->addWidget(_labelContactName.get(), 5, 3, 1, 5);
     _layout->addWidget(_labelContactSelected.get(), 4, 16, 1, 10);
     _layout->addWidget(_call.get(), 4, WIDTH / 20, 3, 1);
-    _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
+    // _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
     _layout->addWidget(_delim["horizontal2"].get(), 7, 16, 1, WIDTH / 20 - 15);
     _layout->addWidget(_delim["vertical"].get(), 4, 15, HEIGHT / 20, 1);
     _layout->addWidget(_contactSearch.get(), 6, 2, 2, 10);

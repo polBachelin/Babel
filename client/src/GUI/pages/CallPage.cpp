@@ -13,9 +13,6 @@ Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(info
 
     loadPage();
     layoutLoader();
-
-    // this->setObjectName("TOTO");
-    // std::cout << "Nom: "<< this->objectName().toStdString() << std::endl;
 }
 
 // LOADERS
@@ -77,6 +74,7 @@ void Client::GUI::CallPage::labelLoader()
     _labelProfile->setPixmap(QPixmap::fromImage(*_imgProfile));
     _labelLogo->setToolTip("logo du babel des boss du jeu");
     _labelPageName->setText("Babel :: Call Page");
+    _labelPageName->setStyleSheet("QLabel { color : white; }");
     _labelTimer->setText("00 : 00");
 }
 
@@ -99,15 +97,15 @@ void Client::GUI::CallPage::layoutLoader()
         _layout->addWidget(_emptyLabel.get(), 0, i);
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
     _layout->addWidget(_labelPageName.get(), 0, 4, 3, 10);
-    _layout->addWidget(_labelProfile.get(), 10, 20, 6, 3);
-    _layout->addWidget(_labelTimer.get(), 16, 21, 2, 1);
-    _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
+    _layout->addWidget(_labelProfile.get(), 10, 18, 6, 3);
+    _layout->addWidget(_labelTimer.get(), 16, 19, 2, 1);
+    // _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
 
-    _layout->addWidget(_soundOn.get(), 25, 15, 3, 2);
-    _layout->addWidget(_soundOff.get(), 25, 15, 3, 2);
-    _layout->addWidget(_micOn.get(), 25, 20, 3, 2);
-    _layout->addWidget(_micOff.get(), 25, 20, 3, 2);
-    _layout->addWidget(_callOff.get(), 25, 25, 3, 2);
+    _layout->addWidget(_soundOn.get(), 25, 14, 3, 2);
+    _layout->addWidget(_soundOff.get(), 25, 14, 3, 2);
+    _layout->addWidget(_micOn.get(), 25, 18, 3, 2);
+    _layout->addWidget(_micOff.get(), 25, 18, 3, 2);
+    _layout->addWidget(_callOff.get(), 25, 23, 3, 2);
 
     this->setLayout(_layout.get());
     initConnections();
