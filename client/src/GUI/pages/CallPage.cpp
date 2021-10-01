@@ -91,8 +91,8 @@ void Client::GUI::CallPage::labelLoader()
     _labelProfile->setPixmap(QPixmap::fromImage(*_imgProfile));
     _labelLogo->setToolTip("logo du babel des boss du jeu");
     _labelContact->setText("Someone calls you . . .");
-    _labelPageName->setText("Babel :: Call Page");
-    _labelPageName->setStyleSheet("QLabel { color : white; }");
+    _labelPageName->setText("Call Page");
+    _labelPageName->setStyleSheet("QLabel { color : white; font-size: 30px;}");
     _labelTimer->setText("00 : 00");
 
     if (!_calling) {
@@ -122,7 +122,7 @@ void Client::GUI::CallPage::layoutLoader()
     for (std::size_t i = 0; i < WIDTH / 20; i++)
         _layout->addWidget(_emptyLabel.get(), 0, i);
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
-    _layout->addWidget(_labelPageName.get(), 0, 4, 3, 10);
+    _layout->addWidget(_labelPageName.get(), 0, 17, 3, 10);
 
     inCall(true);
     incomingCall(true);
@@ -226,6 +226,7 @@ void Client::GUI::CallPage::callOn()
     _timer->stop();
     _timer->start();
     _eltimer->restart();
+    _labelTimer->setText("00 : 00");
 
     _soundOn->show();
     _micOn->show();

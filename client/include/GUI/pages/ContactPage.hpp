@@ -38,6 +38,8 @@ class ContactPage : public APage
         void contactClicked();
         void callClicked();
         void logOut();
+        void searchContact(QString);
+        void changeMsg(QString);
 
     private:
         // Layout
@@ -64,6 +66,8 @@ class ContactPage : public APage
         QSlider *   _m_slider;
         QWidget *   _parent;
         std::string _username;
+        std::string _msg;
+        std::string _search;
         QString _contactSelected;
 };
 

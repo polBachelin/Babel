@@ -46,8 +46,8 @@ void Client::GUI::ContactPage::labelLoader()
 
     _labelLogo->setPixmap(QPixmap::fromImage(*_imgLogo));
     _labelLogo->setToolTip("logo du babel des boss du jeu");
-    _labelPageName->setText("Babel :: Contact Page");
-    _labelPageName->setStyleSheet("QLabel { color : white; }");
+    _labelPageName->setText("Contact Page");
+    _labelPageName->setStyleSheet("QLabel { color : white; font-size: 30px;}");
     _labelContactName->setText("Contact list");
 }
 
@@ -77,6 +77,7 @@ void Client::GUI::ContactPage::contactLoader()
         _contacts.push_back(std::make_shared<QPushButton>(name.c_str()));
         _contacts[i]->setFlat(true);
         _contacts[i]->setFixedSize({WIDTH / 4, HEIGHT / 15});
+        _contacts[i]->setStyleSheet("Text-align:left");
     }
 }
 
@@ -104,12 +105,12 @@ void Client::GUI::ContactPage::layoutLoader()
     for (std::size_t i = 0; i < WIDTH / 20; i++)
         _layout->addWidget(_emptyLabel.get(), 0, i);
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
-    _layout->addWidget(_labelPageName.get(), 0, 4, 3, 10);
-    _layout->addWidget(_labelContactName.get(), 5, 3, 1, 5);
-    _layout->addWidget(_labelContactSelected.get(), 4, 16, 1, 10);
-    _layout->addWidget(_call.get(), 4, WIDTH / 20, 3, 1);
+    _layout->addWidget(_labelPageName.get(), 0, 15, 3, 10);
+    _layout->addWidget(_labelContactName.get(), 5, 4, 1, 5);
+    _layout->addWidget(_labelContactSelected.get(), 5, 16, 1, 10);
+    _layout->addWidget(_call.get(), 5, WIDTH / 20, 3, 1);
     // _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
-    _layout->addWidget(_delim["horizontal2"].get(), 7, 16, 1, WIDTH / 20 - 15);
+    _layout->addWidget(_delim["horizontal2"].get(), 8, 16, 1, WIDTH / 20 - 15);
     _layout->addWidget(_delim["vertical"].get(), 4, 15, HEIGHT / 20, 1);
     _layout->addWidget(_contactSearch.get(), 6, 2, 2, 10);
     _layout->addWidget(_writeMsg.get(), 28, 16, 2, WIDTH / 20 - 15);
@@ -126,6 +127,8 @@ void Client::GUI::ContactPage::layoutLoader()
 
 void Client::GUI::ContactPage::initConnections()
 {
+    QObject::connect(_contactSearch.get(), SIGNAL(textChanged(QString)), this, SLOT(searchContact(QString)));
+    QObject::connect(_writeMsg.get(), SIGNAL(textChanged(QString)), this, SLOT(changeMsg(QString)));
     QObject::connect(_backButton.get(), SIGNAL(clicked()), this, SLOT(logOut()));
     for (auto &contact : _contacts)
         QObject::connect(contact.get(), SIGNAL(clicked()), this, SLOT(contactClicked()));
@@ -164,8 +167,20 @@ void Client::GUI::ContactPage::logOut()
     _username = "";
     _labelContactSelected->setText(_contactSelected);
     _call->hide();
+    for (auto &contact : _contacts)
+        contact->setFlat(true);
 
     emit changePage(LOGIN);
+}
+
+void Client::GUI::ContactPage::changeMsg(QString msg)
+{
+    this->_msg = msg.toStdString();
+}
+
+void Client::GUI::ContactPage::searchContact(QString search)
+{
+    this->_search = search.toStdString();
 }
 
 #include "moc_ContactPage.cpp"
