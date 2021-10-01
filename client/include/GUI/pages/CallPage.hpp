@@ -31,6 +31,8 @@ class CallPage : public APage
         void labelLoader();
         void btnLoader();
         void timerLoader();
+        void inCall(bool);
+        void incomingCall(bool);
 
     public slots:
         void soundOff();
@@ -38,6 +40,7 @@ class CallPage : public APage
         void micOff();
         void micOn();
         void callOff();
+        void callOn();
         void updateTimer();
 
     private:
@@ -67,10 +70,20 @@ class CallPage : public APage
         std::unique_ptr<QPixmap> _imgMicOff;
         std::unique_ptr<QPushButton> _micOff;
 
+        // Gif
+        std::unique_ptr<QMovie> _gif;
+        std::unique_ptr<QLabel> _labelGif;
+        std::unique_ptr<QPixmap> _imgValidate;
+        std::unique_ptr<QPushButton> _validate;
+        std::unique_ptr<QPixmap> _imgRefuse;
+        std::unique_ptr<QPushButton> _refuse;
+        std::unique_ptr<QLabel> _labelContact;
+
         // Widget lists
         std::map<std::string, std::unique_ptr<QFrame>> _delim;
 
         std::string _username;
+        bool _calling;
 };
 
 }}

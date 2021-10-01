@@ -10,6 +10,7 @@
 Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(WIDTH, HEIGHT);
+    _calling = false;
 
     loadPage();
     layoutLoader();
@@ -56,9 +57,20 @@ void Client::GUI::CallPage::btnLoader()
     loadOneButton(_soundOff, _imgSoundOff, SOUNDOFF_PATH);
     loadOneButton(_micOn, _imgMicOn, MICON_PATH);
     loadOneButton(_micOff, _imgMicOff, MICOFF_PATH);
+    loadOneButton(_validate, _imgValidate, VALIDATE_PATH);
+    loadOneButton(_refuse, _imgRefuse, REFUSE_PATH);
 
     _soundOff->hide();
     _micOff->hide();
+
+    if (!_calling) {
+        _soundOn->hide();
+        _micOn->hide();
+        _callOff->hide();
+    } else {
+        _validate->hide();
+        _refuse->hide();
+    }
 }
 
 void Client::GUI::CallPage::labelLoader()
@@ -69,13 +81,27 @@ void Client::GUI::CallPage::labelLoader()
     _labelProfile = std::make_unique<QLabel>();
     _labelPageName = std::make_unique<QLabel>();
     _labelTimer = std::make_unique<QLabel>();
+    _labelContact = std::make_unique<QLabel>();
+    _gif = std::make_unique<QMovie>(LOGOGIF_PATH);
+    _labelGif = std::make_unique<QLabel>();
 
+    _labelGif->setMovie(_gif.get());
+    _gif->start();
     _labelLogo->setPixmap(QPixmap::fromImage(*_imgLogo));
     _labelProfile->setPixmap(QPixmap::fromImage(*_imgProfile));
     _labelLogo->setToolTip("logo du babel des boss du jeu");
+    _labelContact->setText("Someone calls you . . .");
     _labelPageName->setText("Babel :: Call Page");
     _labelPageName->setStyleSheet("QLabel { color : white; }");
     _labelTimer->setText("00 : 00");
+
+    if (!_calling) {
+        _labelProfile->hide();
+        _labelTimer->hide();
+    } else {
+        _labelContact->hide();
+        _labelGif->hide();
+    }
 }
 
 void Client::GUI::CallPage::delimLoader()
@@ -97,18 +123,40 @@ void Client::GUI::CallPage::layoutLoader()
         _layout->addWidget(_emptyLabel.get(), 0, i);
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
     _layout->addWidget(_labelPageName.get(), 0, 4, 3, 10);
-    _layout->addWidget(_labelProfile.get(), 10, 18, 6, 3);
-    _layout->addWidget(_labelTimer.get(), 16, 19, 2, 1);
+
+    inCall(true);
+    incomingCall(true);
     // _layout->addWidget(_delim["horizontal"].get(), 3, 0, 1, WIDTH / 20 + 1);
+
+    this->setLayout(_layout.get());
+    initConnections();
+}
+
+void Client::GUI::CallPage::inCall(bool calling)
+{
+    if (!calling)
+        return;
+
+    _layout->addWidget(_labelProfile.get(), 10, 18, 6, 3);
+    _layout->addWidget(_labelTimer.get(), 18, 19, 2, 1);
 
     _layout->addWidget(_soundOn.get(), 25, 14, 3, 2);
     _layout->addWidget(_soundOff.get(), 25, 14, 3, 2);
     _layout->addWidget(_micOn.get(), 25, 18, 3, 2);
     _layout->addWidget(_micOff.get(), 25, 18, 3, 2);
     _layout->addWidget(_callOff.get(), 25, 23, 3, 2);
+}
 
-    this->setLayout(_layout.get());
-    initConnections();
+void Client::GUI::CallPage::incomingCall(bool calling)
+{
+    if (!calling)
+        return;
+
+    _layout->addWidget(_labelGif.get(), 8, 17, 10, 5);
+    _layout->addWidget(_labelContact.get(), 17, 17, 2, 5);
+
+    _layout->addWidget(_validate.get(), 21, 16, 3, 2);
+    _layout->addWidget(_refuse.get(), 21, 21, 3, 2);
 }
 
 // CONEXION -- EVENT HANDLER
@@ -121,6 +169,8 @@ void Client::GUI::CallPage::initConnections()
     QObject::connect(_micOff.get(), SIGNAL(clicked()), this, SLOT(micOn()));
     QObject::connect(_callOff.get(), SIGNAL(clicked()), this, SLOT(callOff()));
     QObject::connect(_timer.get(), SIGNAL(timeout()), this, SLOT(updateTimer()));
+    QObject::connect(_refuse.get(), SIGNAL(clicked()), this, SLOT(callOff()));
+    QObject::connect(_validate.get(), SIGNAL(clicked()), this, SLOT(callOn()));
 }
 
 void Client::GUI::CallPage::soundOff()
@@ -151,11 +201,42 @@ void Client::GUI::CallPage::callOff()
 {
     std::cout << "GOTO - contact page" << std::endl << std::endl;
 
+    _calling = false;
     _timer->stop();
     _timer->start();
     _eltimer->restart();
 
+    _soundOn->hide();
+    _micOn->hide();
+    _callOff->hide();
+    _labelProfile->hide();
+    _labelTimer->hide();
+
+    _validate->show();
+    _refuse->show();
+    _labelContact->show();
+    _labelGif->show();
+
     emit changePage(CONTACTS);
+}
+
+void Client::GUI::CallPage::callOn()
+{
+    _calling = true;
+    _timer->stop();
+    _timer->start();
+    _eltimer->restart();
+
+    _soundOn->show();
+    _micOn->show();
+    _callOff->show();
+    _labelProfile->show();
+    _labelTimer->show();
+
+    _validate->hide();
+    _refuse->hide();
+    _labelContact->hide();
+    _labelGif->hide();
 }
 
 void Client::GUI::CallPage::updateTimer()
@@ -165,7 +246,7 @@ void Client::GUI::CallPage::updateTimer()
     std::size_t min(((msecs_elapsed / 1000) % 3600) / 60);
     std::size_t hor(((msecs_elapsed / 1000) % 86400) / 3600);
     std::string time(
-        (!hor ? "": std::to_string(hor)) +
+        (!hor ? "": std::to_string(hor) + " : ") +
         ((min < 10) ? "0": "") + std::to_string(min) + " : " +
         ((sec < 10) ? "0" : "") + std::to_string(sec)
         );

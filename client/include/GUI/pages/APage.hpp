@@ -26,7 +26,10 @@
 #define PROFILE48_PATH  "./assets/profile_48x48.png"
 #define PROFILE96_PATH  "./assets/profile_96x96.png"
 #define BACKGROUND_PATH "./assets/background.png"
+#define LOGOGIF_PATH    "./assets/animatedLogo.gif"
 
+#define VALIDATE_PATH "./assets/validate_48x48.png"
+#define REFUSE_PATH   "./assets/refuse_48x48.png"
 #define CALLON_PATH   "./assets/callOn_48x48.png"
 #define CALLOFF_PATH  "./assets/callOff_48x48.png"
 #define SOUNDON_PATH  "./assets/soundOn_48x48.png"
