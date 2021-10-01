@@ -34,6 +34,9 @@ class ContactPage : public APage
         void callLoader();
         void formLoader();
 
+        // other functions
+        void addOneContact();
+
     public slots:
         void contactClicked();
         void callClicked();
@@ -69,6 +72,7 @@ class ContactPage : public APage
         std::string _msg;
         std::string _search;
         QString _contactSelected;
+        std::size_t _cid;
 };
 
 }}

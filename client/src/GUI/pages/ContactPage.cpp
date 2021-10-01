@@ -11,6 +11,7 @@ Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent
 {
     setFixedSize(WIDTH, HEIGHT);
     _contactSelected = "";
+    _cid = 0;
 
     loadPage();
     layoutLoader();
@@ -34,6 +35,7 @@ void Client::GUI::ContactPage::formLoader()
 
     _contactSearch->setPlaceholderText("search . . .");
     _writeMsg->setPlaceholderText("write a mesage . . .");
+    _writeMsg->hide();
 }
 
 void Client::GUI::ContactPage::labelLoader()
@@ -67,17 +69,29 @@ void Client::GUI::ContactPage::callLoader()
     _call->hide();
 }
 
+void Client::GUI::ContactPage::addOneContact()
+{
+    std::string name("Contact " + std::to_string(_cid++));
+    std::shared_ptr<QPushButton> btn = std::make_shared<QPushButton>(name.c_str());
+
+    btn->setFlat(true);
+    btn->setFixedSize({WIDTH / 4, HEIGHT / 15});
+    btn->setStyleSheet("Text-align:left");
+    _contacts.push_back(btn);
+}
+
 void Client::GUI::ContactPage::contactLoader()
 {
     std::size_t nbContact(5);
-    std::string name;
+    // std::string name;
 
     for (std::size_t i = 0; i != nbContact; i++) {
-        name = "Contact " + std::to_string(i);
-        _contacts.push_back(std::make_shared<QPushButton>(name.c_str()));
-        _contacts[i]->setFlat(true);
-        _contacts[i]->setFixedSize({WIDTH / 4, HEIGHT / 15});
-        _contacts[i]->setStyleSheet("Text-align:left");
+        addOneContact();
+        // name = "Contact " + std::to_string(i);
+        // _contacts.push_back(std::make_shared<QPushButton>(name.c_str()));
+        // _contacts[i]->setFlat(true);
+        // _contacts[i]->setFixedSize({WIDTH / 4, HEIGHT / 15});
+        // _contacts[i]->setStyleSheet("Text-align:left");
     }
 }
 
@@ -108,7 +122,7 @@ void Client::GUI::ContactPage::layoutLoader()
     _layout->addWidget(_call.get(), 5, WIDTH / 20, 3, 1);
 
     _layout->addWidget(_delim["horizontal"].get(), 8, 16, 1, WIDTH / 20 - 15);
-    _layout->addWidget(_delim["vertical"].get(), 4, 15, HEIGHT / 20, 1);
+    _layout->addWidget(_delim["vertical"].get(), 5, 15, HEIGHT / 20, 1);
     _layout->addWidget(_contactSearch.get(), 6, 2, 2, 10);
     _layout->addWidget(_writeMsg.get(), 28, 16, 2, WIDTH / 20 - 15);
     _layout->addWidget(_backButton.get(), 0, WIDTH / 20, 2, 2);
@@ -136,15 +150,18 @@ void Client::GUI::ContactPage::contactClicked()
 {
     QPushButton *buttonSender = qobject_cast<QPushButton *>(sender());
 
+    _writeMsg->setText("");
     for (auto &contact : _contacts)
         contact->setFlat(true);
     if (_contactSelected == buttonSender->text()) {
         _contactSelected = "";
         _call->hide();
+        _writeMsg->hide();
     } else {
         _contactSelected = buttonSender->text();
         buttonSender->setFlat(false);
         _call->show();
+        _writeMsg->show();
     }
     _labelContactSelected->setText(_contactSelected);
 }
@@ -178,6 +195,13 @@ void Client::GUI::ContactPage::changeMsg(QString msg)
 void Client::GUI::ContactPage::searchContact(QString search)
 {
     this->_search = search.toStdString();
+
+    for (auto &contact : _contacts) {
+        if (contact->text().toStdString().find(_search) != std::string::npos || _search.empty())
+            contact->show();
+        else
+            contact->hide();
+    }
 }
 
 #include "moc_ContactPage.cpp"
