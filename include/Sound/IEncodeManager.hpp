@@ -16,8 +16,8 @@ class IEncodeManager {
         virtual void setBitRate(const int &bitRate) = 0;
         virtual void setSamplingRate(const int &samplingRate) = 0;
         virtual void setComplexity(const int &complexity) = 0;
-        virtual void initDecoder();
-        virtual void initEncoder();
+        virtual void initDecoder() = 0;
+        virtual void initEncoder() = 0;
         virtual int encode(unsigned char *output, float *input, int frameSize, std::size_t outputSize) = 0;
         virtual int decode(const unsigned char *input, float *output, int frameSize, std::size_t intputSize) = 0;
 };
