@@ -40,7 +40,7 @@ add_executable(${NAME} ${SRCS})
 if (MVSVC)
         target_compile_options(${NAME} PRIVATE /W4 /WX)
 else ()
-        target_compile_options(${NAME} PRIVATE -Wall -Wextra -std=c++14)
+        target_compile_options(${NAME} PRIVATE -Wall -Wextra -std=c++17)
 endif()
 
 #PortAudio Lib

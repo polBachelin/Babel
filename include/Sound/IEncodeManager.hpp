@@ -8,8 +8,7 @@
 #ifndef IENCODEMANAGER_HPP_
 #define IENCODEMANAGER_HPP_
 
-#include "DecodedSound.hpp"
-#include "EncodedSound.hpp"
+#include <cstddef>
 
 class IEncodeManager {
     public:
@@ -19,8 +18,8 @@ class IEncodeManager {
         virtual void setComplexity(const int &complexity) = 0;
         virtual void initDecoder();
         virtual void initEncoder();
-        virtual int encode(unsigned char *output, float *input, int frameSize, size_t outputSize) = 0;
-        virtual int decode(const unsigned char *input, float *output, int frameSize, size_t intputSize) = 0;
+        virtual int encode(unsigned char *output, float *input, int frameSize, std::size_t outputSize) = 0;
+        virtual int decode(const unsigned char *input, float *output, int frameSize, std::size_t intputSize) = 0;
 };
 
 #endif /* !IENCODEMANAGER_HPP_ */

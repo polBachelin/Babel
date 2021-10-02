@@ -60,7 +60,7 @@ void OpusManager::initEncoder()
 	}
 }
 
-int OpusManager::encode(unsigned char *output, float *input, int frameSize, size_t outputSize)
+int OpusManager::encode(unsigned char *output, float *input, int frameSize, std::size_t outputSize)
 {
 	if (!_encoder)
 		return -1;
@@ -72,7 +72,7 @@ int OpusManager::encode(unsigned char *output, float *input, int frameSize, size
 	}	
 }
 
-int OpusManager::decode(const unsigned char *input, float *output, int frameSize, size_t intputSize)
+int OpusManager::decode(const unsigned char *input, float *output, int frameSize, std::size_t intputSize)
 {
 	if (!_decoder)
 		return -1;

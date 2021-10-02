@@ -5,6 +5,6 @@ SOUND_LIB: {
 NETWORK_LIB: {
 }
 
-ENCODING_LIB: {
+ENCODE_LIB: {
 	./build/BabelLibs/Encode/lib/libBabel_Opus.so
-}
+}`

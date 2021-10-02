@@ -22,10 +22,10 @@ class OpusManager : public IEncodeManager {
         void setBitRate(const int &bitRate) override;
         void setSamplingRate(const int &samplingRate) override;
         void setComplexity(const int &complexity) override;
-		void initDecoder();
-        void initEncoder();
-        int encode(unsigned char *output, float *input, int frameSize, size_t outputSize) override;
-        int decode(const unsigned char *input, float *output, int frameSize, size_t intputSize) override;
+		void initDecoder() override;
+        void initEncoder() override;
+        int encode(unsigned char *output, float *input, int frameSize, std::size_t outputSize) override;
+        int decode(const unsigned char *input, float *output, int frameSize, std::size_t intputSize) override;
 	protected:
 		int _bitRate;
 		int _samplingRate;
