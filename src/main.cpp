@@ -21,10 +21,10 @@
 int main(void)
 {
     std::unordered_map<ConfigFileParser::LIB_TYPE, std::vector<std::string>> _libs = ConfigFileParser::parseFile();
-
+    
     std::shared_ptr<ISoundManager> ptr = DLLoader<ISoundManager>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::SOUND].front());
     std::shared_ptr<IEncodeManager> encod = DLLoader<IEncodeManager>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::ENCODE].front());
-
+    std::shared_ptr<ITcpServer> serv = DLLoader<ITcpServer>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::NETWORK].front());
     // if (ptr) {
     //     try {
     //         ptr->startInputStream();
@@ -42,12 +42,6 @@ int main(void)
     //     } catch (std::exception &e) {
     //         std::cout << e.what() << std::endl ;
     //     }
-    // }
-    //     try {
-    //     AsioTcpServer server(io);
-    //     io.run();
-    // } catch(const std::exception& e) {
-    //     std::cerr << e.what() << std::endl;
     // }
     return 0;
 }

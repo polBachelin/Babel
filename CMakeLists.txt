@@ -23,7 +23,6 @@ include_directories(./include/DLLoader/)
 include_directories(./include/Sound)
 include_directories(./include/Parser)
 include_directories(./include/Server)
-include_directories(./include/Server/DB)
 include_directories(./src/Exception)
 include_directories(./src/Exception/Error)
 
@@ -33,11 +32,7 @@ set(SRCS
     src/Sound/DecodedSound.cpp
     src/Sound/EncodedSound.cpp
     src/Exception/Error/Error.cpp
-    src/Parser/ConfigFileParser.cpp
-    src/Server/Commands.cpp
-    src/Server/Database.cpp
-    src/Server/ContactManager.cpp
-    src/Server/UserManager.cpp)
+    src/Parser/ConfigFileParser.cpp)
 
 
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
@@ -69,7 +64,7 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound ${PROJECT_BINARY_DIR}/BabelLibs
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Encode ${PROJECT_BINARY_DIR}/BabelLibs/Encode)
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Server ${PROJECT_BINARY_DIR}/BabelLibs/Network)
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Server ${PROJECT_BINARY_DIR}/BabelLibs/Server)
 
 target_link_libraries(${NAME} ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)

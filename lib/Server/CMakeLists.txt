@@ -9,15 +9,18 @@ set(NAME Babel_Asio)
 project(${NAME}
 LANGUAGES CXX
 VERSION 0.1
-DESCRIPTION "Asio Server Lib"
-)
+DESCRIPTION "Asio Server Lib")
 
 include_directories(./)
+include_directories(./DB)
 
 set(SRCS
-    AsioTcpConnection.cpp
     AsioTcpServer.cpp
-    Commands.cpp)
+    AsioTcpConnection.cpp
+    Commands.cpp
+    ContactManager.cpp
+    UserManager.cpp
+    DB/Database.cpp)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()

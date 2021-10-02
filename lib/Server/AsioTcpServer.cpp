@@ -36,7 +36,8 @@ void AsioTcpServer::startAccept()
 void AsioTcpServer::initServer(int port)
 {
     _io = std::make_shared<asio::io_context>();
-    _acceptor = std::make_unique<asio::ip::tcp::acceptor>(*_io.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), _port));
+    _port = port;
+    _acceptor = std::make_unique<asio::ip::tcp::acceptor>(*_io.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port));
     _acceptor->set_option(asio::ip::tcp::acceptor::reuse_address(true));
 }
 
