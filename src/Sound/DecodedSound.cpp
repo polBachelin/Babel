@@ -9,14 +9,16 @@
 
 using namespace Sound;
 
-DecodedSound::DecodedSound(const int &size)
-: _size(size), _buffer(size)
+DecodedSound::DecodedSound(const int &size, const int &alignedSize) : _size(size)
 {
-	_alignedBuffer = new float[size];
+	_alignedBuffer = new float[alignedSize];
+	std::memset(_alignedBuffer, 0.0f, alignedSize);
+	_buffer = std::make_shared<CircularBuffer>(size);
 }
 
 DecodedSound::~DecodedSound()
 {
+	std::cout << "$$$ Destroying decoded sound\n";
 	//if (_sample != nullptr)
 		//delete [] _sample;
 }
@@ -28,12 +30,12 @@ int DecodedSound::getSize() const
 
 int DecodedSound::getBytesLeft() const
 {
-	return _buffer.getBytesLeft();
+	return _buffer->getBytesLeft();
 }
 
 CircularBuffer DecodedSound::getBuffer() const
 {
-	return _buffer;
+	return *_buffer;
 }
 
 float *DecodedSound::getAlignedBuffer() const
@@ -41,18 +43,23 @@ float *DecodedSound::getAlignedBuffer() const
 	return _alignedBuffer;
 }
 
+void DecodedSound::clearAligned(size_t bytesRead, unsigned long len)
+{
+	std::memset(_alignedBuffer + bytesRead, 0, len);
+}
+
 size_t DecodedSound::write(const void *rptr, unsigned long len)
 {
-	return _buffer.write(rptr, len);
+	return _buffer->write(rptr, len);
 }
 
 size_t DecodedSound::read(void *wptr, unsigned long len)
 {
-	return _buffer.read(wptr, len);
+	return _buffer->read(wptr, len);
 }
 
 size_t DecodedSound::alignSample(unsigned long len)
 {
-	int ok = _buffer.read(_alignedBuffer, len);
+	int ok = _buffer->read(_alignedBuffer, len);
 	return ok;
 }

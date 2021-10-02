@@ -18,16 +18,17 @@ class CircularBuffer {
     ~CircularBuffer();
 
     void cleanup();
-    void clear();
+    void clear(size_t len);
     bool NoMoreBytes();
     void *getHead() const;
     void *getTail() const;
+    unsigned char *getRawBuf() const;
     int getLen() const;
     int getBytesLeft() const;
     int size() const;
     int write(const void *src, size_t len);
     int read(void *src, size_t len);
-
+    CircularBuffer &operator=(const CircularBuffer &buf);
   protected:
     unsigned char *_buf;
     size_t _len;

@@ -15,10 +15,10 @@
 #include <iostream>
 #include <memory>
 
-#define SAMPLE_RATE  (48000)
+#define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (3)
-#define NUM_CHANNELS    (1)
+#define NUM_SECONDS     (5)
+#define NUM_CHANNELS    (2)
 
 class PortAudioManager : public ISoundManager {
     
@@ -34,18 +34,29 @@ class PortAudioManager : public ISoundManager {
 
         int openInputStream();
         int openOutputStream();
-        int recordAudio() override;
-        int playAudio() override;
+        void startInputStream() override;
+        void startOutputStream() override;
         void setDefaultInputDevice() override;
         void setDefaultOutputDevice() override;
         std::vector<std::string> getInputDeviceNames() const override;
         std::vector<std::string> getOutputDeviceNames() const override;
         bool isInputStreamActive() override;
         bool isOutputStreamActive() override;
+        void setMicMute(bool mute) override;
         bool isMicMuted() override;
+        void setOutputMute(bool mute) override;
         bool isOutputMuted() override;
         void closeOutputStream() override;
         void closeInputStream() override;
+        int getBytesInInput() override;
+        int retrieveInputBytes(float *sample, size_t len) override;
+        void feedBytesToOutput(float *sample, unsigned long len) override;
+        void loadDefaultDevices() override;
+
+
+        void allocateBuffers();
+        void loadApi();
+        void loadDevices(const int &inputChannels, const int &outputChannels);
 
         static int recordCallback(const void *inputBuffer, void *outputBuffer,
                             unsigned long framesPerBuffer,
@@ -57,20 +68,29 @@ class PortAudioManager : public ISoundManager {
                             const PaStreamCallbackTimeInfo* timeInfo,
                             PaStreamCallbackFlags statusFlags,
                             void *userData);
+    
 
-        size_t getNbChannels() const;
-        void setNbChannels(const size_t &nbChannels);
+        size_t getInputChannels() const;
+        void setInputChannels(const size_t &nbChannels);
         static void writeToBuffer(float *rptr, unsigned long framesPerBuffer);
-
     protected:
         paData _data;
-        std::shared_ptr<Sound::DecodedSound> _inputBuffer;
-        std::shared_ptr<Sound::DecodedSound> _outputBuffer;
+        std::unique_ptr<CircularBuffer> _inputBuffer;
+        std::unique_ptr<CircularBuffer> _outputBuffer;
+        float *_inputSample;
+        float *_outputSample;
         PaStream *_inputStream;
         PaStream *_outputStream;
-        size_t _nbChannels;
+        size_t _inputChannels;
+        size_t _outputChannels;
+        int _outputIndex;
+        int _inputIndex;
+        bool _micMute;
+        bool _outputMute;
         PaStreamParameters _inputParameters;
         PaStreamParameters _outputParameters;
+    private:
+        static bool _init;
 };
 
 #endif /* !PORTAUDIOMANAGER_HPP_ */

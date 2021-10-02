@@ -10,16 +10,17 @@
 
 CircularBuffer::CircularBuffer(const size_t &size) : _len(size), _headPtr(0), _tailPtr(0), _bytesLeft(size)
 {
+	std::cout << "ALLOCATING BUFFER" << std::endl;
 	if (size != 0) {
-	_buf = new unsigned char[size];
-	for (std::size_t i = 0; i < size; i++)
-		_buf[i] = 0;
+		_buf = new unsigned char[size];
+		std::memset(_buf, 0, size);
 	} else
 		_buf = nullptr;
 }
 
 CircularBuffer::~CircularBuffer()
 {
+	std::cout << "#### DESTROYING BUFFER" << std::endl;
 	// if (_buf)
 	// 	delete [] _buf;
 }
@@ -27,13 +28,9 @@ CircularBuffer::~CircularBuffer()
 void CircularBuffer::cleanup()
 {}
 
-void CircularBuffer::clear()
+void CircularBuffer::clear(size_t len)
 {
-	for (std::size_t i = 0; i < _len; i++) {
-		_buf[i] = 0;
-	}
-	_tailPtr = 0;
-	_headPtr = 0;
+	std::memset(_buf, 0, len);
 }
 
 void *CircularBuffer::getHead() const
@@ -54,6 +51,11 @@ int CircularBuffer::getLen() const
 int CircularBuffer::getBytesLeft() const
 {
 	return _bytesLeft;
+}
+
+unsigned char *CircularBuffer::getRawBuf() const
+{
+	return _buf;
 }
 
 int CircularBuffer::size() const
@@ -78,12 +80,16 @@ int CircularBuffer::write(const void *src, size_t len)
 		_headPtr = (_headPtr + 1) % _len;
 	}
 	_bytesLeft -= len;
+	if (_bytesLeft <= 0) {
+		_bytesLeft = _len;
+		_tailPtr = _headPtr;
+	}
 	return len;
 }
 
 int CircularBuffer::read(void *src, size_t len)
 {
-	if (src == nullptr || len <= 0 || _bytesLeft == (int)_len)
+	if (src == nullptr || len <= 0 || _len - _bytesLeft < len)
 		return 0;
 	unsigned char *t = static_cast<unsigned char *>(src);
 	for (size_t i = 0; i < len; i++) {
@@ -92,4 +98,20 @@ int CircularBuffer::read(void *src, size_t len)
 	}
 	_bytesLeft += len;
 	return len;
+}
+
+CircularBuffer &CircularBuffer::operator=(const CircularBuffer &buf)
+{
+	if (&buf == this)
+		return *this;
+	if (_len != buf._len) {
+		delete [] _buf;
+		_buf = new unsigned char[buf._len];
+	}
+	std::memcpy(_buf, buf._buf, buf._len);
+	_len = buf._len;
+	_headPtr = buf._headPtr;
+	_tailPtr = buf._tailPtr;
+	_bytesLeft = buf._bytesLeft;
+	return *this;
 }

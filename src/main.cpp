@@ -12,6 +12,10 @@
 #include "Error.hpp"
 #include <unordered_map>
 
+#define SAMPLE_RATE  (44100)
+#define FRAMES_PER_BUFFER (512)
+#define NUM_SECONDS     (5)
+
 int main(void)
 {
     std::unordered_map<ConfigFileParser::LIB_TYPE, std::vector<std::string>> _libs = ConfigFileParser::parseFile();
@@ -21,16 +25,18 @@ int main(void)
     
     if (ptr) {
         try {
-            ptr->recordAudio();
+            ptr->startInputStream();
+            ptr->startOutputStream();
             std::cout << "==== Recording now ! ====" << std::endl;
-            if (ptr->isInputStreamActive())
-                sleep(3);
-            ptr->closeInputStream();
-            ptr->playAudio();
-            std::cout << "==== Playing audio ! ====" << std::endl;
-            if (ptr->isOutputStreamActive())
-                sleep(3);
-            ptr->closeOutputStream();
+            sleep(5);
+            float *t = new float[SAMPLE_RATE * NUM_SECONDS * 2 * sizeof(float)];
+            std::memset(t, 0, SAMPLE_RATE * NUM_SECONDS * 2 * sizeof(float));
+            ptr->retrieveInputBytes(t, SAMPLE_RATE);
+            ptr->feedBytesToOutput(t, SAMPLE_RATE * 3);
+            //ptr->feedBytesToOutput(t, SAMPLE_RATE);
+            sleep(5);
+            std::cout << "-------------\n";
+            // std::cout << "==== Playing audio ! ====" << std::endl;
         } catch (std::exception &e) {
             std::cout << e.what() << std::endl;
         }
