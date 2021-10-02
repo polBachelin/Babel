@@ -27,11 +27,11 @@ class OpusManager : public IEncodeManager {
         int encode(unsigned char *output, float *input, int frameSize, size_t outputSize) override;
         int decode(const unsigned char *input, float *output, int frameSize, size_t intputSize) override;
 	protected:
-		OpusEncoder *_encoder;
-		OpusDecoder *_decoder;
 		int _bitRate;
 		int _samplingRate;
 		int _complexity;
+		OpusEncoder *_encoder;
+		OpusDecoder *_decoder;
 		opus_int32 _err;
 		opus_int32 _decoderErr;
 

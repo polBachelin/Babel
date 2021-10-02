@@ -44,10 +44,12 @@ else ()
 endif()
 
 #PortAudio Lib
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound ${PROJECT_BINARY_DIR}/BabelLibs)
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound ${PROJECT_BINARY_DIR}/BabelLibs/Sound)
 #set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound)
 #include_directories(${SOUND_DIR}/)
 #target_link_libraries(${NAME} Babel_PortAudio)
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Encode ${PROJECT_BINARY_DIR}/BabelLibs/Encode)
 
 target_link_libraries(${NAME} ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
