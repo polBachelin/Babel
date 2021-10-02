@@ -6,4 +6,5 @@ NETWORK_LIB: {
 }
 
 ENCODING_LIB: {
+	./build/BabelLibs/lib/libBabel_Opus.so
 }

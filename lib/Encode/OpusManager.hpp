@@ -9,17 +9,32 @@
 #define OPUSMANAGER_HPP_
 
 #include "IEncodeManager.hpp"
+#include "OpusException.hpp"
 #include "opus.h"
+
+#define CHANNELS (2)
 
 class OpusManager : public IEncodeManager {
 	public:
 		OpusManager();
-		~OpusManager();
+		~OpusManager() override;
 
-		Sound::DecodedSound decode(Sound::EncodedSound &sound) override;
-		Sound::EncodedSound encode(Sound::DecodedSound &sound) override;
+        void setBitRate(const int &bitRate) override;
+        void setSamplingRate(const int &samplingRate) override;
+        void setComplexity(const int &complexity) override;
+		void initDecoder();
+        void initEncoder();
+        int encode(unsigned char *output, float *input, int frameSize, size_t outputSize) override;
+        int decode(const unsigned char *input, float *output, int frameSize, size_t intputSize) override;
 	protected:
-	private:
+		OpusEncoder *_encoder;
+		OpusDecoder *_decoder;
+		int _bitRate;
+		int _samplingRate;
+		int _complexity;
+		opus_int32 _err;
+		opus_int32 _decoderErr;
+
 };
 
 #endif /* !OPUSMANAGER_HPP_ */
