@@ -7,6 +7,14 @@
 
 #include "OpusManager.hpp"
 
+extern "C"
+{
+    std::shared_ptr<IEncodeManager> entryPoint()
+    {
+        return std::make_shared<OpusManager>();
+    }
+}
+
 OpusManager::OpusManager() : _bitRate(0), _samplingRate(0), _complexity(0), _encoder(nullptr), _decoder(nullptr)
 {
 }

@@ -10,11 +10,9 @@
 
 class ITcpServer {
     public:
+        virtual ~ITcpServer() = default;
         virtual void startAccept() = 0;
         virtual void initServer(int port) = 0;
-
-    protected:
-    private:
 };
 
 #endif /* !ITCPSERVER_HPP_ */

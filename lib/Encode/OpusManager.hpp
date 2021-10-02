@@ -11,6 +11,7 @@
 #include "IEncodeManager.hpp"
 #include "OpusException.hpp"
 #include "opus.h"
+#include <memory>
 
 #define CHANNELS (2)
 

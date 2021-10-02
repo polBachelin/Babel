@@ -33,11 +33,6 @@ int DecodedSound::getBytesLeft() const
 	return _buffer->getBytesLeft();
 }
 
-CircularBuffer DecodedSound::getBuffer() const
-{
-	return *_buffer;
-}
-
 float *DecodedSound::getAlignedBuffer() const
 {
 	return _alignedBuffer;
