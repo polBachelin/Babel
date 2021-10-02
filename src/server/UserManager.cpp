@@ -22,10 +22,10 @@ UserManager::~UserManager()
 
 int UserManager::login(const std::string &name, const std::string &passwd)
 {
-    auto tmp = _db.custom("SELECT USERNAME FROM User WHERE NAME=\'" + name + "\'");
+    auto tmp = _db.custom("SELECT USERNAME, PASSWD FROM User WHERE USERNAME=\'" + name + "\'");
     std::string res; 
 
-    if (tmp.ac >= 2 && tmp.av[2] == passwd) {
+    if (tmp.ac >= 2 && tmp.av[1] == passwd) {
         _name = name;
         _cm.setName(_name);
         _isLog = true;
@@ -49,6 +49,7 @@ int UserManager::new_user(const std::string &name, const std::string &passwd)
     std::srand(time(NULL));
     tag = std::rand() % 1000;
     tag_res = name + "#" + std::to_string(tag);
+    std::cout << "New User : " << tag_res << std::endl;
     return_value = _db.insert("User", "USERNAME, PASSWD", "\'" + tag_res + "\', \'" + passwd + "\'");
     if (return_value) {
         std::cerr << "Failed to register" << std::endl;

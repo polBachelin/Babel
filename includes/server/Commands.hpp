@@ -17,8 +17,9 @@
 #include <deque>
 #include <ctime>
 #include <memory>
+#include "UserManager.hpp"
 
-#define MAGIC 12324342212
+#define MAGIC 388474
 
 typedef struct packet_info {
     int magic;
@@ -34,19 +35,19 @@ typedef struct packet {
 } packet_t;
 
 class Commands;
-typedef std::function<void(packet_t &pck)> cmd_ptr;
+typedef std::function<void(UserManager &um, packet_t &pck)> cmd_ptr;
 class Commands {
     public:
         Commands() = default;
         ~Commands() = default;
-        static void redirect(packet_t &pck);
+        static void redirect(UserManager &um, packet_t &pck);
 
     protected:
     private:
-        static void login(packet_t &pck);
-        static void register_(packet_t &pck);
-        static void add_contact(packet_t &pck);
-        static void call_X(packet_t &pck);
+        static void login(UserManager &um, packet_t &pck);
+        static void register_(UserManager &um, packet_t &pck);
+        static void add_contact(UserManager &um, packet_t &pck);
+        static void call_X(UserManager &um, packet_t &pck);
         static const std::map<std::size_t, cmd_ptr> _cmd_map;
 };
 

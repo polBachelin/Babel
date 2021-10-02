@@ -9,7 +9,7 @@
 
 void TcpConnection::interpret()
 {
-    Commands::redirect(_packet);
+    Commands::redirect(_um, _packet);
 }
 
 TcpConnection::pointer TcpConnection::create(asio::io_context& io_context)
@@ -30,7 +30,7 @@ void TcpConnection::HandleReadHeader(const asio::error_code &e, std::size_t size
 {
     packet_t *tmp;
 
-    if (size > 0) {
+    if (size > 0 && !e) {
         _packet = *(packet_t *)test;
         std::cout << "Magic: " << _packet.magic << " Code: " << _packet.code << " data_size: " << _packet.data_size << std::endl; 
         auto handler = std::bind(&TcpConnection::HandleReadData, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
@@ -46,7 +46,7 @@ void TcpConnection::HandleReadData(const asio::error_code &e, std::size_t size)
 {
     packet_t *tmp;
 
-    if (size > 0) {
+    if (size > 0 && !e) {
         strcpy(_packet.data, test);
         std::cout << "Data : " << _packet.data << std::endl;
         interpret();
@@ -59,7 +59,7 @@ void TcpConnection::HandleReadData(const asio::error_code &e, std::size_t size)
     _socket.async_read_some(asio::buffer(test, sizeof(packet_info_t)), handler);
 }
 
-TcpConnection::TcpConnection(asio::io_context& io_context) : _socket(io_context), _receive(nullptr)
+TcpConnection::TcpConnection(asio::io_context& io_context) : _socket(io_context), _um()
 {
     _packet.code = 84;
     _packet.magic = 0;

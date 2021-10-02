@@ -14,30 +14,48 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
     {003, Commands::call_X},
 };
 
-void Commands::redirect(packet_t &pck)
+void Commands::redirect(UserManager &um, packet_t &pck)
 {
     try {
-        _cmd_map.at(pck.code)(pck);
+        _cmd_map.at(pck.code)(um, pck);
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
     }
 }
 
-void Commands::login(packet_t &pck)
+void Commands::login(UserManager &um, packet_t &pck)
+{
+    std::string tmp = pck.data;
+    std::array<std::string, 2> res;
+    int value = 0;
+
+    res[0] = tmp.substr(0, tmp.find("\n"));
+    tmp.erase(0, tmp.find("\n") + 1);
+    res[1] = tmp;
+    std::cout << "username : " << res[0] << std::endl;
+    std::cout << "passwd : " << res[1] << std::endl;
+    value = um.login(res[0], res[1]);
+}
+
+void Commands::register_(UserManager &um, packet_t &pck)
+{
+    std::string tmp = pck.data;
+    std::array<std::string, 2> res;
+    int value = 0;
+
+    res[0] = tmp.substr(0, tmp.find("\n"));
+    tmp.erase(0, tmp.find("\n") + 1);
+    res[1] = tmp;
+    std::cout << "username : " << res[0] << std::endl;
+    std::cout << "passwd : " << res[1] << std::endl;
+    value = um.new_user(res[0], res[1]);
+}
+
+void Commands::add_contact(UserManager &um, packet_t &pck)
 {
 
 }
 
-void Commands::register_(packet_t &pck)
-{
-
-}
-
-void Commands::add_contact(packet_t &pck)
-{
-
-}
-
-void Commands::call_X(packet_t &pck)
+void Commands::call_X(UserManager &um, packet_t &pck)
 {
 }

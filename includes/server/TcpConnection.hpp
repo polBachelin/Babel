@@ -27,7 +27,8 @@ class TcpConnection : public ITcpConnection, public std::enable_shared_from_this
     private:
         asio::ip::tcp::socket _socket;
         std::string _message;
-        void *_receive;
         packet_t _packet;
         char test[2048] = {0};
+        UserManager _um;
+
 };

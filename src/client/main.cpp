@@ -24,13 +24,14 @@ int main(int argc, char* argv[])
 
     packet_t orig;
     packet_t *tmp = &orig;
-    tmp->magic = 562;
-    tmp->code = 3;
-    tmp->data_size = 256;
-    strcpy(tmp->data, "salut");
+    tmp->magic = MAGIC;
+    tmp->code = 000;
+    tmp->data_size = 18;
+    strcpy(tmp->data, "killian#372\ntestfefed\n");
     asio::error_code error;
     std::size_t size = asio::write(socket, asio::buffer(tmp, sizeof(packet_t)), error);
     std::cout << "message sent " << size << "  " << sizeof(packet_t) << std::endl;
+    sleep(30);
   }
   catch (std::exception& e)
   {
