@@ -23,18 +23,16 @@ UserManager::~UserManager()
 int UserManager::login(const std::string &name, const std::string &passwd)
 {
     auto tmp = _db.custom("SELECT USERNAME, PASSWD FROM User WHERE USERNAME=\'" + name + "\'");
-    std::string res; 
+    std::string res;
 
     if (tmp.ac >= 2 && tmp.av[1] == passwd) {
         _name = name;
         _cm.setName(_name);
         _isLog = true;
         std::cout << "Login successful" << std::endl;
-        // TODO: send response to cli
     } else {
         std::cerr << "Invalid Login" << std::endl;
         _isLog = false;
-        // TODO: send response to cli
         return false;
     }
     return true;
@@ -53,14 +51,20 @@ int UserManager::new_user(const std::string &name, const std::string &passwd)
     return_value = _db.insert("User", "USERNAME, PASSWD", "\'" + tag_res + "\', \'" + passwd + "\'");
     if (return_value) {
         std::cerr << "Failed to register" << std::endl;
+        return false;
     }
     _name = tag_res;
     _cm.setName(tag_res);
     _isLog = true;
-    return return_value;
+    return true;
 }
 
 const ContactManager &UserManager::GetContactManager()
 {
     return _cm;
+}
+
+const std::string &UserManager::GetName()
+{
+    return _name;
 }

@@ -9,6 +9,7 @@
 #define IDatabase_h
 
 #include <string>
+#include <cstring>
 #include <deque>
 
 typedef struct CallBackData {

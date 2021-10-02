@@ -27,10 +27,12 @@ int main(int argc, char* argv[])
     tmp->magic = MAGIC;
     tmp->code = 000;
     tmp->data_size = 18;
-    strcpy(tmp->data, "killian#372\ntestfefed\n");
+    strcpy(tmp->data, "killian#372\ntest\n");
     asio::error_code error;
     std::size_t size = asio::write(socket, asio::buffer(tmp, sizeof(packet_t)), error);
     std::cout << "message sent " << size << "  " << sizeof(packet_t) << std::endl;
+    asio::read(socket, asio::buffer(tmp, sizeof(packet_t)));
+    std::cout << "COde : " << tmp->code << " " << tmp->data << std::endl;
     sleep(30);
   }
   catch (std::exception& e)
