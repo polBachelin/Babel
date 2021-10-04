@@ -20,7 +20,7 @@ class AsioTcpConnection : public std::enable_shared_from_this<AsioTcpConnection>
         static pointer create(asio::io_context& io_context);
         asio::ip::tcp::socket &socket();
         void start();
-        void handle_write(const asio::error_code& /*error*/, size_t /*bytes_transferred*/);
+        void handleWrite(const asio::error_code& /*error*/, size_t /*bytes_transferred*/);
         void HandleReadHeader(const asio::error_code &, std::size_t);
         void HandleReadData(const asio::error_code &, std::size_t);
         void interpret();

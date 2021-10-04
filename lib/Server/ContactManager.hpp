@@ -22,9 +22,9 @@ class ContactManager {
         std::string getContactList(const std::string &your_name);
     protected:
     private:
+        Database _db;
         std::string _myName;
         std::string _tableName;
-        Database _db;
 
 };
 

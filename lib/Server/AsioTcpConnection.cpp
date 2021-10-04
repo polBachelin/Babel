@@ -24,7 +24,9 @@ void AsioTcpConnection::start()
 
 void AsioTcpConnection::interpret()
 {
-    Commands::redirect(_socket, _um, _packet);
+    auto tmp = Commands::redirect(_um, _packet);
+    auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
+    asio::async_write(_socket, asio::buffer(tmp, sizeof(packet_t)), handler);
 }
 
 AsioTcpConnection::pointer AsioTcpConnection::create(asio::io_context& io_context)
@@ -37,14 +39,14 @@ asio::ip::tcp::socket &AsioTcpConnection::socket()
     return _socket;
 }
 
-void AsioTcpConnection::handle_write(const asio::error_code &e, size_t size)
+void AsioTcpConnection::handleWrite(const asio::error_code &e, size_t size)
 {
+    if (e || size == 0)
+        throw e;
 }
 
 void AsioTcpConnection::HandleReadHeader(const asio::error_code &e, std::size_t size)
 {
-    packet_t *tmp;
-
     if (size > 0 && !e) {
         _packet = *(packet_t *)test;
         auto handler = std::bind(&AsioTcpConnection::HandleReadData, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
@@ -64,8 +66,6 @@ void AsioTcpConnection::HandleReadHeader(const asio::error_code &e, std::size_t 
 
 void AsioTcpConnection::HandleReadData(const asio::error_code &e, std::size_t size)
 {
-    packet_t *tmp;
-
     if (size > 0 && !e) {
         strcpy(_packet.data, test);
         std::cout << "Data : " << _packet.data << std::endl;

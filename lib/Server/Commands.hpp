@@ -20,21 +20,20 @@
 #include "UserManager.hpp"
 
 class Commands;
-typedef std::function<void(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)> cmd_ptr;
+typedef std::function<packet_t *(UserManager &um, packet_t &pck)> cmd_ptr;
 class Commands {
     public:
         Commands() = default;
         ~Commands() = default;
-        static void redirect(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
+        static packet_t *redirect(UserManager &um, packet_t &pck);
+        static packet_t *CreatePacket(int code, const std::string &data);
     protected:
     private:
-        static void sendResponse(asio::ip::tcp::socket &s, int code, const std::string &data);
-        void HandleWrite(const asio::error_code &e, std::size_t bytes);
-        static void login(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
-        static void Register(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
-        static void addContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
-        static void callX(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
-        static void ListContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
+        static packet_t *login(UserManager &um, packet_t &pck);
+        static packet_t *Register(UserManager &um, packet_t &pck);
+        static packet_t *addContact(UserManager &um, packet_t &pck);
+        static packet_t *callX(UserManager &um, packet_t &pck);
+        static packet_t *ListContact(UserManager &um, packet_t &pck);
         static const std::map<std::size_t, cmd_ptr> _cmd_map;
 };
 

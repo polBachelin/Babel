@@ -15,32 +15,30 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
     {004, Commands::ListContact}
 };
 
-void Commands::redirect(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+packet_t *Commands::redirect(UserManager &um, packet_t &pck)
 {
     try {
-        _cmd_map.at(pck.code)(s, um, pck);
+        return _cmd_map.at(pck.code)(um, pck);
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
+        return nullptr;
     }
+    return nullptr;
 }
 
-void Commands::sendResponse(asio::ip::tcp::socket &s, int code, const std::string &data)
+packet_t *Commands::CreatePacket(int code, const std::string &data)
 {
     packet_t response;
     packet_t *tmp = &response;
-    asio::error_code e;
 
     tmp->magic = MAGIC;
-    tmp->code = 200;
+    tmp->code = code;
     tmp->data_size = data.length();
     std::strcpy(tmp->data, data.c_str());
+    return tmp;
 }
 
-void Commands::HandleWrite(const asio::error_code &e, std::size_t bytes)
-{
-}
-
-void Commands::login(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+packet_t *Commands::login(UserManager &um, packet_t &pck)
 {
     std::string tmp = pck.data;
     std::array<std::string, 2> res;
@@ -51,13 +49,13 @@ void Commands::login(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
     res[1] = tmp;
     value = um.login(res[0], res[1]);
     if (value == true) {
-        Commands::sendResponse(s, 100, "success\n");
+        return Commands::CreatePacket(100, "success\n");
     } else {
-        Commands::sendResponse(s, 200, "failed\n");
+        return Commands::CreatePacket(200, "failed\n");
     }
 }
 
-void Commands::Register(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+packet_t *Commands::Register(UserManager &um, packet_t &pck)
 {
     std::string tmp = pck.data;
     std::array<std::string, 2> res;
@@ -68,13 +66,13 @@ void Commands::Register(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck
     res[1] = tmp;
     value = um.new_user(res[0], res[1]);
     if (value == true) {
-        Commands::sendResponse(s, 101, um.GetName());
+        return Commands::CreatePacket(101, um.GetName());
     } else {
-        Commands::sendResponse(s, 201, "failed\n");
+        return Commands::CreatePacket(201, "failed\n");
     }
 }
 
-void Commands::addContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+packet_t *Commands::addContact(UserManager &um, packet_t &pck)
 {
     auto tmp = um.GetContactManager();
     auto name = um.GetName();
@@ -82,18 +80,20 @@ void Commands::addContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &p
     
     res.erase(res.find('\n'));
     tmp.addContact(res, name);
+    return Commands::CreatePacket(102, "success");
 }
 
-void Commands::callX(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+packet_t *Commands::callX(UserManager &um, packet_t &pck)
 {
 }
 
-void Commands::ListContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+packet_t *Commands::ListContact(UserManager &um, packet_t &pck)
 {
     auto tmp = um.GetContactManager();
     auto name = um.GetName();
     std::string res;
     
+    (void)pck;
     res = tmp.getContactList(name);
-    sendResponse(s, 004, res);
+    return Commands::CreatePacket(004, res);
 }

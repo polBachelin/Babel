@@ -9,7 +9,8 @@
 
 static int verify(void *unused, int argc, char **argv, char **columnName)
 {
-    for (std::size_t i = 0; i < argc; i++) {
+    (void)unused;
+    for (int i = 0; i < argc; i++) {
         std::cout << columnName[i] << " = " <<  (argv[i] ? argv[i] : "NULL") << std::endl;
     }
     return 0;
@@ -19,10 +20,7 @@ int callForSelect(void *data, int argc, char **argv, char **columnName)
 {
     CallBackData_t *tmp = (CallBackData_t *)data;
 
-    // for (std::size_t i = 0; i < argc; i++) {
-    //     std::cout << columnName[i] << " = " <<  (argv[i] ? argv[i] : "NULL") << std::endl;
-    // }
-    for (std::size_t i = 0; i < argc; i++) {
+    for (int i = 0; i < argc; i++) {
         tmp->ac++;
         tmp->av.push_back(argv[i] ? argv[i] : "NULL");
         tmp->c_name.push_back(columnName[i]);
@@ -33,6 +31,7 @@ int callForSelect(void *data, int argc, char **argv, char **columnName)
 
 Database::Database() : _db(nullptr), _err_msg(nullptr)
 {
+    _data.ac = 0;
 }
 
 Database::Database(const std::string &f) : _db(nullptr), _err_msg(nullptr)

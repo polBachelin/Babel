@@ -36,8 +36,8 @@ class UserManager {
         const std::string &GetName();
     protected:
     private:
-        ContactManager _cm;
         Database _db;
+        ContactManager _cm;
         std::string _name;
         bool _isLog = false;
 };

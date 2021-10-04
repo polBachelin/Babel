@@ -29,7 +29,7 @@ class Database : public IDatabase {
     private:
         sqlite3 *_db;
         char *_err_msg;
-        CallBackData_t _data = {0};
+        CallBackData_t _data;
 };
 
 #endif /* !Database_h */
