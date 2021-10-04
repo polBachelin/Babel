@@ -11,6 +11,7 @@
 #include <QtWidgets>
 #include <memory>
 #include "PageManager.hpp"
+#include "TcpClient.hpp"
 
 namespace Client {
 
@@ -26,10 +27,14 @@ namespace Client {
 
             public slots:
                 void changeCurrentPage(pageNames);
+                void receivedSomething(QString msg);
+                void gotError(QAbstractSocket::SocketError err);
+                //void TryConnect
 
             private:
                 void initConnections(void);
                 PageManager _pages;
+                Client::Network::TcpClient _tcpClient;
                 ClientInfos _infos;
 
         };

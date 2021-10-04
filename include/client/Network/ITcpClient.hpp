@@ -8,25 +8,20 @@
 #ifndef ITCPCLIENT_HPP_
 #define ITCPCLIENT_HPP_
 
-#include <iostream>
-
 namespace Client
 {
     namespace Network
     {
-        class ITcpClient {
+        class ITcpClient
+        {
             public:
-                ITcpClient();
-                ~ITcpClient();
-                virtual bool send(const unsigned char *, std::size_t size) const = 0;
-                virtual std::pair<std::size_t, const unsigned char *> getData() = 0;
-                virtual void connectSocket(const std::string, unsigned short) = 0;
-                virtual bool isConnected() = 0;
-
+                virtual void start() = 0;
+                virtual void stop() = 0;
             protected:
-            private:
+                virtual bool connectToServer() = 0;
         };
     }
+}
 
 #endif /* !ITCPCLIENT_HPP_ */
 

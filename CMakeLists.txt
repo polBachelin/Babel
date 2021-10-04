@@ -30,6 +30,7 @@ conan_basic_setup()
 
 find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
 file(GLOB_RECURSE SRCS_CLIENT ${PROJECT_SOURCE_DIR}/src/client/*)
+#file(GLOB_RECURSE SRCS_CLIENT ${PROJECT_SOURCE_DIR}/src/common)
 #file(GLOB_RECURSE SRCS_SERVER ${PROJECT_SOURCE_DIR}/src/server/*)
 
 
@@ -41,6 +42,8 @@ include_directories(${CMAKE_INCLUDE_PATH})
 target_include_directories(${NAME_CLIENT} PUBLIC ${PROJECT_SOURCE_DIR}/include/client)
 target_include_directories(${NAME_CLIENT} PUBLIC ${PROJECT_SOURCE_DIR}/include/client/GUI/pages)
 target_include_directories(${NAME_CLIENT} PUBLIC ${PROJECT_SOURCE_DIR}/include/client/GUI/)
+target_include_directories(${NAME_CLIENT} PUBLIC ${PROJECT_SOURCE_DIR}/include/client/Network/)
+target_include_directories(${NAME_CLIENT} PUBLIC ${PROJECT_SOURCE_DIR}/include/common/)
 target_link_libraries(${NAME_CLIENT} ${CONAN_LIBS} Qt5::Network Qt5::Widgets)
 
 #Include Server
@@ -48,6 +51,7 @@ target_link_libraries(${NAME_CLIENT} ${CONAN_LIBS} Qt5::Network Qt5::Widgets)
 #target_link_libraries(${NAME} PUBLIC ${CONAN_LIBS})
 #target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
 #target_include_directories(${NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include/server)
+#target_include_directories(${NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include/common/)
 
 
 if (MVSVC)
