@@ -9,9 +9,10 @@
 
 const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
     {000, Commands::login},
-    {001, Commands::register_},
-    {002, Commands::add_contact},
-    {003, Commands::call_X},
+    {001, Commands::Register},
+    {002, Commands::addContact},
+    {003, Commands::callX},
+    {004, Commands::ListContact}
 };
 
 void Commands::redirect(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
@@ -33,7 +34,6 @@ void Commands::sendResponse(asio::ip::tcp::socket &s, int code, const std::strin
     tmp->code = 200;
     tmp->data_size = data.length();
     std::strcpy(tmp->data, data.c_str());
-    std::cout << "message sent " << asio::write(s, asio::buffer(tmp, sizeof(packet_t)), e) << std::endl;
 }
 
 void Commands::HandleWrite(const asio::error_code &e, std::size_t bytes)
@@ -57,7 +57,7 @@ void Commands::login(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
     }
 }
 
-void Commands::register_(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+void Commands::Register(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
 {
     std::string tmp = pck.data;
     std::array<std::string, 2> res;
@@ -74,11 +74,26 @@ void Commands::register_(asio::ip::tcp::socket &s, UserManager &um, packet_t &pc
     }
 }
 
-void Commands::add_contact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+void Commands::addContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
 {
-
+    auto tmp = um.GetContactManager();
+    auto name = um.GetName();
+    std::string res = pck.data;
+    
+    res.erase(res.find('\n'));
+    tmp.addContact(res, name);
 }
 
-void Commands::call_X(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+void Commands::callX(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
 {
+}
+
+void Commands::ListContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck)
+{
+    auto tmp = um.GetContactManager();
+    auto name = um.GetName();
+    std::string res;
+    
+    res = tmp.getContactList(name);
+    sendResponse(s, 004, res);
 }

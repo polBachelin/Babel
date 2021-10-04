@@ -31,9 +31,10 @@ class Commands {
         static void sendResponse(asio::ip::tcp::socket &s, int code, const std::string &data);
         void HandleWrite(const asio::error_code &e, std::size_t bytes);
         static void login(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
-        static void register_(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
-        static void add_contact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
-        static void call_X(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
+        static void Register(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
+        static void addContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
+        static void callX(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
+        static void ListContact(asio::ip::tcp::socket &s, UserManager &um, packet_t &pck);
         static const std::map<std::size_t, cmd_ptr> _cmd_map;
 };
 
