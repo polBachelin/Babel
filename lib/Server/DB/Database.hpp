@@ -28,7 +28,7 @@ class Database : public IDatabase {
     protected:
     private:
         sqlite3 *_db;
-        char *_err_msg;
+        char *_errMsg;
         CallBackData_t _data;
 };
 

@@ -28,6 +28,6 @@ class AsioTcpConnection : public std::enable_shared_from_this<AsioTcpConnection>
         asio::ip::tcp::socket _socket;
         std::string _message;
         packet_t _packet;
-        char test[2048] = {0};
+        char _buffer[2048] = {0};
         UserManager _um;
 };
