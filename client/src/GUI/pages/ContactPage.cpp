@@ -69,9 +69,9 @@ void Client::GUI::ContactPage::callLoader()
     _call->hide();
 }
 
-void Client::GUI::ContactPage::addOneContact()
+void Client::GUI::ContactPage::addOneContact(std::string contactName)
 {
-    std::string name("Contact " + std::to_string(_cid++));
+    std::string name(contactName + std::to_string(_cid++));
     std::shared_ptr<QPushButton> btn = std::make_shared<QPushButton>(name.c_str());
 
     btn->setFlat(true);
@@ -82,17 +82,11 @@ void Client::GUI::ContactPage::addOneContact()
 
 void Client::GUI::ContactPage::contactLoader()
 {
-    std::size_t nbContact(5);
-    // std::string name;
-
-    for (std::size_t i = 0; i != nbContact; i++) {
-        addOneContact();
-        // name = "Contact " + std::to_string(i);
-        // _contacts.push_back(std::make_shared<QPushButton>(name.c_str()));
-        // _contacts[i]->setFlat(true);
-        // _contacts[i]->setFixedSize({WIDTH / 4, HEIGHT / 15});
-        // _contacts[i]->setStyleSheet("Text-align:left");
-    }
+    addOneContact("abcdef");
+    addOneContact("Contact");
+    addOneContact("jbseri");
+    addOneContact("nvjserhbdkv");
+    addOneContact("vgzejbsbdhviosd");
 }
 
 void Client::GUI::ContactPage::delimLoader()

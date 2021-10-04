@@ -35,7 +35,7 @@ class ContactPage : public APage
         void formLoader();
 
         // other functions
-        void addOneContact();
+        void addOneContact(std::string);
 
     public slots:
         void contactClicked();
