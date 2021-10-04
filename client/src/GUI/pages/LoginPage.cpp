@@ -61,6 +61,7 @@ void Client::GUI::LoginPage::formLoader()
 
     _usernameForm->setPlaceholderText("Username");
     _passwordForm->setPlaceholderText("Password");
+    _passwordForm->setEchoMode(QLineEdit::Password);
 }
 
 void Client::GUI::LoginPage::delimLoader()
@@ -114,7 +115,12 @@ void Client::GUI::LoginPage::changeUsername(QString username)
 
 void Client::GUI::LoginPage::changePassword(QString password)
 {
+    std::string hidedPassword("");
+
     this->_password = password.toStdString();
+    for (std::size_t i = 0; i < _password.size(); i++)
+        hidedPassword += '*';
+    _passwordForm->setText(hidedPassword.c_str());
 }
 
 void Client::GUI::LoginPage::signIn()

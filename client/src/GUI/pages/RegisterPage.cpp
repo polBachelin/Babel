@@ -67,7 +67,9 @@ void Client::GUI::RegisterPage::formLoader()
 
     _usernameForm->setPlaceholderText("Username");
     _passwordForm->setPlaceholderText("Password");
+    _passwordForm->setEchoMode(QLineEdit::Password);
     _confirmPasswordForm->setPlaceholderText("confirm your password");
+    _confirmPasswordForm->setEchoMode(QLineEdit::Password);
 }
 
 void Client::GUI::RegisterPage::delimLoader()
