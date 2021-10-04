@@ -27,7 +27,6 @@ namespace Sound {
             int getSize() const;
             int getBytesLeft() const;
             float *getSample() const;
-            CircularBuffer getBuffer() const;
             float *getAlignedBuffer() const;
             void clearAligned(size_t bytesRead, unsigned long len);
             size_t write(const void *rptr, unsigned long len);

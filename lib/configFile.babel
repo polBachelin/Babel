@@ -3,7 +3,7 @@ SOUND_LIB: {
 }
 
 NETWORK_LIB: {
-	
+	./build/BabelLibs/Server/lib/libBabel_Asio.so
 }
 
 ENCODE_LIB: {

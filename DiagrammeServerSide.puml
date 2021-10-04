@@ -82,9 +82,9 @@ namespace server {
         - packet_t *_packet
     }
 
-    class TcpServer {
-        +TcpServer(asio::io_context &)
-        +~TcpServer()
+    class AsioTcpServer {
+        +AsioTcpServer(asio::io_context &)
+        +~AsioTcpServer()
         +void startAccept() override
         +void initServer(int port) override
         +void handleAccept(TcpConnection::pointer new_connection, const asio::error_code& error)

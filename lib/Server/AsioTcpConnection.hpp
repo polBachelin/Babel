@@ -10,25 +10,24 @@
 
 #endif /* !CLASS_HPP_ */
 
-#include "ITcpConnection.hpp"
+#include "Commands.hpp"
 
-class TcpConnection : public ITcpConnection, public std::enable_shared_from_this<TcpConnection> {
+class AsioTcpConnection : public std::enable_shared_from_this<AsioTcpConnection> {
     public:
-        TcpConnection(asio::io_context& io_context);
-        ~TcpConnection() {}
-        typedef std::shared_ptr<TcpConnection> pointer;
+        AsioTcpConnection(asio::io_context& io_context);
+        ~AsioTcpConnection();
+        typedef std::shared_ptr<AsioTcpConnection> pointer;
         static pointer create(asio::io_context& io_context);
         asio::ip::tcp::socket &socket();
-        void start() override;
+        void start();
         void handle_write(const asio::error_code& /*error*/, size_t /*bytes_transferred*/);
         void HandleReadHeader(const asio::error_code &, std::size_t);
         void HandleReadData(const asio::error_code &, std::size_t);
-        void interpret() override;
+        void interpret();
     private:
         asio::ip::tcp::socket _socket;
         std::string _message;
         packet_t _packet;
         char test[2048] = {0};
         UserManager _um;
-
 };
