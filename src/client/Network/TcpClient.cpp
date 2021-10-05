@@ -65,7 +65,7 @@ bool TcpClient::getStatus() {return _status;}
 void TcpClient::readyRead()
 {
     QDataStream in(_tcpSocket);
-    //in.setVersion(QDataStream::Qt_5_10);
+
     for (;;) {
         if (!_m_nNextBlockSize) {
             if (_tcpSocket->bytesAvailable() < (qint16) sizeof(quint16)) { break; }
@@ -117,7 +117,6 @@ void TcpClient::closeConnection()
 
     if (shouldEmit)
     {
-        this->
         std::cout << "Client Disconnected" << std::endl;
         _status = false;
         emit statusChanged(_status);

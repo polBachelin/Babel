@@ -35,6 +35,11 @@ namespace Client {
                 void initConnections(void);
                 PageManager _pages;
                 Client::Network::TcpClient _tcpClient;
+                //TODO: intégrer les attributs suivants
+                //Client::Network::PacketManager _packetManager;
+                //Client::Network::UdpClient _udpClient;
+                //std::shared_ptr<IEncodeManager> _encoderManager;
+                //std::shared_ptr<ISoundManager> _soundManager;
                 ClientInfos _infos;
 
         };
