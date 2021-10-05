@@ -20,6 +20,7 @@ class AsioTcpServer : public ITcpServer {
         AsioTcpServer() = default;
         ~AsioTcpServer() = default;
         void startAccept() override;
+        void reAccept();
         void initServer(int port) override;
         void handleAccept(AsioTcpConnection::pointer new_connection, const asio::error_code& error);
     private:

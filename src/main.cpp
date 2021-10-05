@@ -13,35 +13,27 @@
 #include "ConfigFileParser.hpp"
 #include "Error.hpp"
 #include <unordered_map>
+#include "asio.hpp"
 
 #define SAMPLE_RATE  (44100)
 #define FRAMES_PER_BUFFER (512)
 #define NUM_SECONDS     (5)
 
-int main(void)
+int main(int ac, char **av)
 {
     std::unordered_map<ConfigFileParser::LIB_TYPE, std::vector<std::string>> _libs = ConfigFileParser::parseFile();
-    
-    std::shared_ptr<ISoundManager> ptr = DLLoader<ISoundManager>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::SOUND].front());
-    std::shared_ptr<IEncodeManager> encod = DLLoader<IEncodeManager>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::ENCODE].front());
+
     std::shared_ptr<ITcpServer> serv = DLLoader<ITcpServer>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::NETWORK].front());
-    // if (ptr) {
-    //     try {
-    //         ptr->startInputStream();
-    //         ptr->startOutputStream();
-    //         std::cout << "==== Recording now ! ====" << std::endl;
-    //         sleep(5);
-    //         float *t = new float[SAMPLE_RATE * NUM_SECONDS * 2 * sizeof(float)];
-    //         std::memset(t, 0, SAMPLE_RATE * NUM_SECONDS * 2 * sizeof(float));
-    //         ptr->retrieveInputBytes(t, SAMPLE_RATE);
-    //         ptr->feedBytesToOutput(t, SAMPLE_RATE * 3);
-    //         //ptr->feedBytesToOutput(t, SAMPLE_RATE);
-    //         sleep(5);
-    //         std::cout << "-------------\n";
-    //         // std::cout << "==== Playing audio ! ====" << std::endl;
-    //     } catch (std::exception &e) {
-    //         std::cout << e.what() << std::endl ;
-    //     }
-    // }
+
+    if (serv) {
+        if (ac == 1) {
+            std::cout << "Port : 5000" << std::endl;
+            serv->initServer(5000);
+        } else {
+            std::cout << "Port : " << av[1] << std::endl;
+            serv->initServer(std::atoi(av[1]));
+        }
+        serv->startAccept();
+    }
     return 0;
 }

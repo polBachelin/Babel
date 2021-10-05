@@ -1,0 +1,48 @@
+@startuml Babel
+
+!theme spacelab
+
+
+namespace Client {
+
+
+namespace Audio {
+
+}
+
+namespace Network {
+
+    class packetUDP {
+        +unsigned short magicNum
+        +unsigned char[512] data
+        +std::time_t timestamp
+    }packetUDP_t
+
+
+    class UdpClient extends IUdpClient, QObject
+    {
+        +void connect()
+        +void send(packetUDP_t packet)
+        +void getData()
+
+
+
+        public slots:
+            void dataGetted()
+
+
+        -std::queue<packetUDP_t> packets
+    }
+
+}
+
+namespace Exceptions {
+
+class ClientException extends std::exception
+{
+    +const char *what() const noexcept override;
+}
+
+
+
+@enduml

@@ -2,9 +2,15 @@
 !define DARKBLUE
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
 
-namespace Client {
+namespace ClientSide {
      class Test<T> {
-         
+
+        -T _x;
+        -T _y;
+    }
+
+    class Test<T> {
+
         -T _x;
         -T _y;
     }
