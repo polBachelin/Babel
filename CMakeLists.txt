@@ -23,6 +23,7 @@ include_directories(./include/DLLoader/)
 include_directories(./include/Sound)
 include_directories(./include/Parser)
 include_directories(./include/Server)
+include_directories(./include/WindowsEquivalent)
 include_directories(./src/Exception)
 include_directories(./src/Exception/Error)
 
@@ -39,21 +40,27 @@ set(EXECUTABLE_OUTPUT_PATH "${PROJECT_SOURCE_DIR}/bin")
 set(LIBRARY_OUTPUT_PATH "${EXECUTABLE_OUTPUT_PATH}")
 
 configure_file(${PROJECT_SOURCE_DIR}/lib/configFile.babel ${CMAKE_BINARY_DIR}/bin/configFile.babel COPYONLY)
-add_executable(${NAME} ${SRCS})
+add_executable(${NAME} ${SRCS} "include/WindowsEquivalent/Bunistd.h" "include/WindowsEquivalent/Bdirent.h")
 
 set(SRCS_CLI
     src/client/main.cpp)
 
-add_executable(${NAME_CLI} ${SRCS_CLI})
+add_executable(${NAME_CLI} ${SRCS_CLI} "include/WindowsEquivalent/Bunistd.h" "include/WindowsEquivalent/Bdirent.h")
 target_link_libraries(${NAME_CLI} PUBLIC ${CONAN_LIBS})
 target_include_directories(${NAME_CLI} PUBLIC CONAN_INCLUDE_DIRS)
 target_include_directories(${NAME_CLI} PUBLIC ${PROJECT_SOURCE_DIR}/includes)
 target_include_directories(${NAME_CLI} PUBLIC ${PROJECT_SOURCE_DIR}/includes/Server)
 
-if (MVSVC)
-        target_compile_options(${NAME} PRIVATE /W4 /WX)
-else ()
-        target_compile_options(${NAME} PRIVATE -Wall -Wextra -std=c++17)
+if(CMAKE_COMPILER_IS_GNUCXX)
+    message(STATUS "GCC detected, adding compile flags")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
+if(WIN32)
+        target_compile_options(${NAME} PRIVATE)
+else()
+        message(STATUS "NOT IN WINDOWS")
+        target_compile_options(${NAME} PRIVATE)
 endif()
 
 #PortAudio Lib

@@ -15,14 +15,6 @@ extern "C"
     }
 }
 
-AsioTcpServer::AsioTcpServer()
-{
-}
-
-AsioTcpServer::~AsioTcpServer()
-{
-}
-
 void AsioTcpServer::startAccept()
 {
     AsioTcpConnection::pointer new_connection = AsioTcpConnection::create(*_io.get());
