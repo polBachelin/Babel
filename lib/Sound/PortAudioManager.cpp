@@ -12,13 +12,13 @@
 
 bool PortAudioManager::_init = false;
 
-extern "C"
-{
-    std::shared_ptr<ISoundManager> entryPoint()
-    {
-        return std::make_shared<PortAudioManager>();
-    }
-}
+// extern "C"
+// {
+//     std::shared_ptr<ISoundManager> entryPoint()
+//     {
+//         return std::make_shared<PortAudioManager>();
+//     }
+// }
 
 PortAudioManager::PortAudioManager() : 
 _inputBuffer(nullptr), _outputBuffer(nullptr), _inputSample(nullptr), _outputSample(nullptr), _inputStream(nullptr), _outputStream(nullptr), _inputChannels(2), _outputChannels(2), _outputIndex(0), _inputIndex(0), _micMute(false), _outputMute(false)

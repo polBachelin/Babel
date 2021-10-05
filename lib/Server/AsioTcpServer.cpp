@@ -7,23 +7,13 @@
 
 #include "AsioTcpServer.hpp"
 
-extern "C"
-{
-    std::shared_ptr<ITcpServer> entryPoint()
-    {
-        return std::make_shared<AsioTcpServer>();
-    }
-}
-
-AsioTcpServer::AsioTcpServer()
-{
-}
-
-AsioTcpServer::~AsioTcpServer()
-{
-}
-
-
+// extern "C"
+// {
+//     std::shared_ptr<ITcpServer> entryPoint()
+//     {
+//         return std::make_shared<AsioTcpServer>();
+//     }
+// }
 
 void AsioTcpServer::startAccept()
 {

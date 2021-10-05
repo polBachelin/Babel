@@ -13,9 +13,9 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-set(NAME Babel)
+set(NAME Babel_server)
 set(NAME_CLI Babel_client)
-set(NAME_SERV Babel_server)
+#set(NAME_SERV Babel_server)
 
 project(${NAME}
 LANGUAGES CXX
@@ -55,8 +55,7 @@ set(SRCS
     src/Parser/ConfigFileParser.cpp
     )
 
-
-add_executable(${NAME} ${SRCS})
+add_executable(${NAME} ${SRCS} "include/WindowsEquivalent/Bunistd.h" "include/WindowsEquivalent/Bdirent.h")
 target_link_libraries(${NAME} ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
 
@@ -67,8 +66,6 @@ include_directories(./include/client)
 include_directories(./include/client/GUI/pages)
 include_directories(./include/client/GUI/)
 include_directories(./include/client/Network/)
-configure_file(${PROJECT_SOURCE_DIR}/lib/configFile.babel ${CMAKE_BINARY_DIR}/bin/configFile.babel COPYONLY)
-add_executable(${NAME} ${SRCS} "include/WindowsEquivalent/Bunistd.h" "include/WindowsEquivalent/Bdirent.h")
 
 set(SRCS_CLI
     src/client/main.cpp
@@ -84,13 +81,28 @@ set(SRCS_CLI
     )
 
 add_executable(${NAME_CLI} ${SRCS_CLI} "include/WindowsEquivalent/Bunistd.h" "include/WindowsEquivalent/Bdirent.h")
-target_link_libraries(${NAME_CLI} PUBLIC ${CONAN_LIBS})
-add_executable(${NAME_CLI} ${SRCS_CLI})
 target_link_libraries(${NAME_CLI} ${CONAN_LIBS} Qt5::Network Qt5::Widgets)
 target_include_directories(${NAME_CLI} PUBLIC CONAN_INCLUDE_DIRS)
 
-#Compilation
+#PortAudio Lib
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound )
+set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound)
+include_directories(${SOUND_DIR})
+include_directories(${SOUND_DIR}/Exception)
+target_link_libraries(${NAME} Babel_PortAudio)
 
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Encode)
+set(ENCODE_DIR ${PROJECT_SOURCE_DIR}/lib/Encode)
+include_directories(${ENCODE_DIR})
+include_directories(${ENCODE_DIR}/Exception)
+target_link_libraries(${NAME} Babel_Opus)
+
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Server)
+set(SERVER_DIR ${PROJECT_SOURCE_DIR}/lib/Server)
+include_directories(${SERVER_DIR})
+target_link_libraries(${NAME} Babel_Asio)
+
+#Compilation 
 if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra")
@@ -102,8 +114,3 @@ else()
         message(STATUS "NOT IN WINDOWS")
         target_compile_options(${NAME} PRIVATE)
 endif()
-
-#PortAudio Lib
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound ${PROJECT_BINARY_DIR}/BabelLibs/Sound)
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Encode ${PROJECT_BINARY_DIR}/BabelLibs/Encode)
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Server ${PROJECT_BINARY_DIR}/BabelLibs/Server)
