@@ -4,7 +4,7 @@
 
 namespace ClientSide {
      class Test<T> {
-
+         
         -T _x;
         -T _y;
     }
@@ -17,28 +17,50 @@ namespace ClientSide {
 
 }
 
+namespace Load {
+    class DLLoader<T> {
+        +static std::shared_ptr<T> getEntryPoint(std::string filePath);
+    }
+
+    class ConfigFileParser {}
+}
+
 namespace Sound {
     class EncodedSound {
         -unsigned char *buffer;
         -int size;
     }
 
+    class CircularBuffer {
+        -void *buf;
+        -int _length;
+        -int tail;
+        -int head;
+
+        +void cleanup();
+        +void clear();
+        +void *getHead() const;
+        +void *getTail() const;
+        +int writeToBuffer(const void *src, int len);
+        +int read(const void *ptr, int len);
+    }
+
     class DecodedSound {
-        -int _frameIndex;
-        -int _maxFrameIndex;
-        -int size;
-        -std::vector<float> _sample //Sample size is = NUM_SECONS * SAMPLE_RATE * NUM_CHANNELS * sizeof(float)
+        -CircularBuffer _soundBuffer;
     }
 
     class ISoundManager {
         +int recordAudio() = 0;
         +int playAudio() = 0;
         +bool isStreamActive() = 0;
+        +bool isMicMuted() = 0;
+        +bool isOutputMuted() = 0;
+        +void setDefaultInputDevice() = 0;
+        +void setDefaultOutputDevice() = 0;
+        +std::vector<string> getInputDeviceNames() = 0;
+        +std::vector<string> getOutputDeviceNames() = 0;
+        +DecodedSound getSound() const = 0;
     }
-
-    ' class ASoundManager {
-    '     -std::array<float> _sample;
-    ' }
 
     class IEncodeManager {
         +EncodedSound encode(DecodedSound &sound) = 0;
@@ -50,7 +72,7 @@ namespace SoundLib {
     class PortAudioManager {
         +void recordCallback();
         +void playCallback();
-        -DecodedSound _sound;
+        -std::shared_ptr<CircularBuffer> _sound;
         -PaStream *_stream;
         -PaStreamParameters _outputParameters;
         -PaStreamParameters _inputParameters;

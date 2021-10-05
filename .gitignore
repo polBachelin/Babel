@@ -1,3 +1,4 @@
+db/database.db
 build/
 Dockerfile
 build.sh
