@@ -10,7 +10,7 @@
 
 using namespace Client::GUI;
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("localhost", 6637)
+MainWindow::MainWindow() : _pages(this), _tcpClient("10.19.253.225", 5000)
 {
     this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
@@ -32,12 +32,27 @@ void MainWindow::receivedSomething(QString msg)
 {
     std::cout << "Message" << msg.toStdString() << std::endl;
     //parserCommand
+    if (msg.toStdString() == "yes")
+        emit validSignalResponse("", "");
+    else
+        emit wrongSignalResponse("wrong pass", "wrong user");
 }
-
 
 void MainWindow::changeCurrentPage(pageNames name)
 {
     _pages.setCurrentPage(name);
+}
+
+void MainWindow::checkSignal(ClientInfos infos, signal_e e)
+{
+    std::cout << infos.username << std::endl;
+    std::cout << infos.password << std::endl;
+
+    _tcpClient.send(infos.username);
+    if (true)
+        emit validSignalResponse("", "");
+    else
+        emit wrongSignalResponse("wrong pass", "wrong user");
 }
 
 void MainWindow::gotError(QAbstractSocket::SocketError err)
@@ -65,6 +80,9 @@ void MainWindow::gotError(QAbstractSocket::SocketError err)
 
 void MainWindow::initConnections(void)
 {
+    QObject::connect(_pages.getPage(LOGIN), SIGNAL(checkSignIn(ClientInfos, signal_e)),
+        this, SLOT(checkSignal(ClientInfos, signal_e)));
+
     QObject::connect(
         _pages.getPage(LOGIN), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
