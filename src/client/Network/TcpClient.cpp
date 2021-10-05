@@ -50,7 +50,7 @@ void TcpClient::connectionTimeout()
     if(_tcpSocket->state() == QAbstractSocket::ConnectingState)
     {
         _tcpSocket->abort();
-        emit _tcpSocket->error(QAbstractSocket::SocketTimeoutError);
+        emit _tcpSocket->error();
     }
 }
 
