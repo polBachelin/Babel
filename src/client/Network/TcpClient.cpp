@@ -35,18 +35,18 @@ QAbstractSocket *TcpClient::getSocket()
     return _tcpSocket;
 }
 
-void TcpClient::connect2host()
+void TcpClient::connectTohost()
 {
     _timeoutTimer->start(3000);
 
     _tcpSocket->connectToHost(_host, _port);
     QObject::connect(_tcpSocket, &QTcpSocket::connected, this, &TcpClient::connected);
-    QObject::connect(_tcpSocket, &QTcpSocket::readyRead, this, &TcpClient::readyRead);
+    QObject::connect(_tcpSocket, SIGNAL(readyRead()), this, SLOT(TcpClient::readyRead));
+    this->send("Hello Toto\n");
 }
 
 void TcpClient::connectionTimeout()
 {
-    //qDebug() << _tcpSocket->state();
     if(_tcpSocket->state() == QAbstractSocket::ConnectingState)
     {
         _tcpSocket->abort();
@@ -80,17 +80,16 @@ void TcpClient::readyRead()
             str = "Connection closed";
             closeConnection();
         }
-
-        emit hasReadSome(str);
+        std::cout << str.toStdString() << std::endl;
+        emit dataAvailable(str);
         _m_nNextBlockSize = 0;
     }
 }
 
-//void TcpClient::gotDisconnection()
-//{
-//    _status = false;
-//    emit statusChanged(_status);
-//}
+void TcpClient::send(const std::string data)
+{
+    _tcpSocket->write(QByteArray(data.c_str()));
+}
 
 void TcpClient::closeConnection()
 {

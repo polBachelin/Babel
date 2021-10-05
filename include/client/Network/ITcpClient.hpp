@@ -8,6 +8,8 @@
 #ifndef ITCPCLIENT_HPP_
 #define ITCPCLIENT_HPP_
 
+#include <string>
+
 typedef struct packet {
     int magic;
     int code;
@@ -23,10 +25,11 @@ namespace Client
         class ITcpClient
         {
             public:
-                virtual void start() = 0;
-                virtual void stop() = 0;
+                virtual void connectToHost() = 0;
+                virtual void send(const std::string) = 0;
+                virtual void closeConnection();
+                virtual void readyRead() = 0;
             protected:
-                virtual bool connectToServer() = 0;
         };
     }
 }

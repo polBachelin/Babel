@@ -31,14 +31,15 @@ namespace Client
 
                 bool getStatus();
                 QAbstractSocket *getSocket();
+                void send(const std::string );
 
             public slots:
                 void closeConnection();
-                void connect2host();
+                void connectTohost();
 
             signals:
                 void statusChanged(bool);
-                void hasReadSome(QString msg);
+                void dataAvailable(QString msg);
 
             private slots:
                 void readyRead();

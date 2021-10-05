@@ -10,12 +10,12 @@
 
 using namespace Client::GUI;
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("localhost", 6637)
+MainWindow::MainWindow() : _pages(this), _tcpClient("127.0.0.1", 6637)
 {
     this->setFixedSize({800, 600});
     setWindowTitle("Babel");
     this->setCentralWidget(&_pages);
-    _tcpClient.connect2host();
+    _tcpClient.connectTohost();
     initConnections();
 }
 
@@ -68,7 +68,7 @@ void MainWindow::initConnections(void)
     QObject::connect(
         _pages.getPage(CONTACTS), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
-    QObject::connect(&_tcpClient, &Client::Network::TcpClient::hasReadSome, this, &MainWindow::receivedSomething);
+    QObject::connect(&_tcpClient, &Client::Network::TcpClient::dataAvailable, this, &MainWindow::receivedSomething);
     QObject::connect(_tcpClient.getSocket(), SIGNAL(error(QAbstractSocket::SocketError)),
             this, SLOT(gotError(QAbstractSocket::SocketError)));
 }

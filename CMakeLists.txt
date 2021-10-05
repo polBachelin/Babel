@@ -45,11 +45,12 @@ include_directories(./include/)
 include_directories(./include/DLLoader/)
 include_directories(./include/Sound)
 include_directories(./include/Parser)
-#include_directories(./include/Server)
+include_directories(./include/Server)
 include_directories(./src/Exception)
 include_directories(./src/Exception/Error)
 
 set(SRCS
+    src/main.cpp
     src/Sound/CircularBuffer.cpp
     src/Sound/DecodedSound.cpp
     src/Exception/Error/Error.cpp
@@ -79,7 +80,6 @@ set(SRCS_CLI
     src/client/GUI/MainWindow.cpp
     src/client/Network/TcpClient.cpp
     src/client/BabelClient.cpp
-    src/client/main.cpp
     )
 
 add_executable(${NAME_CLI} ${SRCS_CLI})
