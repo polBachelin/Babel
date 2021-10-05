@@ -6,16 +6,20 @@
 */
 
 #include "MainWindow.hpp"
-#include "LoginPage.hpp"
+#include "APage.hpp"
 
 using namespace Client::GUI;
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("127.0.0.1", 6637)
+MainWindow::MainWindow() : _pages(this), _tcpClient("localhost", 6637)
 {
-    this->setFixedSize({800, 600});
+    this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
     this->setCentralWidget(&_pages);
-    _tcpClient.connectTohost();
+    this->setStyleSheet(
+        "background-image:url("
+        BACKGROUND_PATH
+        "); background-position: center;");
+
     initConnections();
 }
 
@@ -28,6 +32,7 @@ void MainWindow::receivedSomething(QString msg)
 {
     std::cout << "Message" << msg.toStdString() << std::endl;
 }
+
 
 void MainWindow::changeCurrentPage(pageNames name)
 {
@@ -63,7 +68,10 @@ void MainWindow::initConnections(void)
         _pages.getPage(LOGIN), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
     QObject::connect(
-        _pages.getPage(NEXT), SIGNAL(changePage(pageNames)),
+        _pages.getPage(REGISTER), SIGNAL(changePage(pageNames)),
+        this, SLOT(changeCurrentPage(pageNames)));
+    QObject::connect(
+        _pages.getPage(CALL), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
     QObject::connect(
         _pages.getPage(CONTACTS), SIGNAL(changePage(pageNames)),

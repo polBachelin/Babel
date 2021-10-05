@@ -12,8 +12,9 @@ using namespace Client::GUI;
 PageManager::PageManager(QWidget *parent) : _parent(parent)
 {
     this->addPage(LOGIN);
-    this->addPage(NEXT);
+    this->addPage(REGISTER);
     this->addPage(CONTACTS);
+    this->addPage(CALL);
     std::cout << "Page manager created" << std::endl;
 }
 
@@ -29,8 +30,11 @@ void PageManager::addPage(pageNames name)
         case LOGIN:
             this->_pages.emplace(LOGIN, std::make_unique<LoginPage>(_infos, _parent));
             break;
-        case NEXT:
-            this->_pages.emplace(NEXT, std::make_unique<NextPage>(_infos, _parent));
+        case REGISTER:
+            this->_pages.emplace(REGISTER, std::make_unique<RegisterPage>(_infos, _parent));
+            break;
+        case CALL:
+            this->_pages.emplace(CALL, std::make_unique<CallPage>(_infos, _parent));
             break;
         case CONTACTS:
             this->_pages.emplace(CONTACTS, std::make_unique<ContactPage>(_infos, _parent));
@@ -43,9 +47,8 @@ void PageManager::addPage(pageNames name)
 
 void PageManager::setCurrentPage(pageNames name)
 {
-        APage *page = getPage(name);
-        page->initConnections();
-        this->setCurrentWidget(page);
+    APage *page = getPage(name);
+    this->setCurrentWidget(page);
 }
 
 APage *PageManager::getPage(pageNames name)

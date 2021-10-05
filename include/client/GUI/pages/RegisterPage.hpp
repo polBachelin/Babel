@@ -2,24 +2,24 @@
 ** EPITECH PROJECT, 2021
 ** Babel
 ** File description:
-** LoginPage
+** RegisterPage
 */
 
-#ifndef DEF_MAFENETRE
-#define DEF_MAFENETRE
+#ifndef DEF_REGISTERPAGE
+#define DEF_REGISTERPAGE
 
 #include "APage.hpp"
 
 namespace Client {
 namespace GUI {
 
-class LoginPage : public APage
+class RegisterPage : public APage
 {
     Q_OBJECT
 
     public:
-        LoginPage(ClientInfos infos, QWidget *parent = nullptr);
-        ~LoginPage() = default;
+        RegisterPage(ClientInfos infos, QWidget *parent = nullptr);
+        ~RegisterPage() = default;
 
         // member functions
         void initConnections() override;
@@ -36,8 +36,9 @@ class LoginPage : public APage
         void changeWidth(int width);
         void changeUsername(QString);
         void changePassword(QString);
-        void signIn();
+        void changeConfirmPassword(QString);
         void createAccount();
+        void signIn();
 
     private:
         // Layout
@@ -49,18 +50,21 @@ class LoginPage : public APage
         std::unique_ptr<QLabel> _labelPageName;
         std::unique_ptr<QLabel> _emptyLabel;
         std::unique_ptr<QLabel> _textLabel;
-        std::unique_ptr<QPushButton> _registerButton;
+        std::unique_ptr<QPushButton> _signButton;
 
         // FORM
         std::unique_ptr<QLineEdit> _usernameForm;
         std::unique_ptr<QLabel> _errorUsername;
         std::unique_ptr<QLineEdit> _passwordForm;
         std::unique_ptr<QLabel> _errorPassword;
-        std::unique_ptr<QPushButton> _signButton;
+        std::unique_ptr<QLineEdit> _confirmPasswordForm;
+        std::unique_ptr<QLabel> _errorConfirmPassword;
+        std::unique_ptr<QPushButton> _registerButton;
 
         // member variables
         std::string _username;
         std::string _password;
+        std::string _confirmPassword;
         bool _formError;
 };
 

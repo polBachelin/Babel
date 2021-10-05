@@ -8,26 +8,11 @@
 #ifndef DEF_CONTACTPAGE
 #define DEF_CONTACTPAGE
 
-#include <QApplication>
-#include <QWidget>
-#include <QtWidgets>
-#include <QPushButton>
-#include <memory>
-#include <QLineEdit>
-#include <QFormLayout>
-#include <QSlider>
-#include <QtCore/QObject>
-#include <QPixmap>
-#include <vector>
 #include "APage.hpp"
-
-#define LOGO_PATH "./assets/babelLogo_48x48.png"
-#define CALL_PATH "./assets/acceptCall_48x48.png"
-#define WIDTH     800
-#define HEIGHT    600
 
 namespace Client {
 namespace GUI {
+
 class ContactPage : public APage
 {
     Q_OBJECT
@@ -39,8 +24,8 @@ class ContactPage : public APage
 
         // member functions
         void initConnections() override;
-        void loadPage();
-        void layoutLoader();
+        void loadPage() override;
+        void layoutLoader() override;
 
         // widgtet loaders
         void contactLoader();
@@ -49,11 +34,15 @@ class ContactPage : public APage
         void callLoader();
         void formLoader();
 
+        // other functions
+        void addOneContact(std::string);
+
     public slots:
         void contactClicked();
         void callClicked();
         void logOut();
-
+        void searchContact(QString);
+        void changeMsg(QString);
 
     private:
         // Layout
@@ -66,7 +55,7 @@ class ContactPage : public APage
         std::unique_ptr<QLabel> _labelPageName;
         std::unique_ptr<QLabel> _labelContactName;
         std::unique_ptr<QLabel> _labelContactSelected;
-        std::unique_ptr<QLabel> _labelCalling;
+        std::unique_ptr<QLabel> _emptyLabel;
         std::unique_ptr<QPushButton> _call;
         std::unique_ptr<QLineEdit> _contactSearch;
         std::unique_ptr<QLineEdit> _writeMsg;
@@ -80,10 +69,12 @@ class ContactPage : public APage
         QSlider *   _m_slider;
         QWidget *   _parent;
         std::string _username;
+        std::string _msg;
+        std::string _search;
         QString _contactSelected;
-        bool _calling;
+        std::size_t _cid;
 };
-}
-}
+
+}}
 
 #endif

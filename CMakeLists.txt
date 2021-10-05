@@ -14,8 +14,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 set(NAME Babel)
-set(NAME_CLI Babel_cli)
-set(NAME_SERV Babel_serv)
+set(NAME_CLI Babel_client)
+set(NAME_SERV Babel_server)
 
 project(${NAME}
 LANGUAGES CXX
@@ -26,12 +26,9 @@ DESCRIPTION "The new skype"
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(KEEP_RPATHS)
 
-
 #Client
-
+# ---------------------------------------
 find_package(Qt5 COMPONENTS Widgets Network REQUIRED)
-
-
 
 #QT lib
 
@@ -74,7 +71,8 @@ set(SRCS_CLI
     src/client/main.cpp
     src/client/GUI/pages/APage.cpp
     src/client/GUI/pages/LoginPage.cpp
-    src/client/GUI/pages/NextPage.cpp
+    src/client/GUI/pages/RegisterPage.cpp
+    src/client/GUI/pages/CallPage.cpp
     src/client/GUI/pages/ContactPage.cpp
     src/client/GUI/pages/PageManager.cpp
     src/client/GUI/MainWindow.cpp
@@ -93,7 +91,7 @@ if (MVSVC)
     target_compile_options(${NAME} PRIVATE /W4 /WX)
 else ()
     target_compile_options(${NAME_CLI} PRIVATE -Wall -Wextra -std=c++17)
-    #target_compile_options(${NAME} PRIVATE -Wall -Wextra -std=c++17)
+    target_compile_options(${NAME} PRIVATE -Wall -Wextra -std=c++17)
 endif()
 
 #PortAudio Lib

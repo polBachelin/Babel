@@ -1,1 +1,1 @@
-cd build && cmake .. -G "Unix Makefiles" && cmake --build . -j 3 && ./bin/babel_client
+cd build && cmake .. -G "Unix Makefiles" && cmake --build . -j 3 && ./bin/Babel_cli

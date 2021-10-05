@@ -41,7 +41,7 @@ void TcpClient::connectTohost()
 
     _tcpSocket->connectToHost(_host, _port);
     QObject::connect(_tcpSocket, &QTcpSocket::connected, this, &TcpClient::connected);
-    QObject::connect(_tcpSocket, SIGNAL(readyRead()), this, SLOT(TcpClient::readyRead));
+    QObject::connect(_tcpSocket, SIGNAL(readyRead()), this, SLOT(TcpClient::readyRead()));
     this->send("Hello Toto\n");
 }
 
