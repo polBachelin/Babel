@@ -16,7 +16,7 @@
 template<typename T>
 class DLLoader {
     public:
-        static std::shared_ptr<T> getEntryPoint(std::string filePath) 
+        static std::shared_ptr<T> getEntryPoint(std::string filePath)
         {
             void *handle = NULL;
             std::shared_ptr<T> (*instance)(void);
