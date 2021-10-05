@@ -31,6 +31,7 @@ MainWindow::~MainWindow()
 void MainWindow::receivedSomething(QString msg)
 {
     std::cout << "Message" << msg.toStdString() << std::endl;
+    //parserCommand
 }
 
 
