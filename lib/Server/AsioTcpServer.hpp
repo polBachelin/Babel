@@ -5,11 +5,10 @@
 ** class
 */
 
-#ifndef CLASS_HPP_
-#define CLASS_HPP_
+#ifndef ASIOTCPSERVER_HPP_
+#define ASIOTCPSERVER_HPP_
 
 
-#endif /* !CLASS_HPP_ */
 
 #include "ITcpServer.hpp"
 #include "AsioTcpConnection.hpp"
@@ -22,11 +21,14 @@ class AsioTcpServer : public ITcpServer {
         void startAccept() override;
         void reAccept();
         void initServer(int port) override;
-        void handleAccept(AsioTcpConnection::pointer new_connection, const asio::error_code& error);
+        void handleAccept(pointer_t new_connection, const asio::error_code& error);
+        std::deque<pointer_t> &getClientList();
     private:
         std::shared_ptr<asio::io_context> _io;
         int _port;
         std::unique_ptr<asio::ip::tcp::acceptor> _acceptor;
-        std::deque<AsioTcpConnection::pointer> _clients;
+        std::deque<pointer_t> _clients;
 
 };
+
+#endif /* !ASIOTCPSERVER_HPP_ */
