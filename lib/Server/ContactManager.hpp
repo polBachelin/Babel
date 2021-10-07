@@ -8,7 +8,7 @@
 #ifndef ContactManager_h
 #define ContactManager_h
 
-#include "Database.hpp"
+#include "DB/Database.hpp"
 
 class ContactManager {
     public:

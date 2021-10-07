@@ -8,11 +8,8 @@
 #ifndef ASIOTCPSERVER_HPP_
 #define ASIOTCPSERVER_HPP_
 
-
-
-#include "ITcpServer.hpp"
 #include "AsioTcpConnection.hpp"
-#include "ContactManager.hpp"
+#include "ITcpServer.hpp"
 
 class AsioTcpServer : public ITcpServer {
     public:

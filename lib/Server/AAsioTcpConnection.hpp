@@ -25,8 +25,8 @@ typedef std::shared_ptr<AAsioTcpConnection> pointer_t;
 
 class AAsioTcpConnection : public ITcpConnection {
     public:
-        AAsioTcpConnection();
-        ~AAsioTcpConnection();
+        AAsioTcpConnection() = default;
+        ~AAsioTcpConnection() = default;
 
         virtual asio::ip::tcp::socket &socket() = 0;
         virtual void start() = 0;

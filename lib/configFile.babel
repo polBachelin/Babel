@@ -1,11 +1,11 @@
 SOUND_LIB: {
-	./build/BabelLibs/Sound/lib/libBabel_PortAudio.so
+	./build/BabelLibs/Sound/lib/libBabel_PortAudio.a
 }
 
 NETWORK_LIB: {
-	./build/BabelLibs/Server/lib/libBabel_Asio.so
+	./build/BabelLibs/Server/lib/libBabel_Asio.a
 }
 
 ENCODE_LIB: {
-	./build/BabelLibs/Encode/lib/libBabel_Opus.so
+	./build/BabelLibs/Encode/lib/libBabel_Opus.a
 }`
