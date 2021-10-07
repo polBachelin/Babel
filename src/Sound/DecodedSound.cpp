@@ -12,7 +12,7 @@ using namespace Sound;
 DecodedSound::DecodedSound(const int &size, const int &alignedSize) : _size(size)
 {
 	_alignedBuffer = new float[alignedSize];
-	std::memset(_alignedBuffer, 0.0f, alignedSize);
+	std::memset(_alignedBuffer, 0, alignedSize);
 	_buffer = std::make_shared<CircularBuffer>(size);
 }
 

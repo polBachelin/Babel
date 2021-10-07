@@ -9,7 +9,6 @@
 #define CONFIGFILEPARSER_HPP_
 
 #include <memory>
-#include <unistd.h>
 #include <regex>
 #include <string>
 #include <fstream>
@@ -17,7 +16,13 @@
 #include <sstream>
 #include <utility>
 #include <iostream>
-#include <dirent.h>
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
+	#include <Bdirent.h>
+	#include <Bunistd.h>
+#else
+	#include <dirent.h>
+	#include <unistd.h>
+#endif
 #include <sys/types.h>
 #include <unordered_map>
 

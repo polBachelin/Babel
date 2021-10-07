@@ -51,6 +51,11 @@ namespace GUI {
             CALL
         };
 
+    enum signal_e
+        {
+            SIGNINCHECK
+        };
+
 class APage : public QWidget
 {
     Q_OBJECT
@@ -66,7 +71,7 @@ class APage : public QWidget
 
     signals:
         void changePage(pageNames name);
-
+        void checkSignIn(ClientInfos, signal_e);
 
     protected:
         std::unique_ptr<QGridLayout> _layout;

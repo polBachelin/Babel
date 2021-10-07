@@ -8,7 +8,7 @@
 #include "CircularBuffer.hpp"
 #include <iostream>
 
-CircularBuffer::CircularBuffer(const size_t &size) : _len(size), _headPtr(0), _tailPtr(0), _bytesLeft(size)
+CircularBuffer::CircularBuffer(const int &size) : _len(size), _headPtr(0), _tailPtr(0), _bytesLeft(size)
 {
 	std::cout << "ALLOCATING BUFFER" << std::endl;
 	if (size != 0) {
@@ -43,7 +43,7 @@ void *CircularBuffer::getTail() const
 	return &_buf[_tailPtr];
 }
 
-int CircularBuffer::getLen() const
+std::size_t CircularBuffer::getLen() const
 {
 	return _len;
 }
@@ -60,7 +60,7 @@ unsigned char *CircularBuffer::getRawBuf() const
 
 int CircularBuffer::size() const
 {
-	return _len - _bytesLeft;
+	return (int)_len - _bytesLeft;
 }
 
 bool CircularBuffer::NoMoreBytes()
@@ -70,7 +70,7 @@ bool CircularBuffer::NoMoreBytes()
 	return false;
 }
 
-int CircularBuffer::write(const void *src, size_t len)
+int CircularBuffer::write(const void *src, int len)
 {
 	if (src == nullptr || len == 0 || _bytesLeft <= 0)
 		return 0;
@@ -87,9 +87,9 @@ int CircularBuffer::write(const void *src, size_t len)
 	return len;
 }
 
-int CircularBuffer::read(void *src, size_t len)
+int CircularBuffer::read(void *src, int len)
 {
-	if (src == nullptr || len <= 0 || _len - _bytesLeft < len)
+	if (src == nullptr || len <= 0 || (int)(_len - _bytesLeft) < len)
 		return 0;
 	unsigned char *t = static_cast<unsigned char *>(src);
 	for (size_t i = 0; i < len; i++) {

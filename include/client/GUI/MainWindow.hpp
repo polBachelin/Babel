@@ -15,6 +15,7 @@
 
 namespace Client {
 
+
     namespace GUI {
 
         class MainWindow : public QMainWindow
@@ -25,7 +26,12 @@ namespace Client {
                 MainWindow();
                 ~MainWindow();
 
+            signals:
+                void validSignalResponse(QString, QString);
+                void wrongSignalResponse(QString, QString);
+
             public slots:
+                void checkSignal(ClientInfos, signal_e);
                 void changeCurrentPage(pageNames);
                 void receivedSomething(QString msg);
                 void gotError(QAbstractSocket::SocketError err);

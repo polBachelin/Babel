@@ -16,8 +16,8 @@
 
 class AsioTcpServer : public ITcpServer {
     public:
-        AsioTcpServer();
-        ~AsioTcpServer();
+        AsioTcpServer() = default;
+        ~AsioTcpServer() = default;
         void startAccept() override;
         void reAccept();
         void initServer(int port) override;
@@ -25,7 +25,7 @@ class AsioTcpServer : public ITcpServer {
         std::deque<pointer_t> &getClientList();
     private:
         std::shared_ptr<asio::io_context> _io;
-        int _port;
+        int _port = 0;
         std::unique_ptr<asio::ip::tcp::acceptor> _acceptor;
         std::deque<pointer_t> _clients;
 
