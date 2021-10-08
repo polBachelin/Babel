@@ -12,6 +12,10 @@ using namespace Client::Managers;
 CallManager::CallManager() : QObject()
 {
     _udpClient = std::make_unique<Client::Network::UDPClient>();
+    _frameSize = _soundManager->getInputChannels() * sizeof(float);
+    _inputBufferSize =  3 * _soundManager->getSampleRate() * _frameSize;
+    _inputBuffer = new float[size];
+    _outputBuffer = new float[size];
     _udpClient->connectToPair();
     //connect(_soundManager, inputAvailable, this, sendAudioData);
     //connect(_soundManager, outputAvailable, this, onReadAudioData);
@@ -21,31 +25,41 @@ CallManager::~CallManager()
 {
 }
 
+Client::Network::audioPacket_t CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
+{
+    Client::Network::audioPacket_t audioPacket;
+
+    audioPacket.timestamp = time;
+    audioPacket.data = new unsigned char[buffSize];
+    std::memcpy(audioPacket.data, compressedBuff, buffSize);
+    audioPacket.sizeOfData = buffSize;
+    return audioPacket;
+}
+
 void CallManager::sendAudioData()
 {
     Client::Network::packetUDP_t dataPacket;
-    Client::Network::audioPacket_t audioPacket = {};
+    Client::Network::audioPacket_t audioPacket;
     char *ptr;
 
-    audioPacket.timestamp = std::time(nullptr);
-
-    // ? audioPacket.data = ??????
-    unsigned char toto[512] = "wsh";
-    audioPacket.data = toto;
-    audioPacket.sizeOfData = 3;
+    unsigned char compressedBuffer = new unsigned char[_inputBufferSize];
+    std::memset(compressedBuffer, 0, _inputBufferSize);
+    _soundManager->retrieveInputBytes(_inputBuffer, 512);
+    int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 512, _inputBufferSize);
+    audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));    
     ptr = reinterpret_cast<char *>(&audioPacket);
-
     dataPacket.port = _audioPort;
     dataPacket.data = ptr;
     for (auto &pair : _pairs) {
         dataPacket.host = pair.first;
         _udpClient->send(dataPacket);
     }
+    delete [] compressedBuffer;
+    delete [] audioPacket.data;
 }//TODO: paramètre input compressé
 
 void CallManager::onReadAudioData()
 {
-    // TODO:: créer un compressedBuffer;
     Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
     auto *audioPacket = reinterpret_cast<Client::Network::audioPacket_t *>(dataPacket.data);
 
@@ -57,6 +71,8 @@ void CallManager::onReadAudioData()
     if (audioPacket->timestamp < _pairs[dataPacket.host])
         return;
     _pairs[dataPacket.host] = audioPacket->timestamp;
+    _encoderManager->decode(audioPacket->data, _outputBuffer, 512, audioPacket->sizeOfData);
+    _soundManager->feedBytesToOutput(_outputBuffer, 512);
     //this->interpretSound(compressedBuffer, dataPacket.host)
 }
 

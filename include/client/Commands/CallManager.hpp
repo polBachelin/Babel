@@ -32,7 +32,8 @@ namespace Client
                 ~CallManager();
                 void sendAudioData();
                  //TODO: paramètre input compressé
-                 void connectToHosts();
+                void connectToHosts();
+                Client::Network::audioPacket_t createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time);
                 void beginCall(const std::vector<std::string> &pairs);
                 void endCall();
 
@@ -46,8 +47,12 @@ namespace Client
                 const int _magicNum = 1234;
                 const unsigned short _audioPort = 5000;
                 bool _inCall = false;
-                //std::shared_ptr<IEncodeManager> _encoderManager;
-                //std::shared_ptr<ISoundManager> _soundManager;
+                float *_inputBuffer;
+                float *_outputBuffer;
+                int _frameSize;
+                int _inputBufferSize;
+                std::shared_ptr<IEncodeManager> _encoderManager;
+                std::shared_ptr<ISoundManager> _soundManager;
         };
     }
 }

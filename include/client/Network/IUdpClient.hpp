@@ -23,7 +23,7 @@ namespace Client
             unsigned char *data;
             unsigned short sizeOfData;
             std::time_t timestamp;
-        }audioPacket_t;
+        } audioPacket_t;
         #pragma pack(pop)
 
         typedef struct packetUDP
@@ -31,7 +31,7 @@ namespace Client
             char *data;
             std::string host;
             unsigned short port;
-        }packetUDP_t;
+        } packetUDP_t;
 
         class IUDPClient
         {

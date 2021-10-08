@@ -66,6 +66,16 @@ bool PortAudioManager::isOutputMuted()
     return _outputMute;
 }
 
+int PortAudioManager::getSampleRate()
+{
+    return SAMPLE_RATE;
+}
+
+size_t PortAudioManager::getOutputChannels() const
+{
+    return _outputChannels;
+}
+
 size_t PortAudioManager::getInputChannels() const
 {
     return _inputChannels;
