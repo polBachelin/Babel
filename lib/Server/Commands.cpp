@@ -85,6 +85,7 @@ packet_t *Commands::addContact(UserManager &um, packet_t &pck)
 
 packet_t *Commands::callX(UserManager &um, packet_t &pck)
 {
+    return NULL;
 }
 
 packet_t *Commands::ListContact(UserManager &um, packet_t &pck)

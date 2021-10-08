@@ -52,8 +52,6 @@ namespace GUI {
             CALL
         };
 
-<<<<<<< Updated upstream:client/include/GUI/pages/APage.hpp
-=======
     enum signal_e
         {
             Elogin = 000,
@@ -74,7 +72,6 @@ namespace GUI {
             EContactlist = 004
         };
 
->>>>>>> Stashed changes:include/client/GUI/pages/APage.hpp
 class APage : public QWidget
 {
     Q_OBJECT
@@ -90,7 +87,7 @@ class APage : public QWidget
 
     signals:
         void changePage(pageNames name);
-
+        void checkSignIn(ClientInfos, signal_e);
 
     protected:
         std::unique_ptr<QGridLayout> _layout;

@@ -12,6 +12,11 @@ Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(in
     setFixedSize(WIDTH, HEIGHT);
     _formError = false;
 
+    QObject::connect(parent, SIGNAL(validSignalResponse(QString, QString)),
+        this, SLOT(validSignIn(QString, QString)));
+    QObject::connect(parent, SIGNAL(wrongSignalResponse(QString, QString)),
+        this, SLOT(wrongSignIn(QString, QString)));
+
     loadPage();
     layoutLoader();
 }
@@ -115,12 +120,7 @@ void Client::GUI::LoginPage::changeUsername(QString username)
 
 void Client::GUI::LoginPage::changePassword(QString password)
 {
-    std::string hidedPassword("");
-
     this->_password = password.toStdString();
-    for (std::size_t i = 0; i < _password.size(); i++)
-        hidedPassword += '*';
-    _passwordForm->setText(hidedPassword.c_str());
 }
 
 void Client::GUI::LoginPage::signIn()
@@ -141,8 +141,6 @@ void Client::GUI::LoginPage::signIn()
         return;
     }
 
-<<<<<<< Updated upstream:client/src/GUI/pages/LoginPage.cpp
-=======
     _infos.username = _username;
     _infos.password = _password;
 
@@ -152,15 +150,25 @@ void Client::GUI::LoginPage::signIn()
 
 void Client::GUI::LoginPage::validSignIn(QString passErr, QString userErr)
 {
->>>>>>> Stashed changes:src/client/GUI/pages/LoginPage.cpp
     std::cout << "GOTO - contact page" << std::endl << std::endl;
 
+    (void)passErr;
+    (void)userErr;
     _username = "";
     _password = "";
     _usernameForm->setText(_username.c_str());
     _passwordForm->setText(_password.c_str());
 
+    this->setDisabled(false);
     emit changePage(CONTACTS);
+}
+
+void Client::GUI::LoginPage::wrongSignIn(QString passErr, QString userErr)
+{
+    _errorPassword->setText(passErr);
+    _errorUsername->setText(userErr);
+
+    this->setDisabled(false);
 }
 
 void Client::GUI::LoginPage::createAccount()

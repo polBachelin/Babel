@@ -13,6 +13,7 @@
 #include "PageManager.hpp"
 #include "MainWindow.hpp"
 #include <iostream>
+#include "TcpClient.hpp"
 
 
 namespace Client {
@@ -27,6 +28,7 @@ class BabelClient : public QApplication
 
     private:
         Client::GUI::MainWindow mainWindow;
+
         //TODO: Network infos(Myip, port, ip server)
         //TODO: Interface Ipage
         //TODO: IPageManager

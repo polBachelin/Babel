@@ -4,7 +4,7 @@
 
 namespace ClientSide {
      class Test<T> {
-         
+
         -T _x;
         -T _y;
     }

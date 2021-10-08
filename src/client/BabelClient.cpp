@@ -15,11 +15,8 @@ BabelClient::BabelClient(int &argc, char **argv) : QApplication(argc, argv)
 
 BabelClient::~BabelClient()
 {
-
     std::cout << "BabelClient détruit" << std::endl;
-
 }
-
 
 int BabelClient::start()
 {
