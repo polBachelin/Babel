@@ -16,8 +16,8 @@ include_directories(./DB)
 
 set(SRCS
     AsioTcpServer.cpp
-    AsioTcpConnection.cpp
     Commands.cpp
+    AsioTcpConnection.cpp
     ContactManager.cpp
     UserManager.cpp
     DB/Database.cpp)

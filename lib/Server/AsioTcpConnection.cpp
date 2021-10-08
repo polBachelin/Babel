@@ -7,11 +7,16 @@
 
 #include "AsioTcpConnection.hpp"
 
-AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context) : _socket(io_context), _um()
+AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<pointer_t> &list) : _socket(io_context), _um(_socket), _list(list)
 {
     _packet.code = 84;
     _packet.magic = 0;
     _packet.data_size = 0;
+}
+
+AsioTcpConnection::~AsioTcpConnection()
+{
+    _socket.close();
 }
 
 void AsioTcpConnection::start()
@@ -24,14 +29,16 @@ void AsioTcpConnection::start()
 
 void AsioTcpConnection::interpret()
 {
-    auto tmp = Commands::redirect(_um, _packet);
-    auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-    asio::async_write(_socket, asio::buffer(tmp, sizeof(packet_t)), handler);
+    auto tmp = Commands::redirect(_um, _packet, _list);
+    if (tmp->code != 666) {
+        auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
+        asio::async_write(_socket, asio::buffer(tmp, sizeof(packet_t)), handler);
+    }
 }
 
-AsioTcpConnection::pointer AsioTcpConnection::create(asio::io_context& io_context)
+pointer_t AsioTcpConnection::create(asio::io_context& io_context, std::deque<pointer_t> &list)
 {
-    return pointer(new AsioTcpConnection(io_context));
+    return pointer_t(new AsioTcpConnection(io_context, list));
 }
 
 asio::ip::tcp::socket &AsioTcpConnection::socket()
@@ -49,6 +56,7 @@ void AsioTcpConnection::HandleReadHeader(const asio::error_code &e, std::size_t 
 {
     if (size > 0 && !e) {
         _packet = *(packet_t *)_buffer;
+        _socket.write_some(asio::buffer("success\n", 9));
         auto handler = std::bind(&AsioTcpConnection::HandleReadData, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         _socket.async_read_some(asio::buffer(_buffer, _packet.data_size), handler);
         return;
@@ -83,4 +91,9 @@ void AsioTcpConnection::HandleReadData(const asio::error_code &e, std::size_t si
     }
     auto handler = std::bind(&AsioTcpConnection::HandleReadHeader, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
     _socket.async_read_some(asio::buffer(_buffer, sizeof(packet_info_t)), handler);
+}
+
+UserManager &AsioTcpConnection::getUsermanager()
+{
+    return _um;
 }

@@ -7,7 +7,7 @@
 
 #include "UserManager.hpp"
 
-UserManager::UserManager() : _db("db/database.db"), _cm()
+UserManager::UserManager(asio::ip::tcp::socket &s) : _db("db/database.db"), _cm(), _sock(s)
 {
     _db.createTable("User", "ID INTEGER PRIMARY KEY AUTOINCREMENT," \
                     "USERNAME TEXT NOT NULL," \
@@ -67,4 +67,9 @@ const ContactManager &UserManager::GetContactManager()
 const std::string &UserManager::GetName()
 {
     return _name;
+}
+
+asio::ip::tcp::socket &UserManager::getSock()
+{
+    return _sock;
 }

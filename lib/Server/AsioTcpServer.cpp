@@ -17,17 +17,17 @@
 
 void AsioTcpServer::startAccept()
 {
-    AsioTcpConnection::pointer new_connection = AsioTcpConnection::create(*_io.get());
+    pointer_t new_connection = AsioTcpConnection::create(*_io.get(), _clients);
 
+    _clients.push_back(new_connection);
     _acceptor->async_accept(new_connection->socket(),
         std::bind(&AsioTcpServer::handleAccept, this, new_connection, std::placeholders::_1));
-    _clients.push_back(new_connection);
     _io->run();
 }
 
 void AsioTcpServer::reAccept()
 {
-    AsioTcpConnection::pointer new_connection = AsioTcpConnection::create(*_io.get());
+    pointer_t new_connection = AsioTcpConnection::create(*_io.get(), _clients);
 
     _acceptor->async_accept(new_connection->socket(),
         std::bind(&AsioTcpServer::handleAccept, this, new_connection, std::placeholders::_1));
@@ -42,7 +42,7 @@ void AsioTcpServer::initServer(int port)
     _acceptor->set_option(asio::ip::tcp::acceptor::reuse_address(true));
     try {
         asio::io_service netService;
-        asio::ip::udp::resolver   resolver(netService);
+        asio::ip::udp::resolver resolver(netService);
         asio::ip::udp::resolver::query query(asio::ip::udp::v4(), "google.com", "");
         asio::ip::udp::resolver::iterator endpoints = resolver.resolve(query);
         asio::ip::udp::endpoint ep = *endpoints;
@@ -55,10 +55,17 @@ void AsioTcpServer::initServer(int port)
     }
 }
 
-void AsioTcpServer::handleAccept(AsioTcpConnection::pointer new_connection, const asio::error_code& error)
+void AsioTcpServer::handleAccept(pointer_t new_connection, const asio::error_code& error)
 {
     if (!error) {
         new_connection->start();
     }
     AsioTcpServer::reAccept();
+    if (error)
+        std::cerr << error.message() << std::endl;
+}
+
+std::deque<pointer_t> &AsioTcpServer::getClientList()
+{
+    return _clients;
 }

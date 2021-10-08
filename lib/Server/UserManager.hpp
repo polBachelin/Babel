@@ -9,6 +9,7 @@
 #define UserManager_h
 
 #include "ContactManager.hpp"
+#include <asio.hpp>
 
 #define MAGIC 388474
 
@@ -28,14 +29,16 @@ typedef struct packet {
 
 class UserManager {
     public:
-        UserManager();
+        UserManager(asio::ip::tcp::socket &s);
         ~UserManager();
         int login(const std::string &, const std::string &);
         int new_user(const std::string &, const std::string &);
         const ContactManager &GetContactManager();
         const std::string &GetName();
+        asio::ip::tcp::socket &getSock();
     protected:
     private:
+        asio::ip::tcp::socket &_sock;
         Database _db;
         ContactManager _cm;
         std::string _name;
