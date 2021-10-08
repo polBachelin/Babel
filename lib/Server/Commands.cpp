@@ -29,14 +29,14 @@ packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_
 
 packet_t *Commands::CreatePacket(int code, const std::string &data)
 {
-    packet_t response;
-    packet_t *tmp = &response;
+    packet_t *response = new packet_t;
+    // packet_t *tmp = &response;
 
-    tmp->magic = MAGIC;
-    tmp->code = code;
-    tmp->data_size = data.length();
-    std::strcpy(tmp->data, data.c_str());
-    return tmp;
+    response->magic = MAGIC;
+    response->code = code;
+    response->data_size = data.length();
+    std::strcpy(response->data, data.c_str());
+    return response;
 }
 
 packet_t *Commands::login(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
@@ -78,7 +78,7 @@ packet_t *Commands::addContact(UserManager &um, packet_t &pck, std::deque<pointe
     auto tmp = um.GetContactManager();
     auto name = um.GetName();
     std::string res = pck.data;
-    
+
     res.erase(res.find('\n'));
     tmp.addContact(res, name);
     return Commands::CreatePacket(102, "success");
@@ -118,7 +118,7 @@ packet_t *Commands::ListContact(UserManager &um, packet_t &pck, std::deque<point
     auto tmp = um.GetContactManager();
     auto name = um.GetName();
     std::string res;
-    
+
     (void)pck;
     res = tmp.getContactList(name);
     return Commands::CreatePacket(004, res);
@@ -139,5 +139,5 @@ packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer
             return Commands::CreatePacket(666, "");
         }
     }
-    return Commands::CreatePacket(666, "");    
+    return Commands::CreatePacket(666, "");
 }

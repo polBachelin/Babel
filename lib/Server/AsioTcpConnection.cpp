@@ -29,11 +29,12 @@ void AsioTcpConnection::start()
 
 void AsioTcpConnection::interpret()
 {
-    auto tmp = Commands::redirect(_um, _packet, _list);
+    packet_t *tmp = Commands::redirect(_um, _packet, _list);
     if (tmp->code != 666) {
         auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         asio::async_write(_socket, asio::buffer(tmp, sizeof(packet_t)), handler);
     }
+    delete tmp;
 }
 
 pointer_t AsioTcpConnection::create(asio::io_context& io_context, std::deque<pointer_t> &list)
