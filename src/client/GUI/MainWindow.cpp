@@ -36,7 +36,7 @@ std::map<std::size_t, std::string> errSockMap = {
     {22, "!! Temporary Error !!"}
 };
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("10.19.253.226", 5000)
+MainWindow::MainWindow() : _pages(this), _tcpClient("10.19.247.16", 5000)
 {
     this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
@@ -56,9 +56,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::receivedSomething(QByteArray msg)
 {
-    packet_t *package;
-    package = reinterpret_cast<packet_t *>(msg.data());
-
+    packet_t *package = reinterpret_cast<packet_t *>(msg.data());
+    
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;

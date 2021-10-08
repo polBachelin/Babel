@@ -57,7 +57,9 @@ void AsioTcpConnection::HandleReadHeader(const asio::error_code &e, std::size_t 
 {
     if (size > 0 && !e) {
         _packet = *(packet_t *)_buffer;
-        _socket.write_some(asio::buffer("success\n", 9));
+        //TODO : POLO IL DIT QUE ÇA RESTE PAS LA ÇA. c'est changé pour que Simon puisse bosser de son cote mais ça reste pas la ça
+        std::memcpy(_packet.data, "success\n", 9);
+        _socket.write_some(asio::buffer(&_packet, sizeof(packet_t)));
         auto handler = std::bind(&AsioTcpConnection::HandleReadData, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         _socket.async_read_some(asio::buffer(_buffer, _packet.data_size), handler);
         return;
