@@ -56,8 +56,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::receivedSomething(QByteArray msg)
 {
-    packet_t *package;
-    package = reinterpret_cast<packet_t *>(msg.data());
+    packet_t *package = reinterpret_cast<packet_t *>(msg.data());
 
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
@@ -65,6 +64,7 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::cout << "data  = " << package->data << std::endl;
 
     std::string test(package->data);
+
     if (test == "success\n")
         emit validSignalResponse("", "");
     else

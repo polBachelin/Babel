@@ -29,8 +29,9 @@ packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_
 
 packet_t *Commands::CreatePacket(int code, const std::string &data)
 {
-    packet_t *response = new packet_t;
-    // packet_t *tmp = &response;
+    // packet_t *response = new packet_t;
+    packet_t tmp;
+    packet_t *response = &tmp;
 
     response->magic = MAGIC;
     response->code = code;

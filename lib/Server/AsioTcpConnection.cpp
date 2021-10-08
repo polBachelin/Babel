@@ -34,7 +34,7 @@ void AsioTcpConnection::interpret()
         auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         asio::async_write(_socket, asio::buffer(tmp, sizeof(packet_t)), handler);
     }
-    delete tmp;
+    // delete tmp;
 }
 
 pointer_t AsioTcpConnection::create(asio::io_context& io_context, std::deque<pointer_t> &list)
