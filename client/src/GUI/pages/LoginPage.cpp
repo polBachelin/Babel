@@ -141,6 +141,18 @@ void Client::GUI::LoginPage::signIn()
         return;
     }
 
+<<<<<<< Updated upstream:client/src/GUI/pages/LoginPage.cpp
+=======
+    _infos.username = _username;
+    _infos.password = _password;
+
+    this->setDisabled(true);
+    emit checkSignIn(_infos, Elogin);
+}
+
+void Client::GUI::LoginPage::validSignIn(QString passErr, QString userErr)
+{
+>>>>>>> Stashed changes:src/client/GUI/pages/LoginPage.cpp
     std::cout << "GOTO - contact page" << std::endl << std::endl;
 
     _username = "";

@@ -20,6 +20,7 @@
 #include <QPixmap>
 #include <vector>
 #include <iostream>
+#include <cstring>
 #include "structs.hpp"
 
 #define LOGO_PATH       "./assets/babelLogo_48x48.png"
@@ -51,6 +52,29 @@ namespace GUI {
             CALL
         };
 
+<<<<<<< Updated upstream:client/include/GUI/pages/APage.hpp
+=======
+    enum signal_e
+        {
+            Elogin = 000,
+            Eregister = 001,
+            Eaddcontact = 002,
+            Eacceptinvitation = 112,
+            EcallX = 003,
+            Erefuseincomingcall = 203,
+            Easkcontactlist = 004,
+            Eloginsuccessful = 100,
+            Eloginfailed = 200,
+            Eregistersuccessful = 101,
+            Eregisterfailed = 201,
+            Einvitationreceive = 012,
+            Econtactaddsuccessfully = 102,
+            Eincomingcall = 303,
+            Ecallwasrefused = 203,
+            EContactlist = 004
+        };
+
+>>>>>>> Stashed changes:include/client/GUI/pages/APage.hpp
 class APage : public QWidget
 {
     Q_OBJECT

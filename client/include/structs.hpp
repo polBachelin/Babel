@@ -5,14 +5,27 @@
 ** structs
 */
 
+#ifndef STRUCTS_HPP
+#define STRUCTS_HPP
+
 #include <string>
+
+#define MAGIC 388474
 
 namespace Client {
 
-struct ClientInfos
-    {
+    struct ClientInfos {
         std::string username;
         std::string password;
     };
 
+    typedef struct packet {
+        int magic;
+        int code;
+        int data_size;
+        char data[2048] = {0};
+    } packet_t;
+
 }
+
+#endif /* STRUCTS_HPP */
