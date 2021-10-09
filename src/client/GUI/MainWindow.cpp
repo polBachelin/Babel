@@ -36,7 +36,7 @@ std::map<std::size_t, std::string> errSockMap = {
     {22, "!! Temporary Error !!"}
 };
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("10.19.247.16", 5000)
+MainWindow::MainWindow() : _pages(this), _tcpClient("10.188.56.156", 5000)
 {
     this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
@@ -88,7 +88,6 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
     memcpy(buffTemp, &package, sizeof(package));
 
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(package));
-
     _tcpClient.send(QBta);
 }
 
@@ -99,15 +98,21 @@ void MainWindow::gotError(QAbstractSocket::SocketError err)
 
 void MainWindow::initConnections(void)
 {
-    QObject::connect(_pages.getPage(LOGIN), SIGNAL(checkSignIn(ClientInfos, signal_e)),
+    QObject::connect(
+        _pages.getPage(LOGIN), SIGNAL(checkSignIn(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
-
     QObject::connect(
         _pages.getPage(LOGIN), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
     QObject::connect(
+        _pages.getPage(REGISTER), SIGNAL(checkSignIn(ClientInfos, signal_e)),
+        this, SLOT(checkSignal(ClientInfos, signal_e)));
+    QObject::connect(
         _pages.getPage(REGISTER), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
+    QObject::connect(
+        _pages.getPage(CALL), SIGNAL(callUser(ClientInfos, signal_e)),
+        this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
         _pages.getPage(CALL), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));

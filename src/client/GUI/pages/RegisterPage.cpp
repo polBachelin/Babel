@@ -161,16 +161,16 @@ void Client::GUI::RegisterPage::createAccount()
         return;
     }
 
-    std::cout << "GOTO - contact page" << std::endl << std::endl;
-
-    _username = "";
-    _password = "";
-    _confirmPassword = "";
-    _usernameForm->setText(_username.c_str());
-    _passwordForm->setText(_password.c_str());
-    _confirmPasswordForm->setText(_confirmPassword.c_str());
-
-    emit changePage(CONTACTS);
+    // _username = "";
+    // _password = "";
+    // _confirmPassword = "";
+    // _usernameForm->setText(_username.c_str());
+    // _passwordForm->setText(_password.c_str());
+    // _confirmPasswordForm->setText(_confirmPassword.c_str());
+    _infos.password = _password;
+    _infos.username = _username;
+    
+    emit checkSignIn(_infos, Eregister);
 }
 
 void Client::GUI::RegisterPage::signIn()
