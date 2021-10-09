@@ -76,18 +76,10 @@ void MainWindow::changeCurrentPage(pageNames name)
 }
 
 void MainWindow::checkSignal(ClientInfos infos, signal_e e)
-{
-    packet_t package;
-    char buffTemp[sizeof(package)];
+{    
+    char *buffTemp = CommandsFactory::callCommand(infos, e);
+    QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
-    package.magic = MAGIC;
-    package.code = e;
-    package.data_size = infos.username.size() + infos.password.size() + 2;
-    std::string dataStr(infos.username + "\n" + infos.password + "\n");
-    strcpy(package.data, dataStr.c_str());
-    memcpy(buffTemp, &package, sizeof(package));
-
-    QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(package));
     _tcpClient.send(QBta);
 }
 

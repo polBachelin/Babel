@@ -11,6 +11,7 @@
 #include <QtWidgets>
 #include <memory>
 #include "PageManager.hpp"
+#include "CommandsFactory.hpp"
 #include "TcpClient.hpp"
 
 namespace Client {

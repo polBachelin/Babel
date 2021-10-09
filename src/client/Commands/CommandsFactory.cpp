@@ -10,16 +10,25 @@
 using namespace Client;
 
 const std::unordered_map<GUI::signal_e, 
-std::function<int(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands 
+std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands 
 {
 	{GUI::signal_e::Elogin,
-	[](ClientInfos, GUI::signal_e) {
+	[](ClientInfos infos, GUI::signal_e e) {
 		std::cout << "Sending packet of logiin to server\n";
-		return 1;
+		packet_t package;
+		char *buffTemp = new char[sizeof(package)];
+		
+		package.magic = MAGIC;
+		package.code = e;
+		package.data_size = infos.username.size() + infos.password.size() + 2;
+		std::string dataStr(infos.username + "\n" + infos.password + "\n");
+		strcpy(package.data, dataStr.c_str());
+		memcpy(buffTemp, &package, sizeof(package));
+		return buffTemp;
 	}}
 };
 
-void CommandsFactory::callCommand(ClientInfos info, GUI::signal_e e)
+char *CommandsFactory::callCommand(ClientInfos info, GUI::signal_e e)
 {
-	_commands.at(e)(info, e);
+	return _commands.at(e)(info, e);
 }

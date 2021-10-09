@@ -63,12 +63,14 @@ target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
 
 include_directories(${CMAKE_INCLUDE_PATH})
 include_directories(./include/client)
+include_directories(./include/client/Commands)
 include_directories(./include/client/GUI/pages)
 include_directories(./include/client/GUI/)
 include_directories(./include/client/Network/)
 
 set(SRCS_CLI
     src/client/main.cpp
+    src/client/Commands/CommandsFactory.cpp
     src/client/GUI/pages/APage.cpp
     src/client/GUI/pages/LoginPage.cpp
     src/client/GUI/pages/RegisterPage.cpp
