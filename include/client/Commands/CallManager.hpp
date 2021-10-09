@@ -9,9 +9,8 @@
 #define CALLMANAGER_HPP_
 
 #include <UdpClient.hpp>
-#include <IEncodeManager.hpp>
-#include <ISoundManager.hpp>
-
+#include "PortAudioManager.hpp"
+#include "OpusManager.hpp"
 #include <vector>
 #include <iostream>
 #include <memory>
@@ -51,8 +50,8 @@ namespace Client
                 float *_outputBuffer;
                 int _frameSize;
                 int _inputBufferSize;
-                std::shared_ptr<IEncodeManager> _encoderManager;
-                std::shared_ptr<ISoundManager> _soundManager;
+                std::shared_ptr<OpusManager> _encoderManager;
+                std::shared_ptr<PortAudioManager> _soundManager;
         };
     }
 }

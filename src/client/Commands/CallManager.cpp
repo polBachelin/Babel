@@ -12,10 +12,12 @@ using namespace Client::Managers;
 CallManager::CallManager() : QObject()
 {
     _udpClient = std::make_unique<Client::Network::UDPClient>();
+    _soundManager = std::make_shared<PortAudioManager>();
+    _encoderManager = std::make_shared<OpusManager>();
     _frameSize = _soundManager->getInputChannels() * sizeof(float);
     _inputBufferSize =  3 * _soundManager->getSampleRate() * _frameSize;
-    _inputBuffer = new float[size];
-    _outputBuffer = new float[size];
+    _inputBuffer = new float[_inputBufferSize];
+    _outputBuffer = new float[_inputBufferSize];
     _udpClient->connectToPair();
     //connect(_soundManager, inputAvailable, this, sendAudioData);
     //connect(_soundManager, outputAvailable, this, onReadAudioData);
@@ -42,7 +44,7 @@ void CallManager::sendAudioData()
     Client::Network::audioPacket_t audioPacket;
     char *ptr;
 
-    unsigned char compressedBuffer = new unsigned char[_inputBufferSize];
+    unsigned char *compressedBuffer = new unsigned char[_inputBufferSize];
     std::memset(compressedBuffer, 0, _inputBufferSize);
     _soundManager->retrieveInputBytes(_inputBuffer, 512);
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 512, _inputBufferSize);
