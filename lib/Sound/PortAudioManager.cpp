@@ -12,19 +12,9 @@
 
 bool PortAudioManager::_init = false;
 
-// extern "C"
-// {
-//     std::shared_ptr<ISoundManager> entryPoint()
-//     {
-//         return std::make_shared<PortAudioManager>();
-//     }
-// }
-
 PortAudioManager::PortAudioManager() : 
 _inputBuffer(nullptr), _outputBuffer(nullptr), _inputSample(nullptr), _outputSample(nullptr), _inputStream(nullptr), _outputStream(nullptr), _inputChannels(2), _outputChannels(2), _outputIndex(0), _inputIndex(0), _micMute(false), _outputMute(false)
 {
-    PaError err;
-
     if (!PortAudioManager::_init) {
         if (Pa_Initialize() != paNoError)
             std::cout << "error on init" << std::endl;
@@ -163,11 +153,10 @@ void PortAudioManager::loadDefaultDevices()
 
 int PortAudioManager::openInputStream()
 {
-    PaError err = paNoError;
-
-    if (_inputStream)
+    if (_inputStream) {
         closeInputStream();
-    err = Pa_OpenStream(
+    }
+    Pa_OpenStream(
             &_inputStream,
             &_inputParameters,
             NULL,
@@ -180,12 +169,11 @@ int PortAudioManager::openInputStream()
 }
 
 int PortAudioManager::openOutputStream()
-{
-    PaError err;
-    
-    if (_outputStream)
+{    
+    if (_outputStream) {
         closeOutputStream();
-    err = Pa_OpenStream(
+    }
+    Pa_OpenStream(
             &_outputStream,
             NULL, /* no input */
             &_outputParameters,
@@ -308,10 +296,10 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     (void) userData;
     
     if (data->isMicMuted() || inputBuffer == NULL) {
-        std::memset(data->_inputSample, 0, FRAMES_PER_BUFFER * data->_inputChannels * sizeof(float));
-        data->_inputBuffer->write(data->_inputSample, FRAMES_PER_BUFFER * data->_inputChannels * sizeof(float));
+        std::memset(data->_inputSample, 0, framesPerBuffer * data->_inputChannels * sizeof(float));
+        data->_inputBuffer->write(data->_inputSample, framesPerBuffer * data->_inputChannels * sizeof(float));
     } else
-        data->_inputBuffer->write(rptr, FRAMES_PER_BUFFER * data->_inputChannels * sizeof(float));
+        data->_inputBuffer->write(rptr, framesPerBuffer * data->_inputChannels * sizeof(float));
     return paContinue;
 }
 

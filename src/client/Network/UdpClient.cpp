@@ -38,6 +38,7 @@ void UDPClient::send(const packetUDP_t &packet)
     //TODO: Faut pouvoir send à plusieurs UDP donc inclure le host et le port du receiver dans UDPPacket
 
     QByteArray buf;
+    std::cout << "Trying to send packe to host : " << packet.host  << " : " << packet.port << std::endl;
     //QDataStream s(&buf, QIODevice::WriteOnly);
     // The encoding is big endian by default, on all systems. You
     // can change it if you wish.

@@ -58,7 +58,7 @@ void CallManager::sendAudioData()
     }
     delete [] compressedBuffer;
     delete [] audioPacket.data;
-}//TODO: paramètre input compressé
+}
 
 void CallManager::onReadAudioData()
 {
@@ -81,9 +81,12 @@ void CallManager::onReadAudioData()
 void CallManager::beginCall(const std::vector<std::string> &pairs)
 {
     this->_inCall = true;
+    this->_soundManager->startInputStream();
+    this->_soundManager->startOutputStream();
     this->_udpClient->connectToPair();
     for(auto &pair : pairs)
         _pairs.emplace(pair, 0);
+    this->sendAudioData();
 }
 
 void CallManager::endCall()
