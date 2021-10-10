@@ -52,6 +52,9 @@ class PortAudioManager : public ISoundManager {
         int retrieveInputBytes(float *sample, size_t len) override;
         void feedBytesToOutput(float *sample, unsigned long len) override;
         void loadDefaultDevices() override;
+        size_t getInputChannels() const override;
+        size_t getOutputChannels() const override;
+        int getSampleRate() override;
 
 
         void allocateBuffers();
@@ -70,7 +73,6 @@ class PortAudioManager : public ISoundManager {
                             void *userData);
     
 
-        size_t getInputChannels() const;
         void setInputChannels(const size_t &nbChannels);
         static void writeToBuffer(float *rptr, unsigned long framesPerBuffer);
     protected:

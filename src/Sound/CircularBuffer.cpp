@@ -75,7 +75,7 @@ int CircularBuffer::write(const void *src, int len)
 	if (src == nullptr || len == 0 || _bytesLeft <= 0)
 		return 0;
 	const unsigned char *t = static_cast<const unsigned char *>(src);
-	for (size_t i = 0; i < len; i++) {
+	for (int i = 0; i < len; i++) {
 		_buf[_headPtr] = t[i];
 		_headPtr = (_headPtr + 1) % _len;
 	}
@@ -92,7 +92,7 @@ int CircularBuffer::read(void *src, int len)
 	if (src == nullptr || len <= 0 || (int)(_len - _bytesLeft) < len)
 		return 0;
 	unsigned char *t = static_cast<unsigned char *>(src);
-	for (size_t i = 0; i < len; i++) {
+	for (int i = 0; i < len; i++) {
 		t[i] = _buf[_tailPtr];
 		_tailPtr = (_tailPtr + 1) % _len;
 	}

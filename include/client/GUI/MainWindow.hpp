@@ -13,6 +13,8 @@
 #include "PageManager.hpp"
 #include "CommandsFactory.hpp"
 #include "TcpClient.hpp"
+#include "UdpClient.hpp"
+#include "CallManager.hpp"
 
 namespace Client {
 
@@ -42,11 +44,10 @@ namespace Client {
                 void initConnections(void);
                 PageManager _pages;
                 Client::Network::TcpClient _tcpClient;
+                //TODO: remove this after audio;
+                Client::Managers::CallManager _callManager;
                 //TODO: intégrer les attributs suivants
-                //Client::Network::PacketManager _packetManager;
                 //Client::Network::UdpClient _udpClient;
-                //std::shared_ptr<IEncodeManager> _encoderManager;
-                //std::shared_ptr<ISoundManager> _soundManager;
                 ClientInfos _infos;
 
         };
