@@ -170,7 +170,7 @@ void Client::GUI::RegisterPage::createAccount()
     _infos.password = _password;
     _infos.username = _username;
     
-    emit checkSignIn(_infos, Eregister);
+    emit checkCommand(_infos, Eregister);
 }
 
 void Client::GUI::RegisterPage::signIn()

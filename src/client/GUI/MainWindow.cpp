@@ -91,19 +91,19 @@ void MainWindow::gotError(QAbstractSocket::SocketError err)
 void MainWindow::initConnections(void)
 {
     QObject::connect(
-        _pages.getPage(LOGIN), SIGNAL(checkSignIn(ClientInfos, signal_e)),
+        _pages.getPage(LOGIN), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
         _pages.getPage(LOGIN), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
     QObject::connect(
-        _pages.getPage(REGISTER), SIGNAL(checkSignIn(ClientInfos, signal_e)),
+        _pages.getPage(REGISTER), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
         _pages.getPage(REGISTER), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
     QObject::connect(
-        _pages.getPage(CALL), SIGNAL(callUser(ClientInfos, signal_e)),
+        _pages.getPage(CALL), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
         _pages.getPage(CALL), SIGNAL(changePage(pageNames)),

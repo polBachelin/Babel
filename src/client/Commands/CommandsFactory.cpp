@@ -25,6 +25,12 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		strcpy(package.data, dataStr.c_str());
 		memcpy(buffTemp, &package, sizeof(package));
 		return buffTemp;
+	}},
+
+	{GUI::signal_e::EcallX,
+	[] (ClientInfos infos, GUI::signal_e e) {
+		std::cout << "Telling server to call X\n";
+		return nullptr;
 	}}
 };
 

@@ -145,7 +145,7 @@ void Client::GUI::LoginPage::signIn()
     _infos.password = _password;
 
     this->setDisabled(true);
-    emit checkSignIn(_infos, Elogin);
+    emit checkCommand(_infos, Elogin);
 }
 
 void Client::GUI::LoginPage::validSignIn(QString passErr, QString userErr)

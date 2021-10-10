@@ -233,6 +233,8 @@ void Client::GUI::CallPage::callOn()
     _refuse->hide();
     _labelContact->hide();
     _labelGif->hide();
+
+    emit checkCommand(_infos, EcallX);
 }
 
 void Client::GUI::CallPage::updateTimer()
