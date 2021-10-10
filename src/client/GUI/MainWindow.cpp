@@ -36,7 +36,7 @@ std::map<std::size_t, std::string> errSockMap = {
     {22, "!! Temporary Error !!"}
 };
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("10.19.247.16", 5000)
+MainWindow::MainWindow() : _pages(this), _tcpClient("10.188.56.156", 5000)
 {
     this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
@@ -77,18 +77,9 @@ void MainWindow::changeCurrentPage(pageNames name)
 }
 
 void MainWindow::checkSignal(ClientInfos infos, signal_e e)
-{
-    packet_t package;
-    char buffTemp[sizeof(package)];
-
-    package.magic = MAGIC;
-    package.code = e;
-    package.data_size = infos.username.size() + infos.password.size() + 2;
-    std::string dataStr(infos.username + "\n" + infos.password + "\n");
-    strcpy(package.data, dataStr.c_str());
-    memcpy(buffTemp, &package, sizeof(package));
-
-    QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(package));
+{    
+    char *buffTemp = CommandsFactory::callCommand(infos, e);
+    QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
     _tcpClient.send(QBta);
 }
@@ -100,15 +91,21 @@ void MainWindow::gotError(QAbstractSocket::SocketError err)
 
 void MainWindow::initConnections(void)
 {
-    QObject::connect(_pages.getPage(LOGIN), SIGNAL(checkSignIn(ClientInfos, signal_e)),
+    QObject::connect(
+        _pages.getPage(LOGIN), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
-
     QObject::connect(
         _pages.getPage(LOGIN), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
     QObject::connect(
+        _pages.getPage(REGISTER), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        this, SLOT(checkSignal(ClientInfos, signal_e)));
+    QObject::connect(
         _pages.getPage(REGISTER), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
+    QObject::connect(
+        _pages.getPage(CALL), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
         _pages.getPage(CALL), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));

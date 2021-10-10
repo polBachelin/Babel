@@ -87,7 +87,7 @@ class APage : public QWidget
 
     signals:
         void changePage(pageNames name);
-        void checkSignIn(ClientInfos, signal_e);
+        void checkCommand(ClientInfos, signal_e);
 
     protected:
         std::unique_ptr<QGridLayout> _layout;
