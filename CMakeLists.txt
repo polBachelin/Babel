@@ -55,7 +55,7 @@ set(SRCS
     src/Parser/ConfigFileParser.cpp
     )
 
-add_executable(${NAME} ${SRCS} "include/WindowsEquivalent/Bunistd.h" "include/WindowsEquivalent/Bdirent.h")
+add_executable(${NAME} ${SRCS})
 target_link_libraries(${NAME} ${CONAN_LIBS})
 target_include_directories(${NAME} PUBLIC CONAN_INCLUDE_DIRS)
 
@@ -66,6 +66,7 @@ include_directories(./include/client)
 include_directories(./include/client/GUI/pages)
 include_directories(./include/client/GUI/)
 include_directories(./include/client/Network/)
+include_directories(./include/client/Commands/)
 
 set(SRCS_CLI
     src/client/main.cpp
@@ -78,29 +79,34 @@ set(SRCS_CLI
     src/client/GUI/MainWindow.cpp
     src/client/Network/TcpClient.cpp
     src/client/BabelClient.cpp
+    src/client/Network/UdpClient.cpp
+    src/client/Commands/CallManager.cpp
     )
 
-add_executable(${NAME_CLI} ${SRCS_CLI} "include/WindowsEquivalent/Bunistd.h" "include/WindowsEquivalent/Bdirent.h")
+add_executable(${NAME_CLI} ${SRCS_CLI})
 target_link_libraries(${NAME_CLI} ${CONAN_LIBS} Qt5::Network Qt5::Widgets)
 target_include_directories(${NAME_CLI} PUBLIC CONAN_INCLUDE_DIRS)
 
 #PortAudio Lib
-add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound )
+add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Sound)
 set(SOUND_DIR ${PROJECT_SOURCE_DIR}/lib/Sound)
 include_directories(${SOUND_DIR})
 include_directories(${SOUND_DIR}/Exception)
 target_link_libraries(${NAME} Babel_PortAudio)
+target_link_libraries(${NAME_CLI} Babel_PortAudio)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Encode)
 set(ENCODE_DIR ${PROJECT_SOURCE_DIR}/lib/Encode)
 include_directories(${ENCODE_DIR})
 include_directories(${ENCODE_DIR}/Exception)
 target_link_libraries(${NAME} Babel_Opus)
+target_link_libraries(${NAME_CLI} Babel_Opus)
 
 add_subdirectory(${PROJECT_SOURCE_DIR}/lib/Server)
 set(SERVER_DIR ${PROJECT_SOURCE_DIR}/lib/Server)
 include_directories(${SERVER_DIR})
 target_link_libraries(${NAME} Babel_Asio)
+target_link_libraries(${NAME_CLI} Babel_Asio)
 
 #Compilation 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -111,6 +117,5 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 if(WIN32)
         target_compile_options(${NAME} PRIVATE)
 else()
-        message(STATUS "NOT IN WINDOWS")
         target_compile_options(${NAME} PRIVATE)
 endif()

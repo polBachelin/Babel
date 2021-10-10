@@ -77,7 +77,7 @@ int OpusManager::encode(unsigned char *output, float *input, int frameSize, std:
 	else {
 		std::cerr << "Failed to encode : " << std::to_string(_err) << std::endl;
 		return -1;
-	}	
+	}
 }
 
 int OpusManager::decode(const unsigned char *input, float *output, int frameSize, std::size_t intputSize)
