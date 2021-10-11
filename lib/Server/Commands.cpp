@@ -101,6 +101,7 @@ packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> 
         s.erase(0, pos + delimiter.length());
         i++;
     }
+    std::cout << "Call " << arr[0] << " at " << arr[1] << ":" << arr[2] << std::endl;
     for (auto it = list.begin(); it != list.end(); ++it) {
         if ((*it)->getUsermanager().GetName() == arr[0]) {
             asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
@@ -110,7 +111,7 @@ packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> 
             return Commands::CreatePacket(666, "");
         }
     }
-    return Commands::CreatePacket(666, "");
+    return Commands::CreatePacket(603, "failed\n");
 }
 
 packet_t *Commands::ListContact(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
