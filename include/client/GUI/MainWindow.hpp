@@ -47,8 +47,6 @@ namespace Client {
                 Client::Network::TcpClient _tcpClient;
                 //TODO: remove this after audio;
                 Client::Managers::CallManager _callManager;
-                //TODO: intégrer les attributs suivants
-                //Client::Network::UdpClient _udpClient;
                 ClientInfos _infos;
 
                 std::unordered_map<int, std::function<void(Client::ClientInfos)>> _signalPageMap;
