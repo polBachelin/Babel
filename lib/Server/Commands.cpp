@@ -51,7 +51,7 @@ packet_t *Commands::login(UserManager &um, packet_t &pck, std::deque<pointer_t> 
     res[1] = tmp;
     value = um.login(res[0], res[1]);
     if (value == true) {
-        return Commands::CreatePacket(100, "success\n");
+        return Commands::CreatePacket(100, um.GetName());
     } else {
         return Commands::CreatePacket(200, "failed\n");
     }
@@ -105,7 +105,7 @@ packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> 
     for (auto it = list.begin(); it != list.end(); ++it) {
         if ((*it)->getUsermanager().GetName() == arr[0]) {
             asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
-            res = um.GetName() + "\n" + inc.local_endpoint().address().to_string() + "\n" + std::to_string(inc.local_endpoint().port()) + "\n";
+            res = um.GetName() + "\n" + inc.local_endpoint().address().to_string() + "\n" + arr[2] + "\n";
             auto tmp = Commands::CreatePacket(303, res);
             dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
             return Commands::CreatePacket(666, "");
