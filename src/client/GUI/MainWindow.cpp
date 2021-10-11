@@ -55,6 +55,8 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
         emit MainWindow::validSignalResponse(info);};
     _signalPageMap[201] = [&](Client::ClientInfos info){
         emit MainWindow::wrongSignalResponse(info);};
+    _infos.ip = hostAddress.toStdString();
+    _infos.port = std::to_string(portVal);
     // _signalPageMap[012] = [&](Client::ClientInfos info){
     //     emit fct(info);};
     // _signalPageMap[102] = [&](Client::ClientInfos info){
@@ -97,6 +99,7 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
     char *buffTemp = CommandsFactory::callCommand(infos, e);
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
+    _infos = infos;
     _tcpClient.send(QBta);
 }
 

@@ -45,7 +45,16 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 	{GUI::signal_e::EcallX,
 	[] (ClientInfos infos, GUI::signal_e e) {
 		std::cout << "Telling server to call X\n";
-		return nullptr;
+		packet_t package;
+		char *buffTemp = new char[sizeof(package)];
+
+		package.magic = MAGIC;
+		package.code = e;
+		package.data_size = infos.userToCall.size() + infos.ip.size() + infos.port.size() + 2;
+		std::string dataStr(infos.userToCall + "\n" + infos.ip + "\n" + infos.port + "\n");
+		strcpy(package.data, dataStr.c_str());
+		memcpy(buffTemp, &package, sizeof(package));
+		return buffTemp;
 	}}
 };
 

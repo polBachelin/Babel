@@ -17,6 +17,9 @@ namespace Client {
     struct ClientInfos {
         std::string username;
         std::string password;
+        std::string userToCall;
+        std::string ip;
+        std::string port;
     };
 
     typedef struct packet {

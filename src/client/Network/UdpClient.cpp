@@ -30,7 +30,6 @@ void UDPClient::connectToPair()
     _socket = std::make_unique<QUdpSocket>();
     _socket->bind(QHostAddress::LocalHost, 5000);
     QObject::connect(_socket.get(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    send((packetUDP_t){"Hello pto", "localhost", 5000});
 }
 
 void UDPClient::send(const packetUDP_t &packet)
