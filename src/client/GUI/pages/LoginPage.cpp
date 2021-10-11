@@ -12,16 +12,20 @@ Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(in
     setFixedSize(WIDTH, HEIGHT);
     _formError = false;
 
-    QObject::connect(parent, SIGNAL(validSignalResponse(Client::ClientInfos)),
-        this, SLOT(validSignIn(Client::ClientInfos)));
-    QObject::connect(parent, SIGNAL(wrongSignalResponse(Client::ClientInfos)),
-        this, SLOT(wrongSignIn(Client::ClientInfos)));
+    QObject::connect(parent, SIGNAL(validSignalResponse(ClientInfos)),
+        this, SLOT(validSignIn(ClientInfos)));
+    QObject::connect(parent, SIGNAL(wrongSignalResponse(ClientInfos)),
+        this, SLOT(wrongSignIn(ClientInfos)));
 
     loadPage();
     layoutLoader();
 }
 
 // LOADERS
+
+void Client::GUI::LoginPage::onPage()
+{
+}
 
 void Client::GUI::LoginPage::loadPage()
 {
@@ -158,7 +162,7 @@ void Client::GUI::LoginPage::validSignIn(Client::ClientInfos info)
     _passwordForm->setText(_password.c_str());
 
     this->setDisabled(false);
-    emit changePage(CONTACTS);
+    emit changePage(CONTACTS, info);
 }
 
 void Client::GUI::LoginPage::wrongSignIn(Client::ClientInfos info)
@@ -180,7 +184,7 @@ void Client::GUI::LoginPage::createAccount()
     _errorPassword->setText("");
     _errorUsername->setText("");
 
-    emit changePage(REGISTER);
+    emit changePage(REGISTER, _infos);
 }
 
 #include "moc_LoginPage.cpp"

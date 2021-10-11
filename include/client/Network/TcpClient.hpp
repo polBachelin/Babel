@@ -16,6 +16,7 @@
 #include <QDataStream>
 #include <QTimer>
 
+#define PACKETSIZE 2060
 
 namespace Client
 {

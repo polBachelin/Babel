@@ -19,6 +19,12 @@ Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent
 
 // LOARDERS
 
+void Client::GUI::ContactPage::onPage()
+{
+    std::cout << "USERNAME = " << _infos.username << std::endl;
+    _labelContactName->setText(_infos.username.c_str());
+}
+
 void Client::GUI::ContactPage::loadPage()
 {
     callLoader();
@@ -164,7 +170,7 @@ void Client::GUI::ContactPage::callClicked()
 {
     std::cout << "GOTO - call page" << std::endl << std::endl;
 
-    emit changePage(CALL);
+    emit changePage(CALL, _infos);
 }
 
 void Client::GUI::ContactPage::logOut()
@@ -178,7 +184,7 @@ void Client::GUI::ContactPage::logOut()
     for (auto &contact : _contacts)
         contact->setFlat(true);
 
-    emit changePage(LOGIN);
+    emit changePage(LOGIN, _infos);
 }
 
 void Client::GUI::ContactPage::changeMsg(QString msg)

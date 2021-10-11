@@ -47,23 +47,23 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
         BACKGROUND_PATH
         "); background-position: center;");
 
-    _signalPageMap[100] = [&](Client::ClientInfos info){
+    _signalPageMap[100] = [&](ClientInfos info){
         emit MainWindow::validSignalResponse(info);};
-    _signalPageMap[200] = [&](Client::ClientInfos info){
+    _signalPageMap[200] = [&](ClientInfos info){
         emit MainWindow::wrongSignalResponse(info);};
-    _signalPageMap[101] = [&](Client::ClientInfos info){
+    _signalPageMap[101] = [&](ClientInfos info){
         emit MainWindow::validSignalResponse(info);};
-    _signalPageMap[201] = [&](Client::ClientInfos info){
+    _signalPageMap[201] = [&](ClientInfos info){
         emit MainWindow::wrongSignalResponse(info);};
-    // _signalPageMap[012] = [&](Client::ClientInfos info){
+    // _signalPageMap[012] = [&](ClientInfos info){
     //     emit fct(info);};
-    // _signalPageMap[102] = [&](Client::ClientInfos info){
+    // _signalPageMap[102] = [&](ClientInfos info){
     //     emit fct(info);};
-    // _signalPageMap[303] = [&](Client::ClientInfos info){
+    // _signalPageMap[303] = [&](ClientInfos info){
     //     emit fct(info);};
-    // _signalPageMap[203] = [&](Client::ClientInfos info){
+    // _signalPageMap[203] = [&](ClientInfos info){
     //     emit fct(info);};
-    // _signalPageMap[004] = [&](Client::ClientInfos info){
+    // _signalPageMap[004] = [&](ClientInfos info){
     //     emit fct(info);};
 
     initConnections();
@@ -78,18 +78,21 @@ void MainWindow::receivedSomething(QByteArray msg)
 {
     packet_t *package = reinterpret_cast<packet_t *>(msg.data());
 
+    if (package->magic != MAGIC)
+        return;
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
 
     std::string test(package->data);
+    _infos.username = test;
     _signalPageMap.at(package->code)(_infos);
 }
 
-void MainWindow::changeCurrentPage(pageNames name)
+void MainWindow::changeCurrentPage(pageNames name, ClientInfos info)
 {
-    _pages.setCurrentPage(name);
+    _pages.setCurrentPage(name, info);
 }
 
 void MainWindow::checkSignal(ClientInfos infos, signal_e e)
@@ -97,6 +100,7 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
     char *buffTemp = CommandsFactory::callCommand(infos, e);
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
+    _infos = infos;
     _tcpClient.send(QBta);
 }
 
@@ -111,23 +115,23 @@ void MainWindow::initConnections(void)
         _pages.getPage(LOGIN), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(LOGIN), SIGNAL(changePage(pageNames)),
-        this, SLOT(changeCurrentPage(pageNames)));
+        _pages.getPage(LOGIN), SIGNAL(changePage(pageNames, ClientInfos)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
         _pages.getPage(REGISTER), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(REGISTER), SIGNAL(changePage(pageNames)),
-        this, SLOT(changeCurrentPage(pageNames)));
+        _pages.getPage(REGISTER), SIGNAL(changePage(pageNames, ClientInfos)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
         _pages.getPage(CALL), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(CALL), SIGNAL(changePage(pageNames)),
-        this, SLOT(changeCurrentPage(pageNames)));
+        _pages.getPage(CALL), SIGNAL(changePage(pageNames, ClientInfos)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
-        _pages.getPage(CONTACTS), SIGNAL(changePage(pageNames)),
-        this, SLOT(changeCurrentPage(pageNames)));
+        _pages.getPage(CONTACTS), SIGNAL(changePage(pageNames, ClientInfos)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
         _pages.getPage(CONTACTS), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));

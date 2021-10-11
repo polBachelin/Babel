@@ -64,7 +64,7 @@ bool TcpClient::getStatus() {return _status;}
 
 void TcpClient::readyForRead()
 {
-    QByteArray datas = _tcpSocket->readAll();
+    QByteArray datas = _tcpSocket->read(PACKETSIZE);
     // qDebug() << datas;
     // std::string str(datas.toStdString());
     // std::cout << "received = " << str << std::endl;

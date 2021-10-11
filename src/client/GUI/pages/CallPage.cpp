@@ -18,6 +18,10 @@ Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(info
 
 // LOADERS
 
+void Client::GUI::CallPage::onPage()
+{
+}
+
 void Client::GUI::CallPage::loadPage()
 {
     btnLoader();
@@ -212,7 +216,7 @@ void Client::GUI::CallPage::callOff()
     _labelContact->show();
     _labelGif->show();
 
-    emit changePage(CONTACTS);
+    emit changePage(CONTACTS, _infos);
 }
 
 void Client::GUI::CallPage::callOn()

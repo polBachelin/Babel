@@ -31,12 +31,12 @@ namespace Client {
                 ~MainWindow();
 
             signals:
-                void validSignalResponse(Client::ClientInfos);
-                void wrongSignalResponse(Client::ClientInfos);
+                void validSignalResponse(ClientInfos);
+                void wrongSignalResponse(ClientInfos);
 
             public slots:
                 void checkSignal(ClientInfos, signal_e);
-                void changeCurrentPage(pageNames);
+                void changeCurrentPage(pageNames, ClientInfos);
                 void receivedSomething(QByteArray);
                 void gotError(QAbstractSocket::SocketError err);
                 //void TryConnect
@@ -44,12 +44,12 @@ namespace Client {
             private:
                 void initConnections(void);
                 PageManager _pages;
-                Client::Network::TcpClient _tcpClient;
+                Network::TcpClient _tcpClient;
                 //TODO: remove this after audio;
-                Client::Managers::CallManager _callManager;
+                Managers::CallManager _callManager;
                 ClientInfos _infos;
 
-                std::unordered_map<int, std::function<void(Client::ClientInfos)>> _signalPageMap;
+                std::unordered_map<int, std::function<void(ClientInfos)>> _signalPageMap;
 
        };
 
