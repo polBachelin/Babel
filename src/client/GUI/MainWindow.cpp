@@ -78,8 +78,10 @@ void MainWindow::receivedSomething(QByteArray msg)
 {
     packet_t *package = reinterpret_cast<packet_t *>(msg.data());
 
-    if (package->magic != MAGIC)
+    if (package->magic != MAGIC) {
+        std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
         return;
+    }
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;

@@ -34,12 +34,11 @@ class ContactPage : public APage
         void labelLoader();
         void callLoader();
         void formLoader();
-
-        // other functions
-        void addOneContact(std::string);
+        void addContactLoader();
 
     public slots:
-        void contactClicked();
+        void contactClicked(QListWidgetItem *);
+        void addContactClicked();
         void callClicked();
         void logOut();
         void searchContact(QString);
@@ -60,15 +59,18 @@ class ContactPage : public APage
         std::unique_ptr<QPushButton> _call;
         std::unique_ptr<QLineEdit> _contactSearch;
         std::unique_ptr<QLineEdit> _writeMsg;
+        std::unique_ptr<QLineEdit> _addContactLineEdit;
+        std::unique_ptr<QPushButton> _addContactBtn;
+        std::unique_ptr<QMessageBox> _addContactBox;
 
         // Widget lists
         std::map<std::string, std::unique_ptr<QFrame>> _delim;
-        std::vector<std::shared_ptr<QPushButton>> _contacts;
         std::unique_ptr<QPushButton> _backButton;
+        std::unique_ptr<QListWidget> _contactList;
 
         // member variables
-        QSlider *   _m_slider;
-        QWidget *   _parent;
+        QSlider * _m_slider;
+        QWidget * _parent;
         std::string _username;
         std::string _msg;
         std::string _search;
