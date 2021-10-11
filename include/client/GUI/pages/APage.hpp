@@ -21,6 +21,7 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
+#include <unordered_map>
 #include "structs.hpp"
 
 #define LOGO_PATH       "./assets/babelLogo_48x48.png"
@@ -60,16 +61,7 @@ namespace GUI {
             Eacceptinvitation = 112,
             EcallX = 003,
             Erefuseincomingcall = 203,
-            Easkcontactlist = 004,
-            Eloginsuccessful = 100,
-            Eloginfailed = 200,
-            Eregistersuccessful = 101,
-            Eregisterfailed = 201,
-            Einvitationreceive = 012,
-            Econtactaddsuccessfully = 102,
-            Eincomingcall = 303,
-            Ecallwasrefused = 203,
-            EContactlist = 004
+            Easkcontactlist = 004
         };
 
 class APage : public QWidget

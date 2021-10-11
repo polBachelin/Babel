@@ -36,7 +36,8 @@ std::map<std::size_t, std::string> errSockMap = {
     {22, "!! Temporary Error !!"}
 };
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("10.188.56.156", 5000)
+MainWindow::MainWindow(const QString hostAddress, int portVal)
+    : _pages(this), _tcpClient(hostAddress, portVal)
 {
     this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
@@ -45,6 +46,25 @@ MainWindow::MainWindow() : _pages(this), _tcpClient("10.188.56.156", 5000)
         "background-image:url("
         BACKGROUND_PATH
         "); background-position: center;");
+
+    _signalPageMap[100] = [&](Client::ClientInfos info){
+        emit MainWindow::validSignalResponse(info);};
+    _signalPageMap[200] = [&](Client::ClientInfos info){
+        emit MainWindow::wrongSignalResponse(info);};
+    _signalPageMap[101] = [&](Client::ClientInfos info){
+        emit MainWindow::validSignalResponse(info);};
+    _signalPageMap[201] = [&](Client::ClientInfos info){
+        emit MainWindow::wrongSignalResponse(info);};
+    // _signalPageMap[012] = [&](Client::ClientInfos info){
+    //     emit fct(info);};
+    // _signalPageMap[102] = [&](Client::ClientInfos info){
+    //     emit fct(info);};
+    // _signalPageMap[303] = [&](Client::ClientInfos info){
+    //     emit fct(info);};
+    // _signalPageMap[203] = [&](Client::ClientInfos info){
+    //     emit fct(info);};
+    // _signalPageMap[004] = [&](Client::ClientInfos info){
+    //     emit fct(info);};
 
     initConnections();
 }
@@ -57,17 +77,14 @@ MainWindow::~MainWindow()
 void MainWindow::receivedSomething(QByteArray msg)
 {
     packet_t *package = reinterpret_cast<packet_t *>(msg.data());
-    
+
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
 
     std::string test(package->data);
-    if (test == "success\n")
-        emit validSignalResponse("", "");
-    else
-        emit wrongSignalResponse("wrong pass", "wrong user");
+    _signalPageMap.at(package->code)(_infos);
 }
 
 void MainWindow::changeCurrentPage(pageNames name)
@@ -76,7 +93,7 @@ void MainWindow::changeCurrentPage(pageNames name)
 }
 
 void MainWindow::checkSignal(ClientInfos infos, signal_e e)
-{    
+{
     char *buffTemp = CommandsFactory::callCommand(infos, e);
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
@@ -111,6 +128,9 @@ void MainWindow::initConnections(void)
     QObject::connect(
         _pages.getPage(CONTACTS), SIGNAL(changePage(pageNames)),
         this, SLOT(changeCurrentPage(pageNames)));
+    QObject::connect(
+        _pages.getPage(CONTACTS), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
         &_tcpClient, &Client::Network::TcpClient::dataAvailable,
         this, &MainWindow::receivedSomething);

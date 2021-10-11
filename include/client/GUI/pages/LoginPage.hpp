@@ -33,8 +33,8 @@ class LoginPage : public APage
         void btnLoader();
 
     public slots:
-        void validSignIn(QString passErr, QString userErr);
-        void wrongSignIn(QString passErr, QString userErr);
+        void validSignIn(Client::ClientInfos);
+        void wrongSignIn(Client::ClientInfos);
         void changeWidth(int width);
         void changeUsername(QString);
         void changePassword(QString);

@@ -12,6 +12,11 @@ Client::GUI::RegisterPage::RegisterPage(ClientInfos infos, QWidget *parent) : AP
     setFixedSize(WIDTH, HEIGHT);
     _formError = false;
 
+    QObject::connect(parent, SIGNAL(validSignalResponse(QString, QString)),
+        this, SLOT(validRegister(QString, QString)));
+    QObject::connect(parent, SIGNAL(wrongSignalResponse(QString, QString)),
+        this, SLOT(wrongRegister(QString, QString)));
+
     loadPage();
     layoutLoader();
 }
@@ -169,8 +174,36 @@ void Client::GUI::RegisterPage::createAccount()
     // _confirmPasswordForm->setText(_confirmPassword.c_str());
     _infos.password = _password;
     _infos.username = _username;
-    
+
+    this->setDisabled(true);
     emit checkCommand(_infos, Eregister);
+}
+
+void Client::GUI::RegisterPage::validRegister(QString passErr, QString userErr)
+{
+    std::cout << "GOTO - contact page" << std::endl << std::endl;
+
+    (void)passErr;
+    (void)userErr;
+    _username = "";
+    _password = "";
+    _confirmPassword = "";
+    _usernameForm->setText(_username.c_str());
+    _passwordForm->setText(_password.c_str());
+    _confirmPasswordForm->setText(_confirmPassword.c_str());
+
+    this->setDisabled(false);
+    emit changePage(CONTACTS);
+}
+
+void Client::GUI::RegisterPage::wrongRegister(QString passErr, QString userErr)
+{
+    _confirmPassword = "";
+    _confirmPasswordForm->setText(_confirmPassword.c_str());
+    _errorPassword->setText(passErr);
+    _errorUsername->setText(userErr);
+
+    this->setDisabled(false);
 }
 
 void Client::GUI::RegisterPage::signIn()
@@ -187,6 +220,7 @@ void Client::GUI::RegisterPage::signIn()
     _errorUsername->setText("");
     _errorConfirmPassword->setText("");
 
+    this->setDisabled(false);
     emit changePage(LOGIN);
 }
 

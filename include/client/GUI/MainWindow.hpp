@@ -26,12 +26,13 @@ namespace Client {
             Q_OBJECT
 
             public:
-                MainWindow();
+                MainWindow(const QString hostAddress,
+                            int portVal);
                 ~MainWindow();
 
             signals:
-                void validSignalResponse(QString, QString);
-                void wrongSignalResponse(QString, QString);
+                void validSignalResponse(Client::ClientInfos);
+                void wrongSignalResponse(Client::ClientInfos);
 
             public slots:
                 void checkSignal(ClientInfos, signal_e);
@@ -50,7 +51,9 @@ namespace Client {
                 //Client::Network::UdpClient _udpClient;
                 ClientInfos _infos;
 
-        };
+                std::unordered_map<int, std::function<void(Client::ClientInfos)>> _signalPageMap;
+
+       };
 
     }
 }

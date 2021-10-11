@@ -9,15 +9,30 @@
 
 using namespace Client;
 
-const std::unordered_map<GUI::signal_e, 
-std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands 
+const std::unordered_map<GUI::signal_e,
+std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 {
 	{GUI::signal_e::Elogin,
 	[](ClientInfos infos, GUI::signal_e e) {
-		std::cout << "Sending packet of logiin to server\n";
+		std::cout << "Sending packet of login to server\n";
 		packet_t package;
 		char *buffTemp = new char[sizeof(package)];
-		
+
+		package.magic = MAGIC;
+		package.code = e;
+		package.data_size = infos.username.size() + infos.password.size() + 2;
+		std::string dataStr(infos.username + "\n" + infos.password + "\n");
+		strcpy(package.data, dataStr.c_str());
+		memcpy(buffTemp, &package, sizeof(package));
+		return buffTemp;
+	}},
+
+	{GUI::signal_e::Eregister,
+	[](ClientInfos infos, GUI::signal_e e) {
+		std::cout << "Sending packet of register to server\n";
+		packet_t package;
+		char *buffTemp = new char[sizeof(package)];
+
 		package.magic = MAGIC;
 		package.code = e;
 		package.data_size = infos.username.size() + infos.password.size() + 2;

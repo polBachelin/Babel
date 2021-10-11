@@ -11,6 +11,15 @@ using namespace Client;
 
 BabelClient::BabelClient(int &argc, char **argv) : QApplication(argc, argv)
 {
+    QString hostAddress = "192.168.0.17";
+    int portVal = 5000;
+
+    if (argc == 3) {
+        hostAddress = argv[1];
+        portVal = std::atoi(argv[2]);
+    }
+    std::cout << hostAddress.toStdString() << " | " << portVal << std::endl;
+    _mainWindow = std::make_unique<Client::GUI::MainWindow>(hostAddress, portVal);
 }
 
 BabelClient::~BabelClient()
@@ -20,7 +29,7 @@ BabelClient::~BabelClient()
 
 int BabelClient::start()
 {
-    mainWindow.show();
+    _mainWindow->show();
 
     return this->exec();
 }

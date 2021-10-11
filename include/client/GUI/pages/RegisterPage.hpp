@@ -33,6 +33,8 @@ class RegisterPage : public APage
         void btnLoader();
 
     public slots:
+        void validRegister(QString passErr, QString userErr);
+        void wrongRegister(QString passErr, QString userErr);
         void changeWidth(int width);
         void changeUsername(QString);
         void changePassword(QString);
