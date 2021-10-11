@@ -33,7 +33,6 @@ packet_t *Commands::CreatePacket(int code, const std::string &data)
 
     tmp->magic = MAGIC;
     tmp->code = code;
-    std::cout << "DAta : " << data << " " << data.length() << std::endl;
     tmp->data_size = data.length();
     std::strcpy(tmp->data, data.c_str());
     return tmp;

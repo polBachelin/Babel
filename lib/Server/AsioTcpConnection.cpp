@@ -33,7 +33,6 @@ void AsioTcpConnection::interpret()
     if (tmp->code != 666) {
         auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         asio::async_write(_socket, asio::buffer(tmp, sizeof(packet_t)), handler);
-        std::cout << "message sent : code : " << tmp->code << " | magic : " << tmp->magic << " | data_size : " << tmp->data_size << " | data : " << tmp->data << std::endl; 
         delete tmp;
     }
 }
