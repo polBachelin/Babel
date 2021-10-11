@@ -36,7 +36,7 @@ std::map<std::size_t, std::string> errSockMap = {
     {22, "!! Temporary Error !!"}
 };
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("10.188.56.156", 5000)
+MainWindow::MainWindow() : _pages(this), _tcpClient("10.19.251.145", 5000)
 {
     this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");

@@ -18,7 +18,6 @@ CallManager::CallManager() : QObject()
     _inputBufferSize =  3 * _soundManager->getSampleRate() * _frameSize;
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
-    _udpClient->connectToPair();
     //connect(_soundManager, inputAvailable, this, sendAudioData);
     //connect(_soundManager, outputAvailable, this, onReadAudioData);
 }
@@ -75,7 +74,6 @@ void CallManager::onReadAudioData()
     _pairs[dataPacket.host] = audioPacket->timestamp;
     _encoderManager->decode(audioPacket->data, _outputBuffer, 512, audioPacket->sizeOfData);
     _soundManager->feedBytesToOutput(_outputBuffer, 512);
-    //this->interpretSound(compressedBuffer, dataPacket.host)
 }
 
 void CallManager::beginCall(const std::vector<std::string> &pairs)
