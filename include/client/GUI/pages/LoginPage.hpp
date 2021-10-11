@@ -25,6 +25,7 @@ class LoginPage : public APage
         void initConnections() override;
         void loadPage() override;
         void layoutLoader() override;
+        void onPage() override;
 
         // widgtet loaders
         void delimLoader();
@@ -33,8 +34,8 @@ class LoginPage : public APage
         void btnLoader();
 
     public slots:
-        void validSignIn(Client::ClientInfos);
-        void wrongSignIn(Client::ClientInfos);
+        void validSignIn(ClientInfos);
+        void wrongSignIn(ClientInfos);
         void changeWidth(int width);
         void changeUsername(QString);
         void changePassword(QString);

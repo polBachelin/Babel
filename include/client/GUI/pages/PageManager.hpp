@@ -27,7 +27,7 @@ namespace Client
                 PageManager(QWidget *parent);
                 ~PageManager();
                 void addPage(pageNames name);
-                void setCurrentPage(pageNames name);
+                void setCurrentPage(pageNames name, ClientInfos);
                 APage *getPage(pageNames name);
 
             private:

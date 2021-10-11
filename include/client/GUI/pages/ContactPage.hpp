@@ -26,6 +26,7 @@ class ContactPage : public APage
         void initConnections() override;
         void loadPage() override;
         void layoutLoader() override;
+        void onPage() override;
 
         // widgtet loaders
         void contactLoader();
