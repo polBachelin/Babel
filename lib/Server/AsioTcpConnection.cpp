@@ -33,6 +33,8 @@ void AsioTcpConnection::interpret()
     if (tmp->code != 666) {
         auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         asio::async_write(_socket, asio::buffer(tmp, sizeof(packet_t)), handler);
+        std::cout << "message sent : code : " << tmp->code << " | magic : " << tmp->magic << " | data_size : " << tmp->data_size << " | data : " << tmp->data << std::endl; 
+        delete tmp;
     }
 }
 
@@ -48,6 +50,7 @@ asio::ip::tcp::socket &AsioTcpConnection::socket()
 
 void AsioTcpConnection::handleWrite(const asio::error_code &e, size_t size)
 {
+    std::cout << "size : " << size << std::endl;
     if (e || size == 0)
         throw e;
 }
@@ -56,8 +59,6 @@ void AsioTcpConnection::HandleReadHeader(const asio::error_code &e, std::size_t 
 {
     if (size > 0 && !e) {
         _packet = *(packet_t *)_buffer;
-        _socket.write_some(asio::buffer("qefsfef\n", 9));
-        std::cout << "message send" << std::endl;
         auto handler = std::bind(&AsioTcpConnection::HandleReadData, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         _socket.async_read_some(asio::buffer(_buffer, _packet.data_size), handler);
         return;

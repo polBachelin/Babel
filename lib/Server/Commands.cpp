@@ -29,11 +29,11 @@ packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_
 
 packet_t *Commands::CreatePacket(int code, const std::string &data)
 {
-    packet_t response;
-    packet_t *tmp = &response;
+    packet_t *tmp = new packet_t;
 
     tmp->magic = MAGIC;
     tmp->code = code;
+    std::cout << "DAta : " << data << " " << data.length() << std::endl;
     tmp->data_size = data.length();
     std::strcpy(tmp->data, data.c_str());
     return tmp;
@@ -50,7 +50,7 @@ packet_t *Commands::login(UserManager &um, packet_t &pck, std::deque<pointer_t> 
     tmp.erase(0, tmp.find("\n") + 1);
     res[1] = tmp;
     value = um.login(res[0], res[1]);
-    if (value == true) {
+    if (value) {
         return Commands::CreatePacket(100, um.GetName());
     } else {
         return Commands::CreatePacket(200, "failed\n");
