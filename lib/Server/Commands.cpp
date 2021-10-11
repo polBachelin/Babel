@@ -45,6 +45,7 @@ packet_t *Commands::login(UserManager &um, packet_t &pck, std::deque<pointer_t> 
     std::array<std::string, 2> res;
     int value = 0;
 
+    std::cout << "Login" << std::endl;
     res[0] = tmp.substr(0, tmp.find("\n"));
     tmp.erase(0, tmp.find("\n") + 1);
     res[1] = tmp;

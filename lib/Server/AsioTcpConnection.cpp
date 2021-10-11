@@ -56,7 +56,8 @@ void AsioTcpConnection::HandleReadHeader(const asio::error_code &e, std::size_t 
 {
     if (size > 0 && !e) {
         _packet = *(packet_t *)_buffer;
-        _socket.write_some(asio::buffer("success\n", 9));
+        _socket.write_some(asio::buffer("qefsfef\n", 9));
+        std::cout << "message send" << std::endl;
         auto handler = std::bind(&AsioTcpConnection::HandleReadData, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         _socket.async_read_some(asio::buffer(_buffer, _packet.data_size), handler);
         return;
