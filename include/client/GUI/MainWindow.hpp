@@ -33,6 +33,8 @@ namespace Client {
             signals:
                 void validSignalResponse(ClientInfos);
                 void wrongSignalResponse(ClientInfos);
+                void contactAddSuccess(ClientInfos);
+                void contactAddFailed(ClientInfos);
 
             public slots:
                 void checkSignal(ClientInfos, signal_e);

@@ -152,7 +152,7 @@ void Client::GUI::LoginPage::signIn()
     emit checkCommand(_infos, Elogin);
 }
 
-void Client::GUI::LoginPage::validSignIn(Client::ClientInfos info)
+void Client::GUI::LoginPage::validSignIn(ClientInfos info)
 {
     std::cout << "GOTO - contact page" << std::endl << std::endl;
 
@@ -165,7 +165,7 @@ void Client::GUI::LoginPage::validSignIn(Client::ClientInfos info)
     emit changePage(CONTACTS, info);
 }
 
-void Client::GUI::LoginPage::wrongSignIn(Client::ClientInfos info)
+void Client::GUI::LoginPage::wrongSignIn(ClientInfos info)
 {
     _errorPassword->setText("wrong password");
     _errorUsername->setText("wrong username");

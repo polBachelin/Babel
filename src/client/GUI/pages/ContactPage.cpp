@@ -13,6 +13,11 @@ Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent
     _contactSelected = "";
     _cid = 0;
 
+    QObject::connect(parent, SIGNAL(contactAddSuccess(ClientInfos)),
+        this, SLOT(validAddContact(ClientInfos)));
+    QObject::connect(parent, SIGNAL(contactAddFailed(ClientInfos)),
+        this, SLOT(wrongAddContact(ClientInfos)));
+
     loadPage();
     layoutLoader();
 }
@@ -32,16 +37,6 @@ void Client::GUI::ContactPage::loadPage()
     contactLoader();
     delimLoader();
     formLoader();
-    addContactLoader();
-}
-
-void Client::GUI::ContactPage::addContactLoader()
-{
-    _addContactBox = std::make_unique<QMessageBox>();
-    _addContactLineEdit = std::make_unique<QLineEdit>();
-
-    _addContactBox->setText("Not implemented yet.");
-    // _addContactBox->layout()->addWidget(_addContactLineEdit.get());
 }
 
 void Client::GUI::ContactPage::formLoader()
@@ -87,14 +82,14 @@ void Client::GUI::ContactPage::callLoader()
 
 void Client::GUI::ContactPage::contactLoader()
 {
-    _addContactBtn = std::make_unique<QPushButton>("+");
+    _addContactBtn = std::make_unique<QPushButton>("Add contact");
     _contactList = std::make_unique<QListWidget>();
 
-    new QListWidgetItem(tr("abcdef"), _contactList.get());
-    new QListWidgetItem(tr("Contact"), _contactList.get());
-    new QListWidgetItem(tr("jbseri"), _contactList.get());
-    new QListWidgetItem(tr("nvjserhbdkv"), _contactList.get());
-    new QListWidgetItem(tr("vgzejbsbdhviosd"), _contactList.get());
+    // new QListWidgetItem(tr("abcdef"), _contactList.get());
+    // new QListWidgetItem(tr("Contact"), _contactList.get());
+    // new QListWidgetItem(tr("jbseri"), _contactList.get());
+    // new QListWidgetItem(tr("nvjserhbdkv"), _contactList.get());
+    // new QListWidgetItem(tr("vgzejbsbdhviosd"), _contactList.get());
 }
 
 void Client::GUI::ContactPage::delimLoader()
@@ -152,7 +147,20 @@ void Client::GUI::ContactPage::initConnections()
 
 void Client::GUI::ContactPage::addContactClicked()
 {
-    _addContactBox->exec();
+    bool ok;
+    QString text = QInputDialog::getText(
+        this,
+        tr("Add a new contact"),
+        tr("Contact name:"),
+        QLineEdit::Normal,
+        _contactSearch->text(),
+        &ok
+    );
+    if (ok && !text.isEmpty()) {
+        ClientInfos info = {.username = text.toStdString().c_str(), .password = ""};
+
+        emit checkCommand(info, Eaddcontact);
+    }
 }
 
 void Client::GUI::ContactPage::contactClicked(QListWidgetItem *item)
@@ -205,6 +213,21 @@ void Client::GUI::ContactPage::searchContact(QString search)
         else
             _contactList->item(i)->setHidden(true);
     }
+}
+
+void Client::GUI::ContactPage::validAddContact(ClientInfos info)
+{
+    QMessageBox msg;
+    msg.setText("Contact added successfully !");
+    msg.exec();
+    new QListWidgetItem(tr(info.username.c_str()), _contactList.get());
+}
+
+void Client::GUI::ContactPage::wrongAddContact(ClientInfos info)
+{
+    QMessageBox msg;
+    msg.setText("Contact not found !");
+    msg.exec();
 }
 
 #include "moc_ContactPage.cpp"

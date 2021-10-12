@@ -57,8 +57,10 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
         emit MainWindow::wrongSignalResponse(info);};
     // _signalPageMap[012] = [&](ClientInfos info){
     //     emit fct(info);};
-    // _signalPageMap[102] = [&](ClientInfos info){
-    //     emit fct(info);};
+    _signalPageMap[102] = [&](ClientInfos info){
+        emit MainWindow::contactAddSuccess(info);};
+    _signalPageMap[202] = [&](ClientInfos info){
+        emit MainWindow::contactAddFailed(info);};
     // _signalPageMap[303] = [&](ClientInfos info){
     //     emit fct(info);};
     // _signalPageMap[203] = [&](ClientInfos info){
@@ -102,7 +104,10 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
     char *buffTemp = CommandsFactory::callCommand(infos, e);
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
-    _infos = infos;
+    if (e == Elogin || e == Eregister) {
+        _infos.username = infos.username;
+        _infos.password = infos.password;
+    }
     _tcpClient.send(QBta);
 }
 
