@@ -27,7 +27,7 @@ namespace Client
             Q_OBJECT
 
             public:
-                CallManager();
+                CallManager(const std::string &myIp);
                 ~CallManager();
                 void sendAudioData();
                  //TODO: paramètre input compressé
@@ -45,6 +45,7 @@ namespace Client
                 std::map<std::string, std::time_t> _pairs;
                 const int _magicNum = 1234;
                 const unsigned short _audioPort = 5000;
+                const std::string _ip;
                 bool _inCall = false;
                 float *_inputBuffer;
                 float *_outputBuffer;

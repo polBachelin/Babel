@@ -8,7 +8,7 @@
 #include "APage.hpp"
 
 
-Client::GUI::APage::APage(ClientInfos infos, QWidget *parent) : _parent(parent), _infos(infos)
+Client::GUI::APage::APage(ClientInfos infos, QWidget *parent) : QWidget(parent) ,_infos(infos)
 {
 }
 

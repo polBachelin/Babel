@@ -25,10 +25,12 @@ UDPClient::~UDPClient()
 {
 }
 
-void UDPClient::connectToPair()
+void UDPClient::connectToHost(const std::string &ip)
 {
     _socket = std::make_unique<QUdpSocket>();
-    _socket->bind(QHostAddress::LocalHost, 5000);
+    QHostAddress hostAddress;
+    hostAddress.setAddress(QString::fromStdString(ip));
+    _socket->bind(hostAddress, 5000);
     QObject::connect(_socket.get(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 

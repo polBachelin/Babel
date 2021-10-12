@@ -20,6 +20,7 @@ namespace Client {
         std::string userToCall;
         std::string ip;
         std::string port;
+        std::string currentData;
     };
 
     typedef struct packet {

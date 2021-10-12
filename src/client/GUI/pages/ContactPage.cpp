@@ -17,6 +17,8 @@ Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent
         this, SLOT(validAddContact(ClientInfos)));
     QObject::connect(parent, SIGNAL(contactAddFailed(ClientInfos)),
         this, SLOT(wrongAddContact(ClientInfos)));
+    QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)),
+        this, SLOT(handleIncomingCall(ClientInfos)));
 
     loadPage();
     layoutLoader();
@@ -159,7 +161,14 @@ void Client::GUI::ContactPage::addContactClicked()
     );
 
     if (ok && !text.isEmpty()) {
-        ClientInfos info = {.username = text.toStdString().c_str(), .password = "", .userToCall = "", .ip = "", .port = ""};
+        ClientInfos info = {
+            .username = text.toStdString().c_str(),
+            .password = "",
+            .userToCall = "",
+            .ip = "",
+            .port = "",
+            .currentData = "",
+            };
 
         emit checkCommand(info, Eaddcontact);
     }
@@ -233,5 +242,6 @@ void Client::GUI::ContactPage::wrongAddContact(ClientInfos info)
     msg.setText("Contact not found !");
     msg.exec();
 }
+
 
 #include "moc_ContactPage.cpp"

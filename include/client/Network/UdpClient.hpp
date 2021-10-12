@@ -26,7 +26,7 @@ namespace Client
             public:
                 UDPClient();
                 ~UDPClient();
-                void connectToPair() override;
+                void connectToHost(const std::string &ip) override;
                 void send(const packetUDP_t &packet) override;
                 void disconnect() override;
                 packetUDP_t getData() override;

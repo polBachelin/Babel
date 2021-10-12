@@ -9,6 +9,7 @@
 #define DEF_CALLPAGE
 
 #include "APage.hpp"
+#include "CallManager.hpp"
 
 namespace Client {
 namespace GUI {
@@ -82,6 +83,7 @@ class CallPage : public APage
 
         // member variables
         std::string _username;
+        Client::Managers::CallManager _callManager;
         bool _calling;
 };
 

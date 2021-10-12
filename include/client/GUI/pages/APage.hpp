@@ -86,7 +86,6 @@ class APage : public QWidget
 
     protected:
         std::unique_ptr<QGridLayout> _layout;
-        QWidget *_parent;
         ClientInfos _infos;
 };
 

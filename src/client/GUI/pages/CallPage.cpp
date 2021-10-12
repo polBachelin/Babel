@@ -7,10 +7,13 @@
 
 #include "CallPage.hpp"
 
-Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(infos, parent)
+Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(infos, parent), _callManager(infos.ip)
 {
     setFixedSize(WIDTH, HEIGHT);
     _calling = false;
+
+    //TODO: connect incoming CALL contact page et callPage
+    //QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)), this, SLOT(callOn()));
 
     loadPage();
     layoutLoader();
@@ -238,7 +241,7 @@ void Client::GUI::CallPage::callOn()
     _labelContact->hide();
     _labelGif->hide();
 
-    emit checkCommand(_infos, EcallX);
+    //emit checkCommand(_infos, EcallX);
 }
 
 void Client::GUI::CallPage::updateTimer()

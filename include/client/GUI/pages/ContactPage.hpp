@@ -69,7 +69,6 @@ class ContactPage : public APage
 
         // member variables
         QSlider * _m_slider;
-        QWidget * _parent;
         std::string _username;
         std::string _msg;
         std::string _search;

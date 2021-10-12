@@ -9,7 +9,7 @@
 
 using namespace Client::Managers;
 
-CallManager::CallManager() : QObject()
+CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
 {
     _udpClient = std::make_unique<Client::Network::UDPClient>();
     _soundManager = std::make_shared<PortAudioManager>();
@@ -18,6 +18,7 @@ CallManager::CallManager() : QObject()
     _inputBufferSize =  3 * _soundManager->getSampleRate() * _frameSize;
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
+    //TODO: connect input to sendAudio + output to readAudio
     //connect(_soundManager, inputAvailable, this, sendAudioData);
     //connect(_soundManager, outputAvailable, this, onReadAudioData);
 }
@@ -81,7 +82,7 @@ void CallManager::beginCall(const std::vector<std::string> &pairs)
     this->_inCall = true;
     this->_soundManager->startInputStream();
     this->_soundManager->startOutputStream();
-    this->_udpClient->connectToPair();
+    this->_udpClient->connectToHost(_ip);
     for(auto &pair : pairs)
         _pairs.emplace(pair, 0);
     this->sendAudioData();

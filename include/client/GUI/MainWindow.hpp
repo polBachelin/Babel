@@ -35,11 +35,13 @@ namespace Client {
                 void wrongSignalResponse(ClientInfos);
                 void contactAddSuccess(ClientInfos);
                 void contactAddFailed(ClientInfos);
+                void incomingCall(ClientInfos);
 
             public slots:
                 void checkSignal(ClientInfos, signal_e);
                 void changeCurrentPage(pageNames, ClientInfos);
                 void receivedSomething(QByteArray);
+                void onStartCallConnection(ClientInfos);
                 void gotError(QAbstractSocket::SocketError err);
                 //void TryConnect
 
@@ -47,10 +49,7 @@ namespace Client {
                 void initConnections(void);
                 PageManager _pages;
                 Network::TcpClient _tcpClient;
-                //TODO: remove this after audio;
-                Managers::CallManager _callManager;
                 ClientInfos _infos;
-
                 std::unordered_map<int, std::function<void(ClientInfos)>> _signalPageMap;
 
        };

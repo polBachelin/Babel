@@ -48,6 +48,7 @@ void PageManager::addPage(pageNames name)
 void PageManager::setCurrentPage(pageNames name, ClientInfos info)
 {
     APage *page = getPage(name);
+
     std::cout << "USERNAME page = " << info.username << std::endl;
     page->setClientInfos(info);
     page->onPage();
