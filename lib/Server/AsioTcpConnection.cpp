@@ -33,6 +33,7 @@ void AsioTcpConnection::interpret()
     if (tmp->code != 666) {
         auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         asio::async_write(_socket, asio::buffer(tmp, sizeof(packet_t)), handler);
+        delete tmp;
     }
     delete tmp;
 }
@@ -49,6 +50,7 @@ asio::ip::tcp::socket &AsioTcpConnection::socket()
 
 void AsioTcpConnection::handleWrite(const asio::error_code &e, size_t size)
 {
+    std::cout << "size : " << size << std::endl;
     if (e || size == 0)
         throw e;
 }
@@ -57,9 +59,6 @@ void AsioTcpConnection::HandleReadHeader(const asio::error_code &e, std::size_t 
 {
     if (size > 0 && !e) {
         _packet = *(packet_t *)_buffer;
-        //TODO : POLO IL DIT QUE ÇA RESTE PAS LA ÇA. c'est changé pour que Simon puisse bosser de son cote mais ça reste pas la ça
-        // std::memcpy(_packet.data, "success\n", 9);
-        // _socket.write_some(asio::buffer(&_packet, sizeof(packet_t)));
         auto handler = std::bind(&AsioTcpConnection::HandleReadData, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
         _socket.async_read_some(asio::buffer(_buffer, _packet.data_size), handler);
         return;

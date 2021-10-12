@@ -23,6 +23,7 @@ class Commands {
         static packet_t *login(UserManager &um, packet_t &pck, std::deque<pointer_t> &);
         static packet_t *Register(UserManager &um, packet_t &pck, std::deque<pointer_t> &);
         static packet_t *addContact(UserManager &um, packet_t &pck, std::deque<pointer_t> &);
+        static packet_t *AcceptInvitation(UserManager &um, packet_t &pck, std::deque<pointer_t> &);
         static packet_t *callX(UserManager &um, packet_t &pck, std::deque<pointer_t> &);
         static packet_t *callRefused(UserManager &um, packet_t &pck, std::deque<pointer_t> &);
         static packet_t *ListContact(UserManager &um, packet_t &pck, std::deque<pointer_t> &);

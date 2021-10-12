@@ -18,6 +18,7 @@ class AsioTcpServer : public ITcpServer {
         void startAccept() override;
         void reAccept();
         void initServer(int port) override;
+        void printLocalAdress();
         void handleAccept(pointer_t new_connection, const asio::error_code& error);
         std::deque<pointer_t> &getClientList();
     private:

@@ -38,9 +38,9 @@ class UserManager {
         asio::ip::tcp::socket &getSock();
     protected:
     private:
-        asio::ip::tcp::socket &_sock;
         Database _db;
         ContactManager _cm;
+        asio::ip::tcp::socket &_sock;
         std::string _name;
         bool _isLog = false;
 };
