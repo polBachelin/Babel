@@ -36,6 +36,7 @@ namespace Client {
                 void contactAddSuccess(ClientInfos);
                 void contactAddFailed(ClientInfos);
                 void incomingCall(ClientInfos);
+                void contactList(ClientInfos);
 
             public slots:
                 void checkSignal(ClientInfos, signal_e);

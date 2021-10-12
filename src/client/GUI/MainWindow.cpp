@@ -51,6 +51,8 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
 
     _infos.port = std::to_string(portVal);
 
+    initConnections();
+
     _signalPageMap[100] = [&](ClientInfos info){
         emit MainWindow::validSignalResponse(info);};
     _signalPageMap[200] = [&](ClientInfos info){
@@ -81,10 +83,8 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
         emit MainWindow::contactAddFailed(info);};
     // _signalPageMap[203] = [&](ClientInfos info){
     //     emit fct(info);};
-    // _signalPageMap[004] = [&](ClientInfos info){
-    //     emit fct(info);};
-
-    initConnections();
+    _signalPageMap[004] = [&](ClientInfos info){
+        emit MainWindow::contactList(info);};
 }
 
 MainWindow::~MainWindow()
@@ -107,11 +107,17 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::string test(package->data);
     _infos.username = test;
     _infos.currentData = package->data;
-    _signalPageMap.at(package->code)(_infos);
+    if (_signalPageMap.find(package->code) == _signalPageMap.end()) {
+        std::cout << "got an unknown code : " << package->code << std::endl;
+    } else {
+        std::cout << "got a code : " << package->code << std::endl;
+        _signalPageMap.at(package->code)(_infos);
+    }
 }
 
 void MainWindow::changeCurrentPage(pageNames name, ClientInfos info)
 {
+    std::cout << "page change request" << std::endl;
     _pages.setCurrentPage(name, info);
 }
 
@@ -124,6 +130,7 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
         _infos.username = infos.username;
         _infos.password = infos.password;
     }
+    std::cout << "send package with data : " << infos.username << std::endl;
     _tcpClient.send(QBta);
 }
 

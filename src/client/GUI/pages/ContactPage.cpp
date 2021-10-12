@@ -19,6 +19,8 @@ Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent
         this, SLOT(wrongAddContact(ClientInfos)));
     QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)),
         this, SLOT(handleIncomingCall(ClientInfos)));
+    QObject::connect(parent, SIGNAL(contactList(ClientInfos)),
+        this, SLOT(fillContactList(ClientInfos)));
 
     loadPage();
     layoutLoader();
@@ -28,6 +30,7 @@ void Client::GUI::ContactPage::onPage()
 {
     std::cout << "USERNAME = " << _infos.username << std::endl;
     _labelContactName->setText(_infos.username.c_str());
+    emit checkCommand(_infos, Easkcontactlist);
 }
 
 // LOARDERS
@@ -247,6 +250,17 @@ void Client::GUI::ContactPage::handleIncomingCall(ClientInfos info)
 {
     info.userToCall = "";
     emit changePage(CALL, info);
+}
+
+void Client::GUI::ContactPage::fillContactList(ClientInfos info)
+{
+    std::replace(info.currentData.begin(), info.currentData.end(), '\n', ' ');
+    std::istringstream ss(info.currentData);
+    std::string word;
+
+    while (ss >> word)
+        new QListWidgetItem(tr(word.c_str()), _contactList.get());
+        // std::cout << word << "\n";
 }
 
 #include "moc_ContactPage.cpp"

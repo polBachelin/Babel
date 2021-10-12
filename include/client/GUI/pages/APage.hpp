@@ -23,6 +23,7 @@
 #include <cstring>
 #include <unordered_map>
 #include "structs.hpp"
+#include <bits/stdc++.h>
 
 #define LOGO_PATH       "./assets/babelLogo_48x48.png"
 #define PROFILE48_PATH  "./assets/profile_48x48.png"
