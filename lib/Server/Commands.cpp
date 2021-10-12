@@ -11,9 +11,10 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
     {000, Commands::login},
     {001, Commands::Register},
     {002, Commands::addContact},
+    {112, Commands::AcceptInvitation},
     {003, Commands::callX},
     {004, Commands::ListContact},
-    {203, Commands::callX}
+    {203, Commands::callRefused}
 };
 
 packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
@@ -78,10 +79,19 @@ packet_t *Commands::addContact(UserManager &um, packet_t &pck, std::deque<pointe
     auto tmp = um.GetContactManager();
     auto name = um.GetName();
     std::string res = pck.data;
+    std::string own;
     
     res.erase(res.find('\n'));
-    tmp.addContact(res, name);
-    return Commands::CreatePacket(102, "success");
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if ((*it)->getUsermanager().GetName() == res) {
+            asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
+            own = um.GetName() + "\n";
+            auto tmp = Commands::CreatePacket(012, own);
+            dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
+            return Commands::CreatePacket(102, res);
+        }
+    }
+    return Commands::CreatePacket(202, "failed");
 }
 
 packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
@@ -141,4 +151,25 @@ packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer
         }
     }
     return Commands::CreatePacket(666, "");    
+}
+
+packet_t *Commands::AcceptInvitation(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+{
+    auto tmp = um.GetContactManager();
+    auto name = um.GetName();
+    std::string res = pck.data;
+    std::string own;
+    
+    res.erase(res.find('\n'));
+    tmp.addContact(res, name);
+    for (auto it = list.begin(); it != list.end(); ++it) {
+        if ((*it)->getUsermanager().GetName() == res) {
+            asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
+            own = um.GetName() + "\n";
+            auto tmp = Commands::CreatePacket(302, own);
+            dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
+            return Commands::CreatePacket(666, "");
+        }
+    }
+    return Commands::CreatePacket(666, "");
 }
