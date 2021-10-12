@@ -62,18 +62,17 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
     _signalPageMap[303] = [&](ClientInfos info){
         emit MainWindow::incomingCall(info);};
 
-    initConnections();
     foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
-    QNetworkInterface::InterfaceFlags flags = netInterface.flags();
-    if( (bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)){
-        foreach (const QNetworkAddressEntry &address, netInterface.addressEntries()) {
-            if(address.ip().protocol() == QAbstractSocket::IPv4Protocol) {
-                _infos.ip = address.ip().toString().toStdString();
-                return;
+        QNetworkInterface::InterfaceFlags flags = netInterface.flags();
+        if( (bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)){
+            foreach (const QNetworkAddressEntry &address, netInterface.addressEntries()) {
+                if(address.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+                    _infos.ip = address.ip().toString().toStdString();
+                    return;
+                }
             }
         }
     }
-}
     // _signalPageMap[012] = [&](Client::ClientInfos info){
     //     emit fct(info);};
     _signalPageMap[102] = [&](ClientInfos info){
@@ -85,6 +84,7 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
     // _signalPageMap[004] = [&](ClientInfos info){
     //     emit fct(info);};
 
+    initConnections();
 }
 
 MainWindow::~MainWindow()
@@ -130,6 +130,11 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
 void MainWindow::gotError(QAbstractSocket::SocketError err)
 {
     std::cout << errSockMap[err] << std::endl;
+}
+
+void MainWindow::onStartCallConnection(ClientInfos info)
+{
+
 }
 
 void MainWindow::initConnections(void)

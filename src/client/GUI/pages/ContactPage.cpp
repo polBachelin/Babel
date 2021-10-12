@@ -243,5 +243,10 @@ void Client::GUI::ContactPage::wrongAddContact(ClientInfos info)
     msg.exec();
 }
 
+void Client::GUI::ContactPage::handleIncomingCall(ClientInfos info)
+{
+    info.userToCall = "";
+    emit changePage(CALL, info);
+}
 
 #include "moc_ContactPage.cpp"

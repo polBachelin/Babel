@@ -10,10 +10,8 @@
 Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(infos, parent), _callManager(infos.ip)
 {
     setFixedSize(WIDTH, HEIGHT);
-    _calling = false;
 
-    //TODO: connect incoming CALL contact page et callPage
-    //QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)), this, SLOT(callOn()));
+    QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)), this, SLOT(incoming(ClientInfos)));
 
     loadPage();
     layoutLoader();
@@ -70,14 +68,8 @@ void Client::GUI::CallPage::btnLoader()
     _soundOff->hide();
     _micOff->hide();
 
-    if (!_calling) {
-        _soundOn->hide();
-        _micOn->hide();
-        _callOff->hide();
-    } else {
-        _validate->hide();
-        _refuse->hide();
-    }
+    _validate->hide();
+    _refuse->hide();
 }
 
 void Client::GUI::CallPage::labelLoader()
@@ -102,13 +94,8 @@ void Client::GUI::CallPage::labelLoader()
     _labelPageName->setStyleSheet("QLabel { color : white; font-size: 30px;}");
     _labelTimer->setText("00 : 00");
 
-    if (!_calling) {
-        _labelProfile->hide();
-        _labelTimer->hide();
-    } else {
-        _labelContact->hide();
-        _labelGif->hide();
-    }
+    _labelContact->hide();
+    _labelGif->hide();
 }
 
 void Client::GUI::CallPage::delimLoader()
@@ -127,18 +114,15 @@ void Client::GUI::CallPage::layoutLoader()
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
     _layout->addWidget(_labelPageName.get(), 0, 17, 3, 10);
 
-    inCall(true);
-    incomingCall(true);
+    inCall();
+    incomingCall();
 
     this->setLayout(_layout.get());
     initConnections();
 }
 
-void Client::GUI::CallPage::inCall(bool calling)
+void Client::GUI::CallPage::inCall()
 {
-    if (!calling)
-        return;
-
     _layout->addWidget(_labelProfile.get(), 10, 18, 6, 3);
     _layout->addWidget(_labelTimer.get(), 18, 19, 2, 1);
 
@@ -149,11 +133,8 @@ void Client::GUI::CallPage::inCall(bool calling)
     _layout->addWidget(_callOff.get(), 25, 23, 3, 2);
 }
 
-void Client::GUI::CallPage::incomingCall(bool calling)
+void Client::GUI::CallPage::incomingCall()
 {
-    if (!calling)
-        return;
-
     _layout->addWidget(_labelGif.get(), 8, 17, 10, 5);
     _layout->addWidget(_labelContact.get(), 17, 17, 2, 5);
 
@@ -203,7 +184,6 @@ void Client::GUI::CallPage::callOff()
 {
     std::cout << "GOTO - contact page" << std::endl << std::endl;
 
-    _calling = false;
     _timer->stop();
     _timer->start();
     _eltimer->restart();
@@ -224,7 +204,6 @@ void Client::GUI::CallPage::callOff()
 
 void Client::GUI::CallPage::callOn()
 {
-    _calling = true;
     _timer->stop();
     _timer->start();
     _eltimer->restart();
@@ -257,6 +236,20 @@ void Client::GUI::CallPage::updateTimer()
         );
 
     _labelTimer->setText(time.c_str());
+}
+
+void Client::GUI::CallPage::incoming(ClientInfos info)
+{
+    _labelProfile->hide();
+    _labelTimer->hide();
+    _soundOn->hide();
+    _micOn->hide();
+    _callOff->hide();
+
+    _validate->show();
+    _refuse->show();
+    _labelContact->show();
+    _labelGif->show();
 }
 
 #include "moc_CallPage.cpp"

@@ -33,8 +33,8 @@ class CallPage : public APage
         void labelLoader();
         void btnLoader();
         void timerLoader();
-        void inCall(bool);
-        void incomingCall(bool);
+        void inCall();
+        void incomingCall();
 
     public slots:
         void soundOff();
@@ -44,6 +44,7 @@ class CallPage : public APage
         void callOff();
         void callOn();
         void updateTimer();
+        void incoming(ClientInfos);
 
     private:
         // Layout
@@ -84,7 +85,6 @@ class CallPage : public APage
         // member variables
         std::string _username;
         Client::Managers::CallManager _callManager;
-        bool _calling;
 };
 
 }}

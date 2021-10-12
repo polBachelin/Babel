@@ -38,6 +38,7 @@ class ContactPage : public APage
     public slots:
         void validAddContact(ClientInfos);
         void wrongAddContact(ClientInfos);
+        void handleIncomingCall(ClientInfos);
         void contactClicked(QListWidgetItem *);
         void addContactClicked();
         void callClicked();
