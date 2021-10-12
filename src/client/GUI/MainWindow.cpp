@@ -76,8 +76,10 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
 }
     // _signalPageMap[012] = [&](Client::ClientInfos info){
     //     emit fct(info);};
-    // _signalPageMap[102] = [&](ClientInfos info){
-    //     emit fct(info);};
+    _signalPageMap[102] = [&](ClientInfos info){
+        emit MainWindow::contactAddSuccess(info);};
+    _signalPageMap[202] = [&](ClientInfos info){
+        emit MainWindow::contactAddFailed(info);};
     // _signalPageMap[303] = [&](ClientInfos info){
     //     emit fct(info);};
     // _signalPageMap[203] = [&](ClientInfos info){
@@ -96,8 +98,10 @@ void MainWindow::receivedSomething(QByteArray msg)
 {
     packet_t *package = reinterpret_cast<packet_t *>(msg.data());
 
-    if (package->magic != MAGIC)
+    if (package->magic != MAGIC) {
+        std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
         return;
+    }
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
@@ -117,8 +121,10 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
     char *buffTemp = CommandsFactory::callCommand(infos, e);
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
-    _infos.username = infos.username;
-    _infos.password = infos.password;
+    if (e == Elogin || e == Eregister) {
+        _infos.username = infos.username;
+        _infos.password = infos.password;
+    }
     _tcpClient.send(QBta);
 }
 
