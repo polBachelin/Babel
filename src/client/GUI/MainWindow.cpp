@@ -7,6 +7,8 @@
 
 #include "MainWindow.hpp"
 #include "APage.hpp"
+#include <QNetworkInterface>
+#include <QNetworkAddressEntry>
 
 using namespace Client::GUI;
 
@@ -47,7 +49,6 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
         BACKGROUND_PATH
         "); background-position: center;");
 
-    _infos.ip = hostAddress.toStdString();
     _infos.port = std::to_string(portVal);
 
     _signalPageMap[100] = [&](ClientInfos info){
@@ -58,6 +59,21 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
         emit MainWindow::validSignalResponse(info);};
     _signalPageMap[201] = [&](ClientInfos info){
         emit MainWindow::wrongSignalResponse(info);};
+    _signalPageMap[603] = [&](ClientInfos info){
+        emit MainWindow::wrongSignalResponse(info);};
+
+    initConnections();
+    foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
+    QNetworkInterface::InterfaceFlags flags = netInterface.flags();
+    if( (bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)){
+        foreach (const QNetworkAddressEntry &address, netInterface.addressEntries()) {
+            if(address.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+                _infos.ip = address.ip().toString().toStdString();
+                return;
+            }
+        }
+    }
+}
     // _signalPageMap[012] = [&](Client::ClientInfos info){
     //     emit fct(info);};
     // _signalPageMap[102] = [&](ClientInfos info){
@@ -69,7 +85,6 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
     // _signalPageMap[004] = [&](ClientInfos info){
     //     emit fct(info);};
 
-    initConnections();
 }
 
 MainWindow::~MainWindow()
@@ -87,7 +102,6 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
-
     std::string test(package->data);
     _infos.username = test;
     _signalPageMap.at(package->code)(_infos);
@@ -103,7 +117,8 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
     char *buffTemp = CommandsFactory::callCommand(infos, e);
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
-    _infos = infos;
+    _infos.username = infos.username;
+    _infos.password = infos.password;
     _tcpClient.send(QBta);
 }
 

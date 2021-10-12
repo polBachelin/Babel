@@ -144,6 +144,7 @@ void Client::GUI::ContactPage::initConnections()
     for (auto &contact : _contacts)
         QObject::connect(contact.get(), SIGNAL(clicked()), this, SLOT(contactClicked()));
     QObject::connect(_call.get(), SIGNAL(clicked()), this, SLOT(callClicked()));
+    QObject::connect(_parent, SIGNAL(wrongSignalResponse(ClientInfos)), this, SLOT(callCanceled(ClientInfos)));
 }
 
 void Client::GUI::ContactPage::contactClicked()
@@ -170,6 +171,8 @@ void Client::GUI::ContactPage::callClicked()
 {
     std::cout << "GOTO - call page" << std::endl << std::endl;
 
+    _infos.userToCall =  _contactSelected.toStdString();
+    emit checkCommand(_infos, EcallX);
     emit changePage(CALL, _infos);
 }
 
@@ -205,3 +208,4 @@ void Client::GUI::ContactPage::searchContact(QString search)
 }
 
 #include "moc_ContactPage.cpp"
+k
