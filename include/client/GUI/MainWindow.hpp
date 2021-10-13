@@ -48,7 +48,6 @@ namespace Client {
                 void checkSignal(ClientInfos, signal_e);
                 void changeCurrentPage(pageNames, ClientInfos);
                 void receivedSomething(QByteArray);
-                void onStartCallConnection(ClientInfos);
                 void gotError(QAbstractSocket::SocketError err);
                 //void TryConnect
 
