@@ -16,7 +16,7 @@ UserManager::UserManager(asio::ip::tcp::socket &s) : _db("db/database.db"), _cm(
 
 UserManager::~UserManager()
 {
-    _db.close();
+    //_db.close();
     _isLog = false;
 }
 

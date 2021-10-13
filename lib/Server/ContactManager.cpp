@@ -23,7 +23,7 @@ ContactManager::ContactManager(const std::string &name) : _db("db/database.db"),
 
 ContactManager::~ContactManager()
 {
-    _db.close();
+    //_db.close();
 }
 
 
