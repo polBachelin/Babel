@@ -75,13 +75,13 @@ MainWindow::~MainWindow()
 void MainWindow::signalReceivedLoader()
 {
     _signalPageMap[100] = [&](ClientInfos info){
-        emit MainWindow::validSignalResponse(info);};
+        emit MainWindow::validSignInResponse(info);};
     _signalPageMap[200] = [&](ClientInfos info){
-        emit MainWindow::wrongSignalResponse(info);};
+        emit MainWindow::wrongSignInResponse(info);};
     _signalPageMap[101] = [&](ClientInfos info){
-        emit MainWindow::validSignalResponse(info);};
+        emit MainWindow::validRegisterResponse(info);};
     _signalPageMap[201] = [&](ClientInfos info){
-        emit MainWindow::wrongSignalResponse(info);};
+        emit MainWindow::wrongRegisterResponse(info);};
     _signalPageMap[303] = [&](ClientInfos info){
         emit MainWindow::incomingCall(info);};
     _signalPageMap[012] = [&](ClientInfos info){
