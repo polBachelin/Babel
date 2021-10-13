@@ -9,6 +9,7 @@
 #define COMMANDS_HPP_
 
 #include "AAsioTcpConnection.hpp"
+#define PRINT_PCK(pck) (std::cout << "Magic : " << pck.magic << "\nCode : " << pck.code << "\nData size :" << pck.data_size << "\nData : " << pck.data << std::endl)
 
 class Commands;
 typedef std::function<packet_t *(UserManager &um, packet_t &pck, std::deque<pointer_t> &)> cmd_ptr;
