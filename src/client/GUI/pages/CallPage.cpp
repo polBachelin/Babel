@@ -251,7 +251,7 @@ void Client::GUI::CallPage::callOn()
     while (ss >> word)
         words.push_back(word);
     pairs.push_back(words[1]);
-    std::cout << "Ip to bind: " << words[2] << ":" << pairs.front() << std::endl;
+    std::cout << "Accept call from: " << words[2] << ":" << pairs.front() << std::endl;
     _callManager.connectToHost(pairs.front());
 }
 

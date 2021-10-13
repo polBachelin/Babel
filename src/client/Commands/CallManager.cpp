@@ -24,8 +24,8 @@ CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
     //TODO: connect input to sendAudio + output to readAudio
-    //connect(_soundManager, outputAvailable, this, onReadAudioData);
-    //connect(_soundManager, inputAvailable, this, sendAudioData);
+    QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP), this, SLOT(onReadAudioData));
+    QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData));
 }
 
 CallManager::~CallManager()
@@ -67,6 +67,7 @@ void CallManager::sendAudioData()
 
 void CallManager::onReadAudioData()
 {
+
     Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
     auto *audioPacket = reinterpret_cast<Client::Network::audioPacket_t *>(dataPacket.data);
 
@@ -88,6 +89,7 @@ void CallManager::connectToHost(const std::string &ip)
     this->_inCall = true;
     this->_soundManager->startInputStream();
     this->_soundManager->startOutputStream();
+    this->sendAudioData();
 }
 
 void CallManager::beginCall()
@@ -103,6 +105,7 @@ void CallManager::endCall()
 {
     this->_inCall = false;
     this->_udpClient->disconnect();
+    QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData));
 }
 
 #include "moc_CallManager.cpp"
