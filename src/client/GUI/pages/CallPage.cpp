@@ -238,6 +238,18 @@ void Client::GUI::CallPage::callOn()
     _labelContact->hide();
     _labelGif->hide();
 
+    std::vector<std::string> pairs;
+
+    std::replace(_infos.currentData.begin(), _infos.currentData.end(), '\n', ' ');
+    std::istringstream ss(_infos.currentData);
+    std::string word;
+    std::vector<std::string> words;
+
+    while (ss >> word)
+        words.push_back(word);
+    pairs.push_back(words[1]);
+    std::cout << pairs.front() << std::endl;
+    _callManager.beginCall(pairs);
     //emit checkCommand(_infos, EcallX);
 }
 
@@ -268,6 +280,8 @@ void Client::GUI::CallPage::incoming(ClientInfos info)
     _refuse->show();
     _labelContact->show();
     _labelGif->show();
+
+    _infos.currentData = info.currentData;
 }
 
 #include "moc_CallPage.cpp"

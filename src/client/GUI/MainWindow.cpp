@@ -104,6 +104,7 @@ void MainWindow::receivedSomething(QByteArray msg)
         std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
         return;
     }
+    std::cout << "J'ai reçu" << std::endl;
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
@@ -136,7 +137,11 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
         _infos.username = infos.username;
         _infos.password = infos.password;
     }
-    std::cout << "send package with data : " << infos.username << std::endl;
+    std::cout << "US " << infos.ip << " send infos: " << std::endl;
+
+    std::cout << infos.ip << std::endl;
+    std::cout << infos.userToCall << std::endl;
+    std::cout << infos.currentData << std::endl;
     _tcpClient.send(QBta);
 }
 

@@ -19,8 +19,8 @@ CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
     //TODO: connect input to sendAudio + output to readAudio
-    //connect(_soundManager, inputAvailable, this, sendAudioData);
     //connect(_soundManager, outputAvailable, this, onReadAudioData);
+    //connect(_soundManager, inputAvailable, this, sendAudioData);
 }
 
 CallManager::~CallManager()
@@ -46,12 +46,17 @@ void CallManager::sendAudioData()
 
     unsigned char *compressedBuffer = new unsigned char[_inputBufferSize];
     std::memset(compressedBuffer, 0, _inputBufferSize);
+    std::cout << "SendAudio: memset OK..." << std::endl;
     _soundManager->retrieveInputBytes(_inputBuffer, 512);
+    std::cout << "SendAudio: retrieveBytes OK..." << std::endl;
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 512, _inputBufferSize);
-    audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));    
+    std::cout << "SendAudio: encode OK... " << compressedSize << std::endl;
+    audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
+    std::cout << "SendAudio: createAudioPacket OK..." << std::endl;
     ptr = reinterpret_cast<char *>(&audioPacket);
     dataPacket.port = _audioPort;
     dataPacket.data = ptr;
+    std::cout << std::to_string(dataPacket.port) << dataPacket.data << std::endl;
     for (auto &pair : _pairs) {
         dataPacket.host = pair.first;
         _udpClient->send(dataPacket);
@@ -79,13 +84,19 @@ void CallManager::onReadAudioData()
 
 void CallManager::beginCall(const std::vector<std::string> &pairs)
 {
+    std::cout << "BEGIN CALL" << std::endl;
     this->_inCall = true;
     this->_soundManager->startInputStream();
+    std::cout << "startInputStream..." << std::endl;
     this->_soundManager->startOutputStream();
+    std::cout << "startOutputStream..." << std::endl;
     this->_udpClient->connectToHost(_ip);
+    std::cout << "Connect to client caller..." << std::endl;
     for(auto &pair : pairs)
         _pairs.emplace(pair, 0);
+    std::cout << "Emplace finished..." << std::endl;
     this->sendAudioData();
+    std::cout << "Send data OK..." << std::endl;
 }
 
 void CallManager::endCall()
