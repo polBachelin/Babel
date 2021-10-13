@@ -20,7 +20,9 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
 packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
 {
     try {
-        return _cmd_map.at(pck.code)(um, pck, list);
+        PRINT_PCK(pck);
+        if (pck.magic == MAGIC)
+            return _cmd_map.at(pck.code)(um, pck, list);
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
         return nullptr;
