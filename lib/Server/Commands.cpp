@@ -122,7 +122,8 @@ packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> 
     for (auto it = list.begin(); it != list.end(); ++it) {
         if ((*it)->getUsermanager().GetName() == arr[0]) {
             asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
-            res = um.GetName() + "\n" + inc.local_endpoint().address().to_string() + "\n" + arr[2] + "\n";
+            res = um.GetName() + "\n" + arr[1] + "\n" + arr[2] + "\n";
+            std::cout << "INC IP -> " << arr[1] << std::endl;
             auto tmp = Commands::CreatePacket(303, res);
             dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
             return Commands::CreatePacket(666, "");

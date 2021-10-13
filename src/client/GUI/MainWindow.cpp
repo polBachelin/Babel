@@ -109,7 +109,7 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
+    std::cout << "---------------------------------------" << std::endl;
 
     std::string test(package->data);
     _infos.username = test;
