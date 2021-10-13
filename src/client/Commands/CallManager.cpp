@@ -55,8 +55,10 @@ void CallManager::sendAudioData()
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
     ptr = reinterpret_cast<char *>(&audioPacket);
+
     dataPacket.port = _audioPort;
     dataPacket.data = ptr;
+    dataPacket.host = _ip;
 
     std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << dataPacket.data << std::endl;
     _udpClient->send(dataPacket);
