@@ -80,7 +80,7 @@ packet_t *Commands::addContact(UserManager &um, packet_t &pck, std::deque<pointe
     auto name = um.GetName();
     std::string res = pck.data;
     std::string own;
-
+    
     res.erase(res.find('\n'));
     for (auto it = list.begin(); it != list.end(); ++it) {
         if ((*it)->getUsermanager().GetName() == res) {
@@ -129,7 +129,7 @@ packet_t *Commands::ListContact(UserManager &um, packet_t &pck, std::deque<point
     auto tmp = um.GetContactManager();
     auto name = um.GetName();
     std::string res;
-
+    
     (void)pck;
     res = tmp.getContactList(name);
     return Commands::CreatePacket(004, res);
@@ -150,7 +150,7 @@ packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer
             return Commands::CreatePacket(666, "");
         }
     }
-    return Commands::CreatePacket(666, "");
+    return Commands::CreatePacket(666, "");    
 }
 
 packet_t *Commands::AcceptInvitation(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
@@ -159,7 +159,7 @@ packet_t *Commands::AcceptInvitation(UserManager &um, packet_t &pck, std::deque<
     auto name = um.GetName();
     std::string res = pck.data;
     std::string own;
-
+    
     res.erase(res.find('\n'));
     tmp.addContact(res, name);
     for (auto it = list.begin(); it != list.end(); ++it) {

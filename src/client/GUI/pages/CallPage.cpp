@@ -21,6 +21,10 @@ Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(info
 
 void Client::GUI::CallPage::onPage()
 {
+    _timer->stop();
+    _timer->start();
+    _eltimer->restart();
+    _labelTimer->setText("00 : 00");
 }
 
 void Client::GUI::CallPage::loadPage()

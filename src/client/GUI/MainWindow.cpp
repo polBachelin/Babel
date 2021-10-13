@@ -63,6 +63,16 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
         emit MainWindow::wrongSignalResponse(info);};
     _signalPageMap[303] = [&](ClientInfos info){
         emit MainWindow::incomingCall(info);};
+    // _signalPageMap[012] = [&](ClientInfos info){
+    //     emit fct(info);};
+    _signalPageMap[102] = [&](ClientInfos info){
+        emit MainWindow::contactAddSuccess(info);};
+    _signalPageMap[202] = [&](ClientInfos info){
+        emit MainWindow::contactAddFailed(info);};
+    // _signalPageMap[203] = [&](ClientInfos info){
+    //     emit fct(info);};
+    _signalPageMap[004] = [&](ClientInfos info){
+        emit MainWindow::contactList(info);};
 
     foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
         QNetworkInterface::InterfaceFlags flags = netInterface.flags();
@@ -75,16 +85,6 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
             }
         }
     }
-    // _signalPageMap[012] = [&](Client::ClientInfos info){
-    //     emit fct(info);};
-    _signalPageMap[102] = [&](ClientInfos info){
-        emit MainWindow::contactAddSuccess(info);};
-    _signalPageMap[202] = [&](ClientInfos info){
-        emit MainWindow::contactAddFailed(info);};
-    // _signalPageMap[203] = [&](ClientInfos info){
-    //     emit fct(info);};
-    _signalPageMap[004] = [&](ClientInfos info){
-        emit MainWindow::contactList(info);};
 }
 
 MainWindow::~MainWindow()
@@ -104,9 +104,11 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
+
     std::string test(package->data);
     _infos.username = test;
     _infos.currentData = package->data;
+
     if (_signalPageMap.find(package->code) == _signalPageMap.end()) {
         std::cout << "got an unknown code : " << package->code << std::endl;
     } else {
