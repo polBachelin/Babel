@@ -36,6 +36,8 @@ namespace Client
                 void beginCall();
                 void endCall();
 
+            signals:
+                void sendData();
             public slots:
                 void onReadAudioData();
 

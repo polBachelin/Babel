@@ -30,7 +30,7 @@ void UDPClient::connectToHost(const std::string &ip)
     _socket = std::make_unique<QUdpSocket>();
     QHostAddress hostAddress;
     hostAddress.setAddress(QString::fromStdString(ip));
-    _socket->bind(hostAddress, 5000);
+    _socket->bind(hostAddress, 6000);
     QObject::connect(_socket.get(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
@@ -51,6 +51,7 @@ packetUDP_t UDPClient::getData()
     packetUDP_t ret = _data.front();
 
     _data.pop();
+
     return ret;
 }
 
@@ -75,6 +76,7 @@ void UDPClient::onReadyRead()
     qDebug() << "Message: " << QString::fromStdString(std::string(new_packet.data));
 
     _data.push(new_packet);
+    emit getDataFromUDP();
 }
 
 void UDPClient::disconnect()

@@ -31,6 +31,9 @@ namespace Client
                 void disconnect() override;
                 packetUDP_t getData() override;
 
+            signals:
+                void getDataFromUDP();
+
             private slots:
                 void onReadyRead();
 
