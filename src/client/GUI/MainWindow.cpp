@@ -104,35 +104,23 @@ void MainWindow::receivedSomething(QByteArray msg)
         std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
         return;
     }
-    std::cout << "J'ai reçu" << std::endl;
+    std::cout << "J'ai reçu ----------------------------" << std::endl;
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
-
-    // package->code = (package->code == 10 ? 123456 : package->code);
+    std::cout << "--------------------------------------" << std::endl;
 
     std::string test(package->data);
     _infos.username = test;
     _infos.currentData = package->data;
 
-    bool isCoded = false;
-    for (auto &it : _signalPageMap){
-        std::cout << "test the code : " << it.first << std::endl;
-        if (it.first == package->code) {
-            std::cout << "got a code : " << package->code << std::endl;
-            isCoded = true;
-            _signalPageMap.at(package->code)(_infos);
-        }
-    }
-    if (!isCoded)
+    if (_signalPageMap.find(package->code) == _signalPageMap.end()) {
         std::cout << "got an unknown code : " << package->code << std::endl;
-    // if (_signalPageMap.find(package->code) == _signalPageMap.end()) {
-    //     std::cout << "got an unknown code : " << package->code << std::endl;
-    // } else {
-    //     std::cout << "got a code : " << package->code << std::endl;
-    //     _signalPageMap.at(package->code)(_infos);
-    // }
+    } else {
+        std::cout << "got a code : " << package->code << std::endl;
+        _signalPageMap.at(package->code)(_infos);
+    }
 }
 
 void MainWindow::changeCurrentPage(pageNames name, ClientInfos info)
