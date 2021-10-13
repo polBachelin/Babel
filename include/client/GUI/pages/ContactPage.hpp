@@ -40,6 +40,7 @@ class ContactPage : public APage
         void wrongAddContact(ClientInfos);
         void handleIncomingCall(ClientInfos);
         void fillContactList(ClientInfos);
+        void invitationReceived(ClientInfos);
         void contactClicked(QListWidgetItem *);
         void addContactClicked();
         void callClicked();

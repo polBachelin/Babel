@@ -21,6 +21,8 @@ Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent
         this, SLOT(handleIncomingCall(ClientInfos)));
     QObject::connect(parent, SIGNAL(contactList(ClientInfos)),
         this, SLOT(fillContactList(ClientInfos)));
+    QObject::connect(parent, SIGNAL(invitationContactReceived(ClientInfos)),
+        this, SLOT(invitationReceived(ClientInfos)));
 
     loadPage();
     layoutLoader();
@@ -244,6 +246,15 @@ void Client::GUI::ContactPage::wrongAddContact(ClientInfos info)
     QMessageBox msg;
     msg.setText("Contact not found !");
     msg.exec();
+}
+
+void Client::GUI::ContactPage::invitationReceived(ClientInfos info)
+{
+    QMessageBox msg;
+    std::string str(info.username + "added you to his contacts !");
+    msg.setText(str.c_str());
+    msg.exec();
+    new QListWidgetItem(tr(info.username.c_str()), _contactList.get());
 }
 
 void Client::GUI::ContactPage::handleIncomingCall(ClientInfos info)

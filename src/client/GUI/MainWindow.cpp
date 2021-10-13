@@ -52,27 +52,7 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
     _infos.port = std::to_string(portVal);
 
     initConnections();
-
-    _signalPageMap[100] = [&](ClientInfos info){
-        emit MainWindow::validSignalResponse(info);};
-    _signalPageMap[200] = [&](ClientInfos info){
-        emit MainWindow::wrongSignalResponse(info);};
-    _signalPageMap[101] = [&](ClientInfos info){
-        emit MainWindow::validSignalResponse(info);};
-    _signalPageMap[201] = [&](ClientInfos info){
-        emit MainWindow::wrongSignalResponse(info);};
-    _signalPageMap[303] = [&](ClientInfos info){
-        emit MainWindow::incomingCall(info);};
-    // _signalPageMap[012] = [&](ClientInfos info){
-    //     emit fct(info);};
-    _signalPageMap[102] = [&](ClientInfos info){
-        emit MainWindow::contactAddSuccess(info);};
-    _signalPageMap[202] = [&](ClientInfos info){
-        emit MainWindow::contactAddFailed(info);};
-    // _signalPageMap[203] = [&](ClientInfos info){
-    //     emit fct(info);};
-    _signalPageMap[004] = [&](ClientInfos info){
-        emit MainWindow::contactList(info);};
+    signalReceivedLoader();
 
     foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
         QNetworkInterface::InterfaceFlags flags = netInterface.flags();
@@ -90,6 +70,30 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
 MainWindow::~MainWindow()
 {
     std::cout << "MainWindow détruit" << std::endl;
+}
+
+void MainWindow::signalReceivedLoader()
+{
+    _signalPageMap[100] = [&](ClientInfos info){
+        emit MainWindow::validSignalResponse(info);};
+    _signalPageMap[200] = [&](ClientInfos info){
+        emit MainWindow::wrongSignalResponse(info);};
+    _signalPageMap[101] = [&](ClientInfos info){
+        emit MainWindow::validSignalResponse(info);};
+    _signalPageMap[201] = [&](ClientInfos info){
+        emit MainWindow::wrongSignalResponse(info);};
+    _signalPageMap[303] = [&](ClientInfos info){
+        emit MainWindow::incomingCall(info);};
+    _signalPageMap[012] = [&](ClientInfos info){
+        emit MainWindow::invitationContactReceived(info);};
+    _signalPageMap[102] = [&](ClientInfos info){
+        emit MainWindow::contactAddSuccess(info);};
+    _signalPageMap[202] = [&](ClientInfos info){
+        emit MainWindow::contactAddFailed(info);};
+    _signalPageMap[203] = [&](ClientInfos info){
+        emit MainWindow::callRefused(info);};
+    _signalPageMap[004] = [&](ClientInfos info){
+        emit MainWindow::contactList(info);};
 }
 
 void MainWindow::receivedSomething(QByteArray msg)

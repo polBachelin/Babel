@@ -44,7 +44,9 @@ class CallPage : public APage
         void callOff();
         void callOn();
         void updateTimer();
+        void endCall();
         void incoming(ClientInfos);
+        void callWasRefused(ClientInfos);
 
     private:
         // Layout

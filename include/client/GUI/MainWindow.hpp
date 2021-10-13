@@ -30,6 +30,8 @@ namespace Client {
                             int portVal);
                 ~MainWindow();
 
+                void signalReceivedLoader();
+
             signals:
                 void validSignalResponse(ClientInfos);
                 void wrongSignalResponse(ClientInfos);
@@ -37,6 +39,8 @@ namespace Client {
                 void contactAddFailed(ClientInfos);
                 void incomingCall(ClientInfos);
                 void contactList(ClientInfos);
+                void invitationContactReceived(ClientInfos);
+                void callRefused(ClientInfos);
 
             public slots:
                 void checkSignal(ClientInfos, signal_e);

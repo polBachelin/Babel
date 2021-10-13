@@ -11,7 +11,10 @@ Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(info
 {
     setFixedSize(WIDTH, HEIGHT);
 
-    QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)), this, SLOT(incoming(ClientInfos)));
+    QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)),
+        this, SLOT(incoming(ClientInfos)));
+    QObject::connect(parent, SIGNAL(callRefused(ClientInfos)),
+        this, SLOT(callWasRefused(ClientInfos)));
 
     loadPage();
     layoutLoader();
@@ -156,7 +159,7 @@ void Client::GUI::CallPage::initConnections()
     QObject::connect(_micOff.get(), SIGNAL(clicked()), this, SLOT(micOn()));
     QObject::connect(_callOff.get(), SIGNAL(clicked()), this, SLOT(callOff()));
     QObject::connect(_timer.get(), SIGNAL(timeout()), this, SLOT(updateTimer()));
-    QObject::connect(_refuse.get(), SIGNAL(clicked()), this, SLOT(callOff()));
+    QObject::connect(_refuse.get(), SIGNAL(clicked()), this, SLOT(endCall()));
     QObject::connect(_validate.get(), SIGNAL(clicked()), this, SLOT(callOn()));
 }
 
@@ -184,6 +187,12 @@ void Client::GUI::CallPage::micOn()
     _micOff->hide();
 }
 
+void Client::GUI::CallPage::endCall()
+{
+    emit checkCommand(_infos, Erefuseincomingcall);
+    callOff();
+}
+
 void Client::GUI::CallPage::callOff()
 {
     std::cout << "GOTO - contact page" << std::endl << std::endl;
@@ -204,6 +213,11 @@ void Client::GUI::CallPage::callOff()
     _labelGif->hide();
 
     emit changePage(CONTACTS, _infos);
+}
+
+void Client::GUI::CallPage::callWasRefused(ClientInfos info)
+{
+    callOff();
 }
 
 void Client::GUI::CallPage::callOn()

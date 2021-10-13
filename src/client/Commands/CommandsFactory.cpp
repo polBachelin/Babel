@@ -57,6 +57,21 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		return buffTemp;
 	}},
 
+	{GUI::signal_e::Erefuseincomingcall,
+	[](ClientInfos infos, GUI::signal_e e) {
+		std::cout << "Sending packet of refuse incoming call to server\n";
+		packet_t package;
+		char *buffTemp = new char[sizeof(package)];
+
+		package.magic = MAGIC;
+		package.code = e;
+		package.data_size = infos.username.size() + 1;
+		std::string dataStr(infos.username + "\n");
+		strcpy(package.data, dataStr.c_str());
+		memcpy(buffTemp, &package, sizeof(package));
+		return buffTemp;
+	}},
+
 	{GUI::signal_e::EcallX,
 	[] (ClientInfos infos, GUI::signal_e e) {
 		std::cout << "Telling server to call X\n";
