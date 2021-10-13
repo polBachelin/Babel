@@ -134,11 +134,14 @@ packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> 
 packet_t *Commands::ListContact(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
 {
     auto tmp = um.GetContactManager();
-    auto name = um.GetName();
+    //auto name = um.GetName();
     std::string res;
+    std::string name = pck.data;
 
-    (void)pck;
+
+    name.erase(name.find('\n'));
     res = tmp.getContactList(name);
+    std::cout << "Res contact list : " << res << std::endl;
     return Commands::CreatePacket(4, res);
 }
 

@@ -104,7 +104,7 @@ void MainWindow::receivedSomething(QByteArray msg)
         std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
         return;
     }
-    std::cout << "J'ai reçu ----------------------------" << std::endl;
+    std::cout << "------------- J'ai reçu ---------------" << std::endl;
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
