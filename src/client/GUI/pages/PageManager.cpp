@@ -9,8 +9,9 @@
 
 using namespace Client::GUI;
 
-PageManager::PageManager(QWidget *parent) : _parent(parent)
+PageManager::PageManager(QWidget *parent, ClientInfos &infos) : _parent(parent), _infos(infos)
 {
+
     this->addPage(LOGIN);
     this->addPage(REGISTER);
     this->addPage(CONTACTS);

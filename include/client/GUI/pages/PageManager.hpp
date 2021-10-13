@@ -24,7 +24,7 @@ namespace Client
         class PageManager : public QStackedWidget
         {
             public:
-                PageManager(QWidget *parent);
+                PageManager(QWidget *parent, ClientInfos &infos);
                 ~PageManager();
                 void addPage(pageNames name);
                 void setCurrentPage(pageNames name, ClientInfos);

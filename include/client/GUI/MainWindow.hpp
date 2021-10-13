@@ -53,7 +53,7 @@ namespace Client {
 
             private:
                 void initConnections(void);
-                PageManager _pages;
+                std::unique_ptr<PageManager> _pages;
                 Network::TcpClient _tcpClient;
                 ClientInfos _infos;
                 std::unordered_map<int, std::function<void(ClientInfos)>> _signalPageMap;

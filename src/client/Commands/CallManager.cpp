@@ -19,7 +19,6 @@ CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
     _encoderManager->setBitRate(10);
-    std::cout << "SAMPLE" << _soundManager->getSampleRate() << std::endl;
     _encoderManager->setSamplingRate(_soundManager->getSampleRate());
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
@@ -62,7 +61,7 @@ void CallManager::sendAudioData()
     dataPacket.data = ptr;
     dataPacket.host = _ip;
 
-    std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << dataPacket.data << std::endl;
+    std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << ":" << compressedSize << std::endl;
     _udpClient->send(dataPacket);
 
     delete [] compressedBuffer;
@@ -83,8 +82,8 @@ void CallManager::onReadAudioData()
     //if (audioPacket->timestamp < _pairs[dataPacket.host])
         //return;
     //_pairs[dataPacket.host] = audioPacket->timestamp;
-    _encoderManager->decode(audioPacket->data, _outputBuffer, 512, audioPacket->sizeOfData);
-    _soundManager->feedBytesToOutput(_outputBuffer, 512);
+    _encoderManager->decode(audioPacket->data, _outputBuffer, 480, audioPacket->sizeOfData);
+    _soundManager->feedBytesToOutput(_outputBuffer, 480);
 }
 
 void CallManager::connectToHost(const std::string &ip)
@@ -99,7 +98,6 @@ void CallManager::beginCall()
     std::cout << "BEGIN CALL" << std::endl;
     std::cout << "Connect to client caller..." << _ip << std::endl;
     this->connectToHost(_ip);
-    this->sendAudioData();
     std::cout << "Send data OK..." << std::endl;
 }
 

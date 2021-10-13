@@ -39,11 +39,10 @@ std::map<std::size_t, std::string> errSockMap = {
 };
 
 MainWindow::MainWindow(const QString hostAddress, int portVal)
-    : _pages(this), _tcpClient(hostAddress, portVal)
+    : _tcpClient(hostAddress, portVal)
 {
     this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
-    this->setCentralWidget(&_pages);
     this->setStyleSheet(
         "background-image:url("
         BACKGROUND_PATH
@@ -51,15 +50,17 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
 
     _infos.port = std::to_string(portVal);
 
-    initConnections();
-    signalReceivedLoader();
-
+    //TODO : faire une fonction pour recup l'ip
     foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
         QNetworkInterface::InterfaceFlags flags = netInterface.flags();
         if( (bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)){
             foreach (const QNetworkAddressEntry &address, netInterface.addressEntries()) {
                 if(address.ip().protocol() == QAbstractSocket::IPv4Protocol) {
                     _infos.ip = address.ip().toString().toStdString();
+                    _pages = std::make_unique<PageManager>(this, _infos);
+                    initConnections();
+                    signalReceivedLoader();
+                    this->setCentralWidget(_pages.get());
                     return;
                 }
             }
@@ -126,7 +127,7 @@ void MainWindow::receivedSomething(QByteArray msg)
 void MainWindow::changeCurrentPage(pageNames name, ClientInfos info)
 {
     std::cout << "page change request" << std::endl;
-    _pages.setCurrentPage(name, info);
+    _pages->setCurrentPage(name, info);
 }
 
 void MainWindow::checkSignal(ClientInfos infos, signal_e e)
@@ -153,28 +154,28 @@ void MainWindow::gotError(QAbstractSocket::SocketError err)
 void MainWindow::initConnections(void)
 {
     QObject::connect(
-        _pages.getPage(LOGIN), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        _pages->getPage(LOGIN), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(LOGIN), SIGNAL(changePage(pageNames, ClientInfos)),
+        _pages->getPage(LOGIN), SIGNAL(changePage(pageNames, ClientInfos)),
         this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
-        _pages.getPage(REGISTER), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        _pages->getPage(REGISTER), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(REGISTER), SIGNAL(changePage(pageNames, ClientInfos)),
+        _pages->getPage(REGISTER), SIGNAL(changePage(pageNames, ClientInfos)),
         this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
-        _pages.getPage(CALL), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        _pages->getPage(CALL), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(CALL), SIGNAL(changePage(pageNames, ClientInfos)),
+        _pages->getPage(CALL), SIGNAL(changePage(pageNames, ClientInfos)),
         this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
-        _pages.getPage(CONTACTS), SIGNAL(changePage(pageNames, ClientInfos)),
+        _pages->getPage(CONTACTS), SIGNAL(changePage(pageNames, ClientInfos)),
         this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
-        _pages.getPage(CONTACTS), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        _pages->getPage(CONTACTS), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
         &_tcpClient, &Client::Network::TcpClient::dataAvailable,
