@@ -12,9 +12,9 @@ Client::GUI::RegisterPage::RegisterPage(ClientInfos infos, QWidget *parent) : AP
     setFixedSize(WIDTH, HEIGHT);
     _formError = false;
 
-    QObject::connect(parent, SIGNAL(validSignalResponse(ClientInfos)),
+    QObject::connect(parent, SIGNAL(validRegisterResponse(ClientInfos)),
         this, SLOT(validRegister(ClientInfos)));
-    QObject::connect(parent, SIGNAL(wrongSignalResponse(ClientInfos)),
+    QObject::connect(parent, SIGNAL(wrongRegisterResponse(ClientInfos)),
         this, SLOT(wrongRegister(ClientInfos)));
 
     loadPage();

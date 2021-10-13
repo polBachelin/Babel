@@ -8,19 +8,21 @@
 #include "Commands.hpp"
 
 const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
-    {000, Commands::login},
-    {001, Commands::Register},
-    {002, Commands::addContact},
+    {0, Commands::login},
+    {1, Commands::Register},
+    {2, Commands::addContact},
     {112, Commands::AcceptInvitation},
-    {003, Commands::callX},
-    {004, Commands::ListContact},
+    {3, Commands::callX},
+    {4, Commands::ListContact},
     {203, Commands::callRefused}
 };
 
 packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
 {
     try {
-        PRINT_PCK(pck);
+        std::cout << "---------Receive------------" << std::endl;
+        PRINT_PCK((pck));
+        std::cout << "----------------------------" << std::endl;
         if (pck.magic == MAGIC)
             return _cmd_map.at(pck.code)(um, pck, list);
     } catch (std::exception &e) {
@@ -38,6 +40,9 @@ packet_t *Commands::CreatePacket(int code, const std::string &data)
     tmp->code = code;
     tmp->data_size = data.length();
     std::strcpy(tmp->data, data.c_str());
+    std::cout << "---------Packet created------------" << std::endl;
+    PRINT_PCK((*tmp));
+    std::cout << "-----------------------------------" << std::endl;
     return tmp;
 }
 
@@ -88,7 +93,7 @@ packet_t *Commands::addContact(UserManager &um, packet_t &pck, std::deque<pointe
         if ((*it)->getUsermanager().GetName() == res) {
             asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
             own = um.GetName() + "\n";
-            auto tmp = Commands::CreatePacket(012, own);
+            auto tmp = Commands::CreatePacket(12, own);
             dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
             return Commands::CreatePacket(102, res);
         }
@@ -134,7 +139,7 @@ packet_t *Commands::ListContact(UserManager &um, packet_t &pck, std::deque<point
 
     (void)pck;
     res = tmp.getContactList(name);
-    return Commands::CreatePacket(004, res);
+    return Commands::CreatePacket(4, res);
 }
 
 packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)

@@ -12,9 +12,9 @@ Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(in
     setFixedSize(WIDTH, HEIGHT);
     _formError = false;
 
-    QObject::connect(parent, SIGNAL(validSignalResponse(ClientInfos)),
+    QObject::connect(parent, SIGNAL(validSignInResponse(ClientInfos)),
         this, SLOT(validSignIn(ClientInfos)));
-    QObject::connect(parent, SIGNAL(wrongSignalResponse(ClientInfos)),
+    QObject::connect(parent, SIGNAL(wrongSignInResponse(ClientInfos)),
         this, SLOT(wrongSignIn(ClientInfos)));
 
     loadPage();

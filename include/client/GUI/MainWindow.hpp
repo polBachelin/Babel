@@ -33,8 +33,10 @@ namespace Client {
                 void signalReceivedLoader();
 
             signals:
-                void validSignalResponse(ClientInfos);
-                void wrongSignalResponse(ClientInfos);
+                void validSignInResponse(ClientInfos);
+                void wrongSignInResponse(ClientInfos);
+                void validRegisterResponse(ClientInfos);
+                void wrongRegisterResponse(ClientInfos);
                 void contactAddSuccess(ClientInfos);
                 void contactAddFailed(ClientInfos);
                 void incomingCall(ClientInfos);

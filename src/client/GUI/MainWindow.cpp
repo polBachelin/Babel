@@ -75,16 +75,16 @@ MainWindow::~MainWindow()
 void MainWindow::signalReceivedLoader()
 {
     _signalPageMap[100] = [&](ClientInfos info){
-        emit MainWindow::validSignalResponse(info);};
+        emit MainWindow::validSignInResponse(info);};
     _signalPageMap[200] = [&](ClientInfos info){
-        emit MainWindow::wrongSignalResponse(info);};
+        emit MainWindow::wrongSignInResponse(info);};
     _signalPageMap[101] = [&](ClientInfos info){
-        emit MainWindow::validSignalResponse(info);};
+        emit MainWindow::validRegisterResponse(info);};
     _signalPageMap[201] = [&](ClientInfos info){
-        emit MainWindow::wrongSignalResponse(info);};
+        emit MainWindow::wrongRegisterResponse(info);};
     _signalPageMap[303] = [&](ClientInfos info){
         emit MainWindow::incomingCall(info);};
-    _signalPageMap[012] = [&](ClientInfos info){
+    _signalPageMap[12] = [&](ClientInfos info){
         emit MainWindow::invitationContactReceived(info);};
     _signalPageMap[102] = [&](ClientInfos info){
         emit MainWindow::contactAddSuccess(info);};
@@ -92,7 +92,7 @@ void MainWindow::signalReceivedLoader()
         emit MainWindow::contactAddFailed(info);};
     _signalPageMap[203] = [&](ClientInfos info){
         emit MainWindow::callRefused(info);};
-    _signalPageMap[004] = [&](ClientInfos info){
+    _signalPageMap[4] = [&](ClientInfos info){
         emit MainWindow::contactList(info);};
 }
 
@@ -104,11 +104,12 @@ void MainWindow::receivedSomething(QByteArray msg)
         std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
         return;
     }
-    std::cout << "J'ai reçu" << std::endl;
+    std::cout << "J'ai reçu ----------------------------" << std::endl;
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
 
     std::string test(package->data);
     _infos.username = test;
