@@ -30,16 +30,6 @@ packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_
 
 packet_t *Commands::CreatePacket(int code, const std::string &data)
 {
-<<<<<<< HEAD
-    packet_t *response = new packet_t;
-    // packet_t *tmp = &response;
-
-    response->magic = MAGIC;
-    response->code = code;
-    response->data_size = data.length();
-    std::strcpy(response->data, data.c_str());
-    return response;
-=======
     packet_t *tmp = new packet_t;
 
     tmp->magic = MAGIC;
@@ -47,7 +37,6 @@ packet_t *Commands::CreatePacket(int code, const std::string &data)
     tmp->data_size = data.length();
     std::strcpy(tmp->data, data.c_str());
     return tmp;
->>>>>>> server
 }
 
 packet_t *Commands::login(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
@@ -161,10 +150,6 @@ packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer
             return Commands::CreatePacket(666, "");
         }
     }
-<<<<<<< HEAD
-    return Commands::CreatePacket(666, "");
-}
-=======
     return Commands::CreatePacket(666, "");
 }
 
@@ -188,4 +173,3 @@ packet_t *Commands::AcceptInvitation(UserManager &um, packet_t &pck, std::deque<
     }
     return Commands::CreatePacket(666, "");
 }
->>>>>>> server
