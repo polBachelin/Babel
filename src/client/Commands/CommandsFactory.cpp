@@ -24,7 +24,7 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		std::string dataStr(infos.username + "\n" + infos.password + "\n");
 		strcpy(package.data, dataStr.c_str());
 
-		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
+		std::cout << "------------ J'ai Envoyé ----------------" << std::endl;
     	std::cout << "Magic = " << package.magic << std::endl;
     	std::cout << "Code  = " << package.code << std::endl;
     	std::cout << "size  = " << package.data_size << std::endl;
@@ -47,7 +47,7 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		std::string dataStr(infos.username + "\n" + infos.password + "\n");
 		strcpy(package.data, dataStr.c_str());
 
-		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
+		std::cout << "------------ J'ai Envoyé ----------------" << std::endl;
     	std::cout << "Magic = " << package.magic << std::endl;
     	std::cout << "Code  = " << package.code << std::endl;
     	std::cout << "size  = " << package.data_size << std::endl;
@@ -70,7 +70,7 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		std::string dataStr(infos.username + "\n");
 		strcpy(package.data, dataStr.c_str());
 
-		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
+		std::cout << "------------ J'ai Envoyé ----------------" << std::endl;
     	std::cout << "Magic = " << package.magic << std::endl;
     	std::cout << "Code  = " << package.code << std::endl;
     	std::cout << "size  = " << package.data_size << std::endl;
@@ -93,7 +93,7 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		std::string dataStr(infos.username + "\n");
 		strcpy(package.data, dataStr.c_str());
 
-		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
+		std::cout << "------------ J'ai Envoyé ----------------" << std::endl;
     	std::cout << "Magic = " << package.magic << std::endl;
     	std::cout << "Code  = " << package.code << std::endl;
     	std::cout << "size  = " << package.data_size << std::endl;
@@ -117,7 +117,7 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		std::string dataStr(infos.userToCall + "\n" + infos.ip + "\n" + infos.port + "\n");
 		strcpy(package.data, dataStr.c_str());
 
-		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
+		std::cout << "------------ J'ai Envoyé ----------------" << std::endl;
     	std::cout << "Magic = " << package.magic << std::endl;
     	std::cout << "Code  = " << package.code << std::endl;
     	std::cout << "size  = " << package.data_size << std::endl;
@@ -140,7 +140,7 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		std::string dataStr(infos.username + "\n");
 		strcpy(package.data, dataStr.c_str());
 
-		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
+		std::cout << "------------ J'ai Envoyé ----------------" << std::endl;
     	std::cout << "Magic = " << package.magic << std::endl;
     	std::cout << "Code  = " << package.code << std::endl;
     	std::cout << "size  = " << package.data_size << std::endl;
