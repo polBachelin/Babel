@@ -19,7 +19,7 @@ CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
     _encoderManager->setBitRate(10);
-    _encoderManager->setSamplingRate(4800);
+    _encoderManager->setSamplingRate(_soundManager->getSampleRate());
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
     //TODO: connect input to sendAudio + output to readAudio
