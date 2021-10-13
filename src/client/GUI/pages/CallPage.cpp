@@ -192,16 +192,16 @@ void Client::GUI::CallPage::callOff()
     _timer->start();
     _eltimer->restart();
 
-    _soundOn->hide();
-    _micOn->hide();
-    _callOff->hide();
-    _labelProfile->hide();
-    _labelTimer->hide();
+    _soundOn->show();
+    _micOn->show();
+    _callOff->show();
+    _labelProfile->show();
+    _labelTimer->show();
 
-    _validate->show();
-    _refuse->show();
-    _labelContact->show();
-    _labelGif->show();
+    _validate->hide();
+    _refuse->hide();
+    _labelContact->hide();
+    _labelGif->hide();
 
     emit changePage(CONTACTS, _infos);
 }
