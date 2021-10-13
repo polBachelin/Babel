@@ -84,7 +84,7 @@ void MainWindow::signalReceivedLoader()
         emit MainWindow::wrongRegisterResponse(info);};
     _signalPageMap[303] = [&](ClientInfos info){
         emit MainWindow::incomingCall(info);};
-    _signalPageMap[012] = [&](ClientInfos info){
+    _signalPageMap[12] = [&](ClientInfos info){
         emit MainWindow::invitationContactReceived(info);};
     _signalPageMap[102] = [&](ClientInfos info){
         emit MainWindow::contactAddSuccess(info);};
@@ -92,7 +92,7 @@ void MainWindow::signalReceivedLoader()
         emit MainWindow::contactAddFailed(info);};
     _signalPageMap[203] = [&](ClientInfos info){
         emit MainWindow::callRefused(info);};
-    _signalPageMap[004] = [&](ClientInfos info){
+    _signalPageMap[4] = [&](ClientInfos info){
         emit MainWindow::contactList(info);};
 }
 
@@ -110,16 +110,29 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
 
+    // package->code = (package->code == 10 ? 123456 : package->code);
+
     std::string test(package->data);
     _infos.username = test;
     _infos.currentData = package->data;
 
-    if (_signalPageMap.find(package->code) == _signalPageMap.end()) {
-        std::cout << "got an unknown code : " << package->code << std::endl;
-    } else {
-        std::cout << "got a code : " << package->code << std::endl;
-        _signalPageMap.at(package->code)(_infos);
+    bool isCoded = false;
+    for (auto &it : _signalPageMap){
+        std::cout << "test the code : " << it.first << std::endl;
+        if (it.first == package->code) {
+            std::cout << "got a code : " << package->code << std::endl;
+            isCoded = true;
+            _signalPageMap.at(package->code)(_infos);
+        }
     }
+    if (!isCoded)
+        std::cout << "got an unknown code : " << package->code << std::endl;
+    // if (_signalPageMap.find(package->code) == _signalPageMap.end()) {
+    //     std::cout << "got an unknown code : " << package->code << std::endl;
+    // } else {
+    //     std::cout << "got a code : " << package->code << std::endl;
+    //     _signalPageMap.at(package->code)(_infos);
+    // }
 }
 
 void MainWindow::changeCurrentPage(pageNames name, ClientInfos info)

@@ -56,13 +56,13 @@ namespace GUI {
 
     enum signal_e
         {
-            Elogin = 000,
-            Eregister = 001,
-            Eaddcontact = 002,
+            Elogin = 0,
+            Eregister = 1,
+            Eaddcontact = 2,
             Eacceptinvitation = 112,
-            EcallX = 003,
+            EcallX = 3,
             Erefuseincomingcall = 203,
-            Easkcontactlist = 004
+            Easkcontactlist = 4
         };
 
 class APage : public QWidget

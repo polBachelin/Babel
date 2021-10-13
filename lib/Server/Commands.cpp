@@ -8,12 +8,12 @@
 #include "Commands.hpp"
 
 const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
-    {000, Commands::login},
-    {001, Commands::Register},
-    {002, Commands::addContact},
+    {0, Commands::login},
+    {1, Commands::Register},
+    {2, Commands::addContact},
     {112, Commands::AcceptInvitation},
-    {003, Commands::callX},
-    {004, Commands::ListContact},
+    {3, Commands::callX},
+    {4, Commands::ListContact},
     {203, Commands::callRefused}
 };
 
@@ -93,7 +93,7 @@ packet_t *Commands::addContact(UserManager &um, packet_t &pck, std::deque<pointe
         if ((*it)->getUsermanager().GetName() == res) {
             asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
             own = um.GetName() + "\n";
-            auto tmp = Commands::CreatePacket(012, own);
+            auto tmp = Commands::CreatePacket(12, own);
             dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
             return Commands::CreatePacket(102, res);
         }
