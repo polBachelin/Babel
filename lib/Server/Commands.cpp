@@ -139,7 +139,7 @@ packet_t *Commands::ListContact(UserManager &um, packet_t &pck, std::deque<point
 
     (void)pck;
     res = tmp.getContactList(name);
-    return Commands::CreatePacket(004, res);
+    return Commands::CreatePacket(4, res);
 }
 
 packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
