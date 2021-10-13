@@ -17,22 +17,24 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
     {203, Commands::callRefused}
 };
 
-packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::redirect(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
 {
     try {
         std::cout << "---------Receive------------" << std::endl;
         PRINT_PCK((pck));
         std::cout << "----------------------------" << std::endl;
         if (pck.magic == MAGIC)
-            return _cmd_map.at(pck.code)(um, pck, list);
+            return _cmd_map.at(pck.code)(parent, pck, list);
     } catch (std::exception &e) {
         std::cout << e.what() << std::endl;
+        std::cout << "---------NULLLLL------------" << std::endl;
         return nullptr;
     }
+    std::cout << "---------NULLLLLL------------" << std::endl;
     return nullptr;
 }
 
-packet_t *Commands::CreatePacket(int code, const std::string &data)
+pck_list *Commands::CreatePacket(pck_list &l, std::shared_ptr<asio::ip::tcp::socket> s, int code, const std::string &data)
 {
     packet_t *tmp = new packet_t;
 
@@ -43,65 +45,75 @@ packet_t *Commands::CreatePacket(int code, const std::string &data)
     std::cout << "---------Packet created------------" << std::endl;
     PRINT_PCK((*tmp));
     std::cout << "-----------------------------------" << std::endl;
-    return tmp;
+    std::cout << "create " << s->is_open() << std::endl;
+    auto sal = std::make_pair(s, tmp);
+    l.push_back(sal);
+    return nullptr;
 }
 
-packet_t *Commands::login(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::login(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
 {
     std::string tmp = pck.data;
     std::array<std::string, 2> res;
     int value = 0;
+    pck_list *pack = new pck_list;
 
     std::cout << "Login" << std::endl;
     res[0] = tmp.substr(0, tmp.find("\n"));
     tmp.erase(0, tmp.find("\n") + 1);
     res[1] = tmp;
-    value = um.login(res[0], res[1]);
+    value = parent->Login(res[0], res[1]);
     if (value) {
-        return Commands::CreatePacket(100, um.GetName());
+        Commands::CreatePacket(*pack, parent->getSocket(), 100, parent->getUserName());
+        std::cout << "login " << pack->begin()->first->is_open() << std::endl;
     } else {
-        return Commands::CreatePacket(200, "failed\n");
+        Commands::CreatePacket(*pack, parent->getSocket(), 200, "failed\n");
+        std::cout << "login " << pack->begin()->first->is_open() << std::endl;
     }
+    return pack;
 }
 
-packet_t *Commands::Register(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::Register(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
 {
     std::string tmp = pck.data;
     std::array<std::string, 2> res;
     int value = 0;
+    pck_list *pack = new pck_list;
 
     res[0] = tmp.substr(0, tmp.find("\n"));
     tmp.erase(0, tmp.find("\n") + 1);
     res[1] = tmp;
-    value = um.new_user(res[0], res[1]);
+    value = parent->NewUser(res[0], res[1]);
     if (value == true) {
-        return Commands::CreatePacket(101, um.GetName());
+        Commands::CreatePacket(*(pack), parent->getSocket(), 101, parent->getUserName());
     } else {
-        return Commands::CreatePacket(201, "failed\n");
+        Commands::CreatePacket(*pack, parent->getSocket(), 201, "failed\n");
     }
+    return pack;
 }
 
-packet_t *Commands::addContact(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::addContact(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
 {
-    auto tmp = um.GetContactManager();
-    auto name = um.GetName();
+    auto name = parent->getUserName();
     std::string res = pck.data;
     std::string own;
+    pck_list *pack = new pck_list;
 
     res.erase(res.find('\n'));
     for (auto it = list.begin(); it != list.end(); ++it) {
-        if ((*it)->getUsermanager().GetName() == res) {
-            asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
-            own = um.GetName() + "\n";
-            auto tmp = Commands::CreatePacket(12, own);
-            dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
-            return Commands::CreatePacket(102, res);
+        if ((*it)->getUserName() == res) {
+            auto dest = (*it)->getSocket();
+            own = parent->getUserName() + "\n";
+            Commands::CreatePacket(*pack, dest, 12, own);
+            Commands::CreatePacket(*pack, parent->getSocket(), 102, res);
+            return pack;
         }
     }
-    return Commands::CreatePacket(202, "failed");
+    Commands::CreatePacket(*pack, parent->getSocket(), 202, "failed");
+    return pack;
 }
 
-packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::callX(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
 {
     std::string s = pck.data;
     std::string delimiter = "\n";
@@ -110,7 +122,8 @@ packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> 
     std::array<std::string, 3> arr;
     int i = 0;
     std::string res;
-    asio::ip::tcp::socket &inc = um.getSock();
+    auto inc = parent->getSocket();
+    pck_list *pack = new pck_list;
 
     while ((pos = s.find(delimiter)) != std::string::npos) {
         token = s.substr(0, pos);
@@ -120,66 +133,71 @@ packet_t *Commands::callX(UserManager &um, packet_t &pck, std::deque<pointer_t> 
     }
     std::cout << "Call " << arr[0] << " at " << arr[1] << ":" << arr[2] << std::endl;
     for (auto it = list.begin(); it != list.end(); ++it) {
-        if ((*it)->getUsermanager().GetName() == arr[0]) {
-            asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
-            res = um.GetName() + "\n" + inc.local_endpoint().address().to_string() + "\n" + arr[2] + "\n";
-            auto tmp = Commands::CreatePacket(303, res);
-            dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
-            return Commands::CreatePacket(666, "");
+        if ((*it)->getUserName() == arr[0]) {
+            auto dest = (*it)->getSocket();
+            res = parent->getUserName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + arr[2] + "\n";
+            Commands::CreatePacket(*pack, dest, 303, res);
+            Commands::CreatePacket(*pack, parent->getSocket(), 666, "");
+            return pack;
         }
     }
-    return Commands::CreatePacket(603, "failed\n");
+    Commands::CreatePacket(*pack, parent->getSocket(), 603, "failed\n");
+    return pack;
 }
 
-packet_t *Commands::ListContact(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::ListContact(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
 {
-    auto tmp = um.GetContactManager();
-    //auto name = um.GetName();
+    //auto name = parent->getUserName();
     std::string res;
     std::string name = pck.data;
+    pck_list *pack = new pck_list;
 
 
     name.erase(name.find('\n'));
-    res = tmp.getContactList(name);
+    res = parent->getUserContactList();
     std::cout << "Res contact list : " << res << std::endl;
-    return Commands::CreatePacket(4, res);
+    Commands::CreatePacket(*pack, parent->getSocket(), 4, res);
+    return pack;
 }
 
-packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::callRefused(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
 {
     std::string s = pck.data;
-    asio::ip::tcp::socket &inc = um.getSock();
+    auto inc = parent->getSocket();
+    pck_list *pack = new pck_list;
 
     s.erase(s.find('\n'));
     for (auto it = list.begin(); it != list.end(); ++it) {
-        if ((*it)->getUsermanager().GetName() == s) {
-            asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
-            s = um.GetName() + "\n" + inc.local_endpoint().address().to_string() + "\n" + std::to_string(inc.local_endpoint().port()) + "\n";
-            auto tmp = Commands::CreatePacket(203, s);
-            dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
-            return Commands::CreatePacket(666, "");
+        if ((*it)->getUserName() == s) {
+            auto dest = (*it)->getSocket();
+            s = parent->getUserName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + std::to_string(inc->local_endpoint().port()) + "\n";
+            Commands::CreatePacket(*pack, dest, 203, s);
+            Commands::CreatePacket(*pack, parent->getSocket(), 666, "");
+            return pack;
         }
     }
-    return Commands::CreatePacket(666, "");
+    Commands::CreatePacket(*pack, parent->getSocket(), 666, "");
+    return pack;
 }
 
-packet_t *Commands::AcceptInvitation(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::AcceptInvitation(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
 {
-    auto tmp = um.GetContactManager();
-    auto name = um.GetName();
+    auto name = parent->getUserName();
     std::string res = pck.data;
     std::string own;
+    pck_list *pack = new pck_list;
 
     res.erase(res.find('\n'));
-    tmp.addContact(res, name);
+    parent->addContact(res, name);
     for (auto it = list.begin(); it != list.end(); ++it) {
-        if ((*it)->getUsermanager().GetName() == res) {
-            asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
-            own = um.GetName() + "\n";
-            auto tmp = Commands::CreatePacket(302, own);
-            dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
-            return Commands::CreatePacket(666, "");
+        if ((*it)->getUserName() == res) {
+            auto dest = (*it)->getSocket();
+            own = parent->getUserName() + "\n";
+            Commands::CreatePacket(*pack, dest, 302, own);
+            Commands::CreatePacket(*pack, parent->getSocket(), 666, "");
+            return pack;
         }
     }
-    return Commands::CreatePacket(666, "");
+    Commands::CreatePacket(*pack, parent->getSocket(), 666, "");
+    return pack;
 }

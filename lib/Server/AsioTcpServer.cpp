@@ -20,7 +20,7 @@ void AsioTcpServer::startAccept()
     pointer_t new_connection = AsioTcpConnection::create(*_io.get(), _clients);
 
     _clients.push_back(new_connection);
-    _acceptor->async_accept(new_connection->socket(),
+    _acceptor->async_accept(*new_connection->getSocket(),
         std::bind(&AsioTcpServer::handleAccept, this, new_connection, std::placeholders::_1));
     _io->run();
 }
@@ -29,7 +29,7 @@ void AsioTcpServer::reAccept()
 {
     pointer_t new_connection = AsioTcpConnection::create(*_io.get(), _clients);
 
-    _acceptor->async_accept(new_connection->socket(),
+    _acceptor->async_accept(*new_connection->getSocket(),
         std::bind(&AsioTcpServer::handleAccept, this, new_connection, std::placeholders::_1));
     _clients.push_back(new_connection);
 }

@@ -28,11 +28,16 @@ class AAsioTcpConnection : public ITcpConnection {
         AAsioTcpConnection() = default;
         ~AAsioTcpConnection() = default;
 
-        virtual asio::ip::tcp::socket &socket() = 0;
         virtual void start() = 0;
-        virtual UserManager &getUsermanager() = 0;
-
+        virtual const std::shared_ptr<asio::ip::tcp::socket> getSocket() const = 0;
+        virtual const std::string &getUserName() const = 0;
+        virtual const std::string &getUserContactList() const = 0;
+        virtual int Login(const std::string &, const std::string &) = 0;
+        virtual int NewUser(const std::string &, const std::string &) = 0;
+        virtual void addContact(const std::string &new_c, const std::string &your_name) = 0;
     protected:
+        std::shared_ptr<asio::ip::tcp::socket> _socket;
+        UserManager _um;
     private:
 };
 

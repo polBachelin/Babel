@@ -29,18 +29,16 @@ typedef struct packet {
 
 class UserManager {
     public:
-        UserManager(asio::ip::tcp::socket &s);
+        UserManager();
         ~UserManager();
         int login(const std::string &, const std::string &);
         int new_user(const std::string &, const std::string &);
-        const ContactManager &GetContactManager();
-        const std::string &GetName();
-        asio::ip::tcp::socket &getSock();
+        ContactManager GetContactManager() const;
+        const std::string &GetName() const;
     protected:
     private:
         Database _db;
         ContactManager _cm;
-        asio::ip::tcp::socket &_sock;
         std::string _name;
         bool _isLog = false;
 };
