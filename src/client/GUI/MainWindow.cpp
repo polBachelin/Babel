@@ -138,11 +138,10 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
         _infos.username = infos.username;
         _infos.password = infos.password;
     }
-    std::cout << "US " << infos.ip << " send infos: " << std::endl;
 
-    std::cout << infos.ip << std::endl;
-    std::cout << infos.userToCall << std::endl;
-    std::cout << infos.currentData << std::endl;
+    // std::cout << "ip         = " << infos.ip << std::endl;
+    // std::cout << "userToCall = " << infos.userToCall << std::endl;
+    // std::cout << "data       = " << infos.currentData << std::endl;
     _tcpClient.send(QBta);
 }
 
