@@ -34,12 +34,8 @@ void AsioTcpServer::reAccept()
     _clients.push_back(new_connection);
 }
 
-void AsioTcpServer::initServer(int port)
+void AsioTcpServer::printLocalAdress()
 {
-    _io = std::make_shared<asio::io_context>();
-    _port = port;
-    _acceptor = std::make_unique<asio::ip::tcp::acceptor>(*_io.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port));
-    _acceptor->set_option(asio::ip::tcp::acceptor::reuse_address(true));
     try {
         asio::io_service netService;
         asio::ip::udp::resolver resolver(netService);
@@ -53,6 +49,16 @@ void AsioTcpServer::initServer(int port)
     } catch (std::exception& e){
         std::cerr << "Could not find our IP adress : " << e.what() << std::endl;
     }
+
+}
+
+void AsioTcpServer::initServer(int port)
+{
+    _io = std::make_shared<asio::io_context>();
+    _port = port;
+    _acceptor = std::make_unique<asio::ip::tcp::acceptor>(*_io.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port));
+    _acceptor->set_option(asio::ip::tcp::acceptor::reuse_address(true));
+    printLocalAdress();
 }
 
 void AsioTcpServer::handleAccept(pointer_t new_connection, const asio::error_code& error)

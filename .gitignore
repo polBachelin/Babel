@@ -4,3 +4,4 @@ Dockerfile
 build.sh
 compiler.sh
 .vscode/
+Client_test.cpp
