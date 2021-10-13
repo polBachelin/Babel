@@ -240,6 +240,7 @@ void Client::GUI::CallPage::callOn()
 
     std::vector<std::string> pairs;
 
+    std::cout << "Current Data [" << _infos.currentData << "]";
     std::replace(_infos.currentData.begin(), _infos.currentData.end(), '\n', ' ');
     std::istringstream ss(_infos.currentData);
     std::string word;
