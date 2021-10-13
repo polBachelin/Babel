@@ -147,7 +147,7 @@ packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer
         if ((*it)->getUsermanager().GetName() == s) {
             asio::ip::tcp::socket &dest = (*it)->getUsermanager().getSock();
             s = um.GetName() + "\n" + inc.local_endpoint().address().to_string() + "\n" + std::to_string(inc.local_endpoint().port()) + "\n";
-            auto tmp = Commands::CreatePacket(303, s);
+            auto tmp = Commands::CreatePacket(203, s);
             dest.write_some(asio::buffer(tmp, sizeof(packet_t)));
             return Commands::CreatePacket(666, "");
         }
