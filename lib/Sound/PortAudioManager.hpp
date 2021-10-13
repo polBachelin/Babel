@@ -15,7 +15,7 @@
 #include <iostream>
 #include <memory>
 
-#define SAMPLE_RATE  (44100)
+#define SAMPLE_RATE  (48000)
 #define FRAMES_PER_BUFFER (512)
 #define NUM_SECONDS     (5)
 #define NUM_CHANNELS    (2)
