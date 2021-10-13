@@ -19,7 +19,7 @@ CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
     _encoderManager->setBitRate(10);
-    _encoderManager->setSamplingRate(48000);
+    _encoderManager->setSamplingRate(_soundManager->getSampleRate());
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
     //TODO: connect input to sendAudio + output to readAudio
@@ -51,9 +51,9 @@ void CallManager::sendAudioData()
     unsigned char *compressedBuffer = new unsigned char[_inputBufferSize];
     std::memset(compressedBuffer, 0, _inputBufferSize);
     std::cout << "SendAudio: memset OK..." << std::endl;
-    _soundManager->retrieveInputBytes(_inputBuffer, 512);
+    _soundManager->retrieveInputBytes(_inputBuffer, 480);
     std::cout << "SendAudio: retrieveBytes OK..." << std::endl;
-    int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 512, _inputBufferSize);
+    int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
     std::cout << "SendAudio: encode OK... " << compressedSize << std::endl;
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
     std::cout << "SendAudio: createAudioPacket OK..." << std::endl;
