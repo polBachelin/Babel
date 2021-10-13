@@ -21,6 +21,7 @@ namespace Client {
         std::string ip;
         std::string port;
         std::string currentData;
+        bool callHost = false;
     };
 
     typedef struct packet {

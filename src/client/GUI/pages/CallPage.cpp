@@ -24,6 +24,8 @@ Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(info
 
 void Client::GUI::CallPage::onPage()
 {
+    if (_infos.callHost)
+        _callManager.beginCall();
     _timer->stop();
     _timer->start();
     _eltimer->restart();
@@ -250,8 +252,7 @@ void Client::GUI::CallPage::callOn()
         words.push_back(word);
     pairs.push_back(words[1]);
     std::cout << "Ip to bind: " << words[2] << ":" << pairs.front() << std::endl;
-    _callManager.beginCall(pairs);
-    //emit checkCommand(_infos, EcallX);
+    _callManager.connectToHost(pairs.front());
 }
 
 void Client::GUI::CallPage::updateTimer()

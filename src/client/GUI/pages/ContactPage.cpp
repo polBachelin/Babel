@@ -199,6 +199,7 @@ void Client::GUI::ContactPage::callClicked()
     std::cout << "GOTO - call page" << std::endl << std::endl;
 
     _infos.userToCall =  _contactSelected.toStdString();
+    _infos.callHost = true;
     emit checkCommand(_infos, EcallX);
     emit changePage(CALL, _infos);
 }

@@ -31,9 +31,9 @@ namespace Client
                 ~CallManager();
                 void sendAudioData();
                  //TODO: paramètre input compressé
-                void connectToHosts();
+                void connectToHost(const std::string &ip);
                 Client::Network::audioPacket_t createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time);
-                void beginCall(const std::vector<std::string> &pairs);
+                void beginCall();
                 void endCall();
 
             public slots:
@@ -42,7 +42,7 @@ namespace Client
 
             private:
                 std::unique_ptr<Client::Network::UDPClient> _udpClient;
-                std::map<std::string, std::time_t> _pairs;
+                //std::map<std::string, std::time_t> _pairs;
                 const int _magicNum = 1234;
                 const unsigned short _audioPort = 6000;
                 const std::string _ip;
