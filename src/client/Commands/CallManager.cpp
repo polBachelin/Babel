@@ -24,8 +24,8 @@ CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
     //TODO: connect input to sendAudio + output to readAudio
-    QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP), this, SLOT(onReadAudioData));
-    QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData));
+    QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP()), this, SLOT(onReadAudioData()));
+    QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
 
 CallManager::~CallManager()

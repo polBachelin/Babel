@@ -29,7 +29,6 @@ namespace Client
             public:
                 CallManager(const std::string &myIp);
                 ~CallManager();
-                void sendAudioData();
                  //TODO: paramètre input compressé
                 void connectToHost(const std::string &ip);
                 Client::Network::audioPacket_t createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time);
@@ -39,6 +38,7 @@ namespace Client
             signals:
                 void sendData();
             public slots:
+                void sendAudioData();
                 void onReadAudioData();
 
 
