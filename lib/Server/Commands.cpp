@@ -20,7 +20,9 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
 packet_t *Commands::redirect(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
 {
     try {
-        PRINT_PCK(pck);
+        std::cout << "---------Receive------------" << std::endl;
+        PRINT_PCK((pck));
+        std::cout << "----------------------------" << std::endl;
         if (pck.magic == MAGIC)
             return _cmd_map.at(pck.code)(um, pck, list);
     } catch (std::exception &e) {
@@ -38,6 +40,9 @@ packet_t *Commands::CreatePacket(int code, const std::string &data)
     tmp->code = code;
     tmp->data_size = data.length();
     std::strcpy(tmp->data, data.c_str());
+    std::cout << "---------Packet created------------" << std::endl;
+    PRINT_PCK((*tmp));
+    std::cout << "-----------------------------------" << std::endl;
     return tmp;
 }
 
@@ -134,7 +139,7 @@ packet_t *Commands::ListContact(UserManager &um, packet_t &pck, std::deque<point
 
     (void)pck;
     res = tmp.getContactList(name);
-    return Commands::CreatePacket(004, res);
+    return Commands::CreatePacket(4, res);
 }
 
 packet *Commands::callRefused(UserManager &um, packet_t &pck, std::deque<pointer_t> &list)
