@@ -130,7 +130,7 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 
 	{GUI::signal_e::Easkcontactlist,
 	[](ClientInfos infos, GUI::signal_e e) {
-		std::cout << "Sending packet of register to server\n";
+		std::cout << "Sending packet of ask contact list to server\n";
 		packet_t package;
 		char *buffTemp = new char[sizeof(package)];
 
