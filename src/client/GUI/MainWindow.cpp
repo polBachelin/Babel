@@ -151,11 +151,6 @@ void MainWindow::gotError(QAbstractSocket::SocketError err)
     std::cout << errSockMap[err] << std::endl;
 }
 
-void MainWindow::onStartCallConnection(ClientInfos info)
-{
-
-}
-
 void MainWindow::initConnections(void)
 {
     QObject::connect(

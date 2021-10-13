@@ -19,6 +19,7 @@ CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
     _encoderManager->setBitRate(10);
+    std::cout << "SAMPLE" << _soundManager->getSampleRate() << std::endl;
     _encoderManager->setSamplingRate(_soundManager->getSampleRate());
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
@@ -60,7 +61,7 @@ void CallManager::sendAudioData()
     ptr = reinterpret_cast<char *>(&audioPacket);
     dataPacket.port = _audioPort;
     dataPacket.data = ptr;
-    std::cout << std::to_string(dataPacket.port) << dataPacket.data << std::endl;
+    std::cout <<  "Infos Caller" <<std::to_string(dataPacket.port) << dataPacket.data << std::endl;
     for (auto &pair : _pairs) {
         dataPacket.host = pair.first;
         _udpClient->send(dataPacket);
@@ -91,11 +92,9 @@ void CallManager::beginCall(const std::vector<std::string> &pairs)
     std::cout << "BEGIN CALL" << std::endl;
     this->_inCall = true;
     this->_soundManager->startInputStream();
-    std::cout << "startInputStream..." << std::endl;
     this->_soundManager->startOutputStream();
-    std::cout << "startOutputStream..." << std::endl;
     this->_udpClient->connectToHost(_ip);
-    std::cout << "Connect to client caller..." << std::endl;
+    std::cout << "Connect to client caller..." << _ip << std::endl;
     for(auto &pair : pairs)
         _pairs.emplace(pair, 0);
     std::cout << "Emplace finished..." << std::endl;
