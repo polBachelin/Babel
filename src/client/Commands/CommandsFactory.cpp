@@ -25,10 +25,10 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		strcpy(package.data, dataStr.c_str());
 
 		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
-    	std::cout << "Magic = " << package->magic << std::endl;
-    	std::cout << "Code  = " << package->code << std::endl;
-    	std::cout << "size  = " << package->data_size << std::endl;
-    	std::cout << "data  = " << package->data << std::endl;
+    	std::cout << "Magic = " << package.magic << std::endl;
+    	std::cout << "Code  = " << package.code << std::endl;
+    	std::cout << "size  = " << package.data_size << std::endl;
+    	std::cout << "data  = " << package.data << std::endl;
     	std::cout << "--------------------------------------" << std::endl;
 
 		memcpy(buffTemp, &package, sizeof(package));
@@ -48,10 +48,10 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		strcpy(package.data, dataStr.c_str());
 
 		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
-    	std::cout << "Magic = " << package->magic << std::endl;
-    	std::cout << "Code  = " << package->code << std::endl;
-    	std::cout << "size  = " << package->data_size << std::endl;
-    	std::cout << "data  = " << package->data << std::endl;
+    	std::cout << "Magic = " << package.magic << std::endl;
+    	std::cout << "Code  = " << package.code << std::endl;
+    	std::cout << "size  = " << package.data_size << std::endl;
+    	std::cout << "data  = " << package.data << std::endl;
     	std::cout << "--------------------------------------" << std::endl;
 
 		memcpy(buffTemp, &package, sizeof(package));
@@ -71,10 +71,10 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		strcpy(package.data, dataStr.c_str());
 
 		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
-    	std::cout << "Magic = " << package->magic << std::endl;
-    	std::cout << "Code  = " << package->code << std::endl;
-    	std::cout << "size  = " << package->data_size << std::endl;
-    	std::cout << "data  = " << package->data << std::endl;
+    	std::cout << "Magic = " << package.magic << std::endl;
+    	std::cout << "Code  = " << package.code << std::endl;
+    	std::cout << "size  = " << package.data_size << std::endl;
+    	std::cout << "data  = " << package.data << std::endl;
     	std::cout << "--------------------------------------" << std::endl;
 
 		memcpy(buffTemp, &package, sizeof(package));
@@ -94,10 +94,10 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		strcpy(package.data, dataStr.c_str());
 
 		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
-    	std::cout << "Magic = " << package->magic << std::endl;
-    	std::cout << "Code  = " << package->code << std::endl;
-    	std::cout << "size  = " << package->data_size << std::endl;
-    	std::cout << "data  = " << package->data << std::endl;
+    	std::cout << "Magic = " << package.magic << std::endl;
+    	std::cout << "Code  = " << package.code << std::endl;
+    	std::cout << "size  = " << package.data_size << std::endl;
+    	std::cout << "data  = " << package.data << std::endl;
     	std::cout << "--------------------------------------" << std::endl;
 
 		memcpy(buffTemp, &package, sizeof(package));
@@ -118,10 +118,10 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		strcpy(package.data, dataStr.c_str());
 
 		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
-    	std::cout << "Magic = " << package->magic << std::endl;
-    	std::cout << "Code  = " << package->code << std::endl;
-    	std::cout << "size  = " << package->data_size << std::endl;
-    	std::cout << "data  = " << package->data << std::endl;
+    	std::cout << "Magic = " << package.magic << std::endl;
+    	std::cout << "Code  = " << package.code << std::endl;
+    	std::cout << "size  = " << package.data_size << std::endl;
+    	std::cout << "data  = " << package.data << std::endl;
     	std::cout << "--------------------------------------" << std::endl;
 
 		memcpy(buffTemp, &package, sizeof(package));
@@ -141,10 +141,10 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 		strcpy(package.data, dataStr.c_str());
 
 		std::cout << "J'ai Envoyé ----------------------------" << std::endl;
-    	std::cout << "Magic = " << package->magic << std::endl;
-    	std::cout << "Code  = " << package->code << std::endl;
-    	std::cout << "size  = " << package->data_size << std::endl;
-    	std::cout << "data  = " << package->data << std::endl;
+    	std::cout << "Magic = " << package.magic << std::endl;
+    	std::cout << "Code  = " << package.code << std::endl;
+    	std::cout << "size  = " << package.data_size << std::endl;
+    	std::cout << "data  = " << package.data << std::endl;
     	std::cout << "--------------------------------------" << std::endl;
 
 		memcpy(buffTemp, &package, sizeof(package));
