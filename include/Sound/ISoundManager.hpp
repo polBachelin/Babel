@@ -29,6 +29,9 @@ class ISoundManager {
         virtual void closeOutputStream() = 0;
         virtual void closeInputStream() = 0;
         virtual int getBytesInInput() = 0;
+        virtual int getSampleRate() = 0;
+        virtual size_t getInputChannels() const = 0;
+        virtual size_t getOutputChannels() const = 0;
         virtual int retrieveInputBytes(float *sample, size_t len) = 0;
         virtual void feedBytesToOutput(float *sample, unsigned long len) = 0;
         virtual void loadDefaultDevices() = 0;

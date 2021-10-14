@@ -9,8 +9,27 @@
 
 using namespace Client;
 
+static bool checkPort(std::string port)
+{
+    int valid = 0;
+
+    for (auto c : port)
+        if (!(valid = std::isdigit(c)))
+            return false;
+    return true;
+}
+
 BabelClient::BabelClient(int &argc, char **argv) : QApplication(argc, argv)
 {
+    QString hostAddress = "0.0.0.0";
+    int portVal = 0;
+
+    if (argc == 3 && checkPort((std::string)argv[2])) {
+        hostAddress = argv[1];
+        portVal = std::atoi(argv[2]);
+    }
+    std::cout << hostAddress.toStdString() << " | " << portVal << std::endl;
+    _mainWindow = std::make_unique<Client::GUI::MainWindow>(hostAddress, portVal);
 }
 
 BabelClient::~BabelClient()
@@ -20,7 +39,7 @@ BabelClient::~BabelClient()
 
 int BabelClient::start()
 {
-    mainWindow.show();
+    _mainWindow->show();
 
     return this->exec();
 }

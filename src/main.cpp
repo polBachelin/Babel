@@ -16,15 +16,12 @@
 #include "asio.hpp"
 #include "PortAudioManager.hpp"
 #include "AsioTcpServer.hpp"
-#define SAMPLE_RATE  (44100)
+#define SAMPLE_RATE  (48000)
 #define FRAMES_PER_BUFFER (512)
 #define NUM_SECONDS     (5)
 
 int main(int ac, char **av)
 {
-   //std::unordered_map<ConfigFileParser::LIB_TYPE, std::vector<std::string>> _libs = ConfigFileParser::parseFile();
-
-    //std::shared_ptr<ITcpServer> serv = DLLoader<ITcpServer>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::NETWORK].front());
     std::shared_ptr<AsioTcpServer> serv = std::make_shared<AsioTcpServer>();
 
     if (serv) {
@@ -35,7 +32,8 @@ int main(int ac, char **av)
             std::cout << "Port : " << av[1] << std::endl;
             serv->initServer(std::atoi(av[1]));
         }
-        serv->startAccept();
+        serv->acceptConnection();
+        serv->run();
     }
     return 0;
 }

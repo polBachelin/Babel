@@ -16,10 +16,11 @@ include_directories(./DB)
 
 set(SRCS
     AsioTcpServer.cpp
-    Commands.cpp
     AsioTcpConnection.cpp
     ContactManager.cpp
     UserManager.cpp
+    ClientManager.cpp
+    CommandsManager.cpp
     DB/Database.cpp)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)

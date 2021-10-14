@@ -13,6 +13,7 @@ class ITcpConnection {
         virtual ~ITcpConnection() = default;
         virtual void start() = 0;
         virtual void interpret() = 0;
+        
 };
 
 #endif /* !ITCPCONNECTION_HPP_ */

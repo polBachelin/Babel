@@ -12,11 +12,20 @@ Client::GUI::RegisterPage::RegisterPage(ClientInfos infos, QWidget *parent) : AP
     setFixedSize(WIDTH, HEIGHT);
     _formError = false;
 
+    QObject::connect(parent, SIGNAL(validRegisterResponse(ClientInfos)),
+        this, SLOT(validRegister(ClientInfos)));
+    QObject::connect(parent, SIGNAL(wrongRegisterResponse(ClientInfos)),
+        this, SLOT(wrongRegister(ClientInfos)));
+
     loadPage();
     layoutLoader();
 }
 
 // LOADERS
+
+void Client::GUI::RegisterPage::onPage()
+{
+}
 
 void Client::GUI::RegisterPage::loadPage()
     // this->setObjectName("TOTO");
@@ -161,16 +170,36 @@ void Client::GUI::RegisterPage::createAccount()
         return;
     }
 
-    // _username = "";
-    // _password = "";
-    // _confirmPassword = "";
-    // _usernameForm->setText(_username.c_str());
-    // _passwordForm->setText(_password.c_str());
-    // _confirmPasswordForm->setText(_confirmPassword.c_str());
     _infos.password = _password;
     _infos.username = _username;
-    
+
+    this->setDisabled(true);
     emit checkCommand(_infos, Eregister);
+}
+
+void Client::GUI::RegisterPage::validRegister(ClientInfos info)
+{
+    std::cout << "GOTO - contact page" << std::endl << std::endl;
+
+    _username = "";
+    _password = "";
+    _confirmPassword = "";
+    _usernameForm->setText(_username.c_str());
+    _passwordForm->setText(_password.c_str());
+    _confirmPasswordForm->setText(_confirmPassword.c_str());
+
+    this->setDisabled(false);
+    emit changePage(CONTACTS, info);
+}
+
+void Client::GUI::RegisterPage::wrongRegister(ClientInfos info)
+{
+    _confirmPassword = "";
+    _confirmPasswordForm->setText(_confirmPassword.c_str());
+    _errorPassword->setText("wrong password");
+    _errorUsername->setText("wrong username");
+
+    this->setDisabled(false);
 }
 
 void Client::GUI::RegisterPage::signIn()
@@ -187,7 +216,7 @@ void Client::GUI::RegisterPage::signIn()
     _errorUsername->setText("");
     _errorConfirmPassword->setText("");
 
-    emit changePage(LOGIN);
+    emit changePage(LOGIN, _infos);
 }
 
 #include "moc_RegisterPage.cpp"

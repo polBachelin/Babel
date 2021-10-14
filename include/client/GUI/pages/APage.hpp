@@ -21,7 +21,9 @@
 #include <vector>
 #include <iostream>
 #include <cstring>
+#include <unordered_map>
 #include "structs.hpp"
+#include <bits/stdc++.h>
 
 #define LOGO_PATH       "./assets/babelLogo_48x48.png"
 #define PROFILE48_PATH  "./assets/profile_48x48.png"
@@ -54,22 +56,13 @@ namespace GUI {
 
     enum signal_e
         {
-            Elogin = 000,
-            Eregister = 001,
-            Eaddcontact = 002,
+            Elogin = 0,
+            Eregister = 1,
+            Eaddcontact = 2,
             Eacceptinvitation = 112,
-            EcallX = 003,
+            EcallX = 3,
             Erefuseincomingcall = 203,
-            Easkcontactlist = 004,
-            Eloginsuccessful = 100,
-            Eloginfailed = 200,
-            Eregistersuccessful = 101,
-            Eregisterfailed = 201,
-            Einvitationreceive = 012,
-            Econtactaddsuccessfully = 102,
-            Eincomingcall = 303,
-            Ecallwasrefused = 203,
-            EContactlist = 004
+            Easkcontactlist = 4
         };
 
 class APage : public QWidget
@@ -84,14 +77,16 @@ class APage : public QWidget
         virtual void initConnections() = 0;
         virtual void loadPage() = 0;
         virtual void layoutLoader() = 0;
+        virtual void onPage() = 0;
+
+        void setClientInfos(const ClientInfos &);
 
     signals:
-        void changePage(pageNames name);
+        void changePage(pageNames name, ClientInfos);
         void checkCommand(ClientInfos, signal_e);
 
     protected:
         std::unique_ptr<QGridLayout> _layout;
-        QWidget *_parent;
         ClientInfos _infos;
 };
 

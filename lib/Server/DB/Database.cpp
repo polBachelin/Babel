@@ -145,7 +145,9 @@ CallBackData_t Database::custom(const std::string &req)
         sqlite3_free(_errMsg);
         return _data;
     }
-    _data = data;
+    _data.ac = data.ac;
+    _data.av = data.av;
+    _data.c_name = data.c_name;
     std::cout << "Custom request succeed" << std::endl;
     return _data;
 }

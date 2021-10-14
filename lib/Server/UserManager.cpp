@@ -7,7 +7,7 @@
 
 #include "UserManager.hpp"
 
-UserManager::UserManager(asio::ip::tcp::socket &s) : _db("db/database.db"), _cm(), _sock(s)
+UserManager::UserManager() : _db("db/database.db"), _cm()
 {
     _db.createTable("User", "ID INTEGER PRIMARY KEY AUTOINCREMENT," \
                     "USERNAME TEXT NOT NULL," \
@@ -16,7 +16,7 @@ UserManager::UserManager(asio::ip::tcp::socket &s) : _db("db/database.db"), _cm(
 
 UserManager::~UserManager()
 {
-    _db.close();
+    //_db.close();
     _isLog = false;
 }
 
@@ -38,7 +38,7 @@ int UserManager::login(const std::string &name, const std::string &passwd)
     return true;
 }
 
-int UserManager::new_user(const std::string &name, const std::string &passwd)
+int UserManager::newUser(const std::string &name, const std::string &passwd)
 {
     int tag = 0;
     std::string tag_res;
@@ -59,17 +59,12 @@ int UserManager::new_user(const std::string &name, const std::string &passwd)
     return true;
 }
 
-const ContactManager &UserManager::GetContactManager()
+ContactManager UserManager::getContactManager() const
 {
     return _cm;
 }
 
-const std::string &UserManager::GetName()
+std::string UserManager::getName() const
 {
     return _name;
-}
-
-asio::ip::tcp::socket &UserManager::getSock()
-{
-    return _sock;
 }

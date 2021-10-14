@@ -9,6 +9,7 @@
 #define DEF_CALLPAGE
 
 #include "APage.hpp"
+#include "CallManager.hpp"
 
 namespace Client {
 namespace GUI {
@@ -25,14 +26,15 @@ class CallPage : public APage
         void initConnections() override;
         void loadPage() override;
         void layoutLoader() override;
+        void onPage() override;
 
         // widgtet loaders
         void delimLoader();
         void labelLoader();
         void btnLoader();
         void timerLoader();
-        void inCall(bool);
-        void incomingCall(bool);
+        void inCall();
+        void incomingCall();
 
     public slots:
         void soundOff();
@@ -42,6 +44,9 @@ class CallPage : public APage
         void callOff();
         void callOn();
         void updateTimer();
+        void endCall();
+        void incoming(ClientInfos);
+        void callWasRefused(ClientInfos);
 
     private:
         // Layout
@@ -81,7 +86,7 @@ class CallPage : public APage
 
         // member variables
         std::string _username;
-        bool _calling;
+        Client::Managers::CallManager _callManager;
 };
 
 }}

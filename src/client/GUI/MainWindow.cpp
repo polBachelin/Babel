@@ -7,6 +7,8 @@
 
 #include "MainWindow.hpp"
 #include "APage.hpp"
+#include <QNetworkInterface>
+#include <QNetworkAddressEntry>
 
 using namespace Client::GUI;
 
@@ -36,17 +38,34 @@ std::map<std::size_t, std::string> errSockMap = {
     {22, "!! Temporary Error !!"}
 };
 
-MainWindow::MainWindow() : _pages(this), _tcpClient("10.188.56.156", 5000)
+MainWindow::MainWindow(const QString hostAddress, int portVal)
+    : _tcpClient(hostAddress, portVal)
 {
     this->setFixedSize({WIDTH, HEIGHT});
     setWindowTitle("Babel");
-    this->setCentralWidget(&_pages);
     this->setStyleSheet(
         "background-image:url("
         BACKGROUND_PATH
         "); background-position: center;");
 
-    initConnections();
+    _infos.port = std::to_string(portVal);
+
+    //TODO : faire une fonction pour recup l'ip
+    foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
+        QNetworkInterface::InterfaceFlags flags = netInterface.flags();
+        if( (bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)){
+            foreach (const QNetworkAddressEntry &address, netInterface.addressEntries()) {
+                if(address.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+                    _infos.ip = address.ip().toString().toStdString();
+                    _pages = std::make_unique<PageManager>(this, _infos);
+                    initConnections();
+                    signalReceivedLoader();
+                    this->setCentralWidget(_pages.get());
+                    return;
+                }
+            }
+        }
+    }
 }
 
 MainWindow::~MainWindow()
@@ -54,33 +73,76 @@ MainWindow::~MainWindow()
     std::cout << "MainWindow détruit" << std::endl;
 }
 
+void MainWindow::signalReceivedLoader()
+{
+    _signalPageMap[100] = [&](ClientInfos info){
+        emit MainWindow::validSignInResponse(info);};
+    _signalPageMap[200] = [&](ClientInfos info){
+        emit MainWindow::wrongSignInResponse(info);};
+    _signalPageMap[101] = [&](ClientInfos info){
+        emit MainWindow::validRegisterResponse(info);};
+    _signalPageMap[201] = [&](ClientInfos info){
+        emit MainWindow::wrongRegisterResponse(info);};
+    _signalPageMap[303] = [&](ClientInfos info){
+        emit MainWindow::incomingCall(info);};
+    _signalPageMap[12] = [&](ClientInfos info){
+        emit MainWindow::invitationContactReceived(info);};
+    _signalPageMap[102] = [&](ClientInfos info){
+        emit MainWindow::contactAddSuccess(info);};
+    _signalPageMap[202] = [&](ClientInfos info){
+        emit MainWindow::contactAddFailed(info);};
+    _signalPageMap[203] = [&](ClientInfos info){
+        emit MainWindow::callRefused(info);};
+    _signalPageMap[4] = [&](ClientInfos info){
+        emit MainWindow::contactList(info);};
+}
+
 void MainWindow::receivedSomething(QByteArray msg)
 {
     packet_t *package = reinterpret_cast<packet_t *>(msg.data());
 
+    if (package->magic != MAGIC) {
+        std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
+        return;
+    }
+    std::cout << "------------- J'ai reçu ---------------" << std::endl;
     std::cout << "Magic = " << package->magic << std::endl;
     std::cout << "Code  = " << package->code << std::endl;
     std::cout << "size  = " << package->data_size << std::endl;
     std::cout << "data  = " << package->data << std::endl;
+    std::cout << "---------------------------------------" << std::endl;
 
     std::string test(package->data);
+    _infos.username = test;
+    _infos.currentData = package->data;
 
-    if (test == "success\n")
-        emit validSignalResponse("", "");
-    else
-        emit wrongSignalResponse("wrong pass", "wrong user");
+    if (_signalPageMap.find(package->code) == _signalPageMap.end()) {
+        std::cout << "got an unknown code : " << package->code << std::endl;
+    } else {
+        std::cout << "got a code : " << package->code << std::endl;
+        _signalPageMap.at(package->code)(_infos);
+    }
 }
 
-void MainWindow::changeCurrentPage(pageNames name)
+void MainWindow::changeCurrentPage(pageNames name, ClientInfos info)
 {
-    _pages.setCurrentPage(name);
+    std::cout << "page change request" << std::endl;
+    _pages->setCurrentPage(name, info);
 }
 
 void MainWindow::checkSignal(ClientInfos infos, signal_e e)
-{    
+{
     char *buffTemp = CommandsFactory::callCommand(infos, e);
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
+    if (e == Elogin || e == Eregister) {
+        _infos.username = infos.username;
+        _infos.password = infos.password;
+    }
+
+    // std::cout << "ip         = " << infos.ip << std::endl;
+    // std::cout << "userToCall = " << infos.userToCall << std::endl;
+    // std::cout << "data       = " << infos.currentData << std::endl;
     _tcpClient.send(QBta);
 }
 
@@ -92,26 +154,29 @@ void MainWindow::gotError(QAbstractSocket::SocketError err)
 void MainWindow::initConnections(void)
 {
     QObject::connect(
-        _pages.getPage(LOGIN), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        _pages->getPage(LOGIN), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(LOGIN), SIGNAL(changePage(pageNames)),
-        this, SLOT(changeCurrentPage(pageNames)));
+        _pages->getPage(LOGIN), SIGNAL(changePage(pageNames, ClientInfos)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
-        _pages.getPage(REGISTER), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        _pages->getPage(REGISTER), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(REGISTER), SIGNAL(changePage(pageNames)),
-        this, SLOT(changeCurrentPage(pageNames)));
+        _pages->getPage(REGISTER), SIGNAL(changePage(pageNames, ClientInfos)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
-        _pages.getPage(CALL), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        _pages->getPage(CALL), SIGNAL(checkCommand(ClientInfos, signal_e)),
         this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
-        _pages.getPage(CALL), SIGNAL(changePage(pageNames)),
-        this, SLOT(changeCurrentPage(pageNames)));
+        _pages->getPage(CALL), SIGNAL(changePage(pageNames, ClientInfos)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
     QObject::connect(
-        _pages.getPage(CONTACTS), SIGNAL(changePage(pageNames)),
-        this, SLOT(changeCurrentPage(pageNames)));
+        _pages->getPage(CONTACTS), SIGNAL(changePage(pageNames, ClientInfos)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
+    QObject::connect(
+        _pages->getPage(CONTACTS), SIGNAL(checkCommand(ClientInfos, signal_e)),
+        this, SLOT(checkSignal(ClientInfos, signal_e)));
     QObject::connect(
         &_tcpClient, &Client::Network::TcpClient::dataAvailable,
         this, &MainWindow::receivedSomething);

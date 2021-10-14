@@ -17,6 +17,11 @@ namespace Client {
     struct ClientInfos {
         std::string username;
         std::string password;
+        std::string userToCall;
+        std::string ip;
+        std::string port;
+        std::string currentData;
+        bool callHost = false;
     };
 
     typedef struct packet {

@@ -13,6 +13,8 @@
 #include "PageManager.hpp"
 #include "CommandsFactory.hpp"
 #include "TcpClient.hpp"
+#include "UdpClient.hpp"
+#include "CallManager.hpp"
 
 namespace Client {
 
@@ -24,32 +26,39 @@ namespace Client {
             Q_OBJECT
 
             public:
-                MainWindow();
+                MainWindow(const QString hostAddress,
+                            int portVal);
                 ~MainWindow();
 
+                void signalReceivedLoader();
+
             signals:
-                void validSignalResponse(QString, QString);
-                void wrongSignalResponse(QString, QString);
+                void validSignInResponse(ClientInfos);
+                void wrongSignInResponse(ClientInfos);
+                void validRegisterResponse(ClientInfos);
+                void wrongRegisterResponse(ClientInfos);
+                void contactAddSuccess(ClientInfos);
+                void contactAddFailed(ClientInfos);
+                void incomingCall(ClientInfos);
+                void contactList(ClientInfos);
+                void invitationContactReceived(ClientInfos);
+                void callRefused(ClientInfos);
 
             public slots:
                 void checkSignal(ClientInfos, signal_e);
-                void changeCurrentPage(pageNames);
+                void changeCurrentPage(pageNames, ClientInfos);
                 void receivedSomething(QByteArray);
                 void gotError(QAbstractSocket::SocketError err);
                 //void TryConnect
 
             private:
                 void initConnections(void);
-                PageManager _pages;
-                Client::Network::TcpClient _tcpClient;
-                //TODO: intégrer les attributs suivants
-                //Client::Network::PacketManager _packetManager;
-                //Client::Network::UdpClient _udpClient;
-                //std::shared_ptr<IEncodeManager> _encoderManager;
-                //std::shared_ptr<ISoundManager> _soundManager;
+                std::unique_ptr<PageManager> _pages;
+                Network::TcpClient _tcpClient;
                 ClientInfos _infos;
+                std::unordered_map<int, std::function<void(ClientInfos)>> _signalPageMap;
 
-        };
+       };
 
     }
 }
