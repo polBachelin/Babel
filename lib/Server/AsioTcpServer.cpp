@@ -13,25 +13,21 @@
 //     {
 //         return std::make_shared<AsioTcpServer>();
 //     }
-// }
+// 
 
-void AsioTcpServer::startAccept()
+void AsioTcpServer::run()
 {
-    pointer_t new_connection = AsioTcpConnection::create(*_io.get(), _clients);
-
-    _clients.push_back(new_connection);
-    _acceptor->async_accept(new_connection->socket(),
-        std::bind(&AsioTcpServer::handleAccept, this, new_connection, std::placeholders::_1));
-    _io->run();
+    if (_io)
+        _io->run();
 }
 
-void AsioTcpServer::reAccept()
+void AsioTcpServer::acceptConnection()
 {
-    pointer_t new_connection = AsioTcpConnection::create(*_io.get(), _clients);
+    std::shared_ptr<AsioTcpConnection> new_connection = std::make_shared<AsioTcpConnection>(*_io.get(), _clients);
 
-    _acceptor->async_accept(new_connection->socket(),
+    _clients.push_back(new_connection->getClientManager());
+    _acceptor->async_accept(*new_connection->getSocket(),
         std::bind(&AsioTcpServer::handleAccept, this, new_connection, std::placeholders::_1));
-    _clients.push_back(new_connection);
 }
 
 void AsioTcpServer::printLocalAdress()
@@ -49,7 +45,6 @@ void AsioTcpServer::printLocalAdress()
     } catch (std::exception& e){
         std::cerr << "Could not find our IP adress : " << e.what() << std::endl;
     }
-
 }
 
 void AsioTcpServer::initServer(int port)
@@ -61,17 +56,17 @@ void AsioTcpServer::initServer(int port)
     printLocalAdress();
 }
 
-void AsioTcpServer::handleAccept(pointer_t new_connection, const asio::error_code& error)
+void AsioTcpServer::handleAccept(std::shared_ptr<AsioTcpConnection> new_connection, const asio::error_code& error)
 {
     if (!error) {
         new_connection->start();
     }
-    AsioTcpServer::reAccept();
+    acceptConnection();
     if (error)
         std::cerr << error.message() << std::endl;
 }
 
-std::deque<pointer_t> &AsioTcpServer::getClientList()
+std::deque<std::shared_ptr<ClientManager>> &AsioTcpServer::getClientList()
 {
     return _clients;
 }

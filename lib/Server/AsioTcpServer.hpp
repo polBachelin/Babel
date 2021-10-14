@@ -15,17 +15,17 @@ class AsioTcpServer : public ITcpServer {
     public:
         AsioTcpServer() = default;
         ~AsioTcpServer() = default;
-        void startAccept() override;
-        void reAccept();
+        void acceptConnection() override;
         void initServer(int port) override;
+        void run() override;
         void printLocalAdress();
-        void handleAccept(pointer_t new_connection, const asio::error_code& error);
-        std::deque<pointer_t> &getClientList();
+        void handleAccept(std::shared_ptr<AsioTcpConnection> new_connection, const asio::error_code& error);
+        std::deque<std::shared_ptr<ClientManager>> &getClientList();
     private:
         std::shared_ptr<asio::io_context> _io;
         int _port = 0;
         std::unique_ptr<asio::ip::tcp::acceptor> _acceptor;
-        std::deque<pointer_t> _clients;
+        std::deque<std::shared_ptr<ClientManager>> _clients;
 
 };
 
