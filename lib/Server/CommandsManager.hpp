@@ -22,21 +22,21 @@
 #define MAGIC 388474
 
 typedef std::deque<std::pair<std::shared_ptr<asio::ip::tcp::socket>, packet_t *>> pck_list;
-typedef std::function<pck_list *(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &, ClientManager &)> cmd_ptr;
+typedef std::function<pck_list *(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &, std::shared_ptr<ClientManager>)> cmd_ptr;
 class CommandsManager {
     public:
         CommandsManager() = default;
         ~CommandsManager() = default;
-        static pck_list *redirect(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &, ClientManager &);
+        static pck_list *redirect(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &, std::shared_ptr<ClientManager>);
         static pck_list *createPacket(pck_list &l, std::shared_ptr<asio::ip::tcp::socket> s, int code, const std::string &data);
 
-        static pck_list *login(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &, ClientManager &);
-        static pck_list *registerUser(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient);
-        static pck_list *addContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient);
-        static pck_list *acceptInvitation(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient);
-        static pck_list *callX(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient);
-        static pck_list *callRefused(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient);
-        static pck_list *listContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient);
+        static pck_list *login(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &, std::shared_ptr<ClientManager>);
+        static pck_list *registerUser(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
+        static pck_list *addContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
+        static pck_list *acceptInvitation(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
+        static pck_list *callX(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
+        static pck_list *callRefused(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
+        static pck_list *listContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
     private:
         static const std::map<std::size_t, cmd_ptr> _cmdMap;
 };
