@@ -48,6 +48,7 @@ namespace Client
                 const int _magicNum = 1234;
                 const unsigned short _audioPort = 6000;
                 const std::string _ip;
+                std::string _contactIp;
                 bool _inCall = false;
                 float *_inputBuffer;
                 float *_outputBuffer;

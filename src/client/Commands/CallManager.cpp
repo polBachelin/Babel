@@ -37,6 +37,7 @@ Client::Network::audioPacket_t CallManager::createAudioPacket(unsigned char *com
 {
     Client::Network::audioPacket_t audioPacket;
 
+    audioPacket.magicNum = _magicNum;
     audioPacket.timestamp = time;
     audioPacket.data = new unsigned char[buffSize];
     std::memcpy(audioPacket.data, compressedBuff, buffSize);
@@ -59,7 +60,7 @@ void CallManager::sendAudioData()
 
     dataPacket.port = _audioPort;
     dataPacket.data = ptr;
-    dataPacket.host = _ip;
+    dataPacket.host = _contactIp;
 
     std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << ":" << compressedSize << std::endl;
     _udpClient->send(dataPacket);
@@ -88,7 +89,9 @@ void CallManager::onReadAudioData()
 
 void CallManager::connectToHost(const std::string &ip)
 {
+    std::cout << "CONNECT TO HOST WITH IP : " << ip << std::endl;
     this->_udpClient->connectToHost(ip);
+    _contactIp = ip;
     this->_inCall = true;
     this->sendAudioData();
 }
