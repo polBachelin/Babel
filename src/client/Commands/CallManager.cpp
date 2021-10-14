@@ -36,7 +36,7 @@ CallManager::~CallManager()
 unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
 {
     unsigned char *res = new unsigned char[buffSize + sizeof(time) + sizeof(unsigned char) + sizeof(int)];
-    intptr_t ptr = reinterpret_cast<intptr_t >(res);
+    uintptr_t ptr = reinterpret_cast<uintptr_t >(res);
     uint32_t networkBuffSize = htonl(buffSize);
     uint32_t networkTime = htonl(time);
 
@@ -75,12 +75,11 @@ void CallManager::onReadAudioData()
 
     Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
     unsigned char *compressed;
-    intptr_t ptr = reinterpret_cast<intptr_t>(dataPacket.data);
+    uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data);
 
     // ? changer la condition pour checker le timestamp
     //if (audioPacket->timestamp < _pairs[dataPacket.host])
         //return;
-    //TODO same here fix pointer type for arithmetic by casting to the appriopriate value
     std::time_t *timestampPtr = reinterpret_cast<std::time_t *>(ptr);
     ptr += sizeof(std::time_t);
     int *buffSizePtr = reinterpret_cast<int *>(ptr);
