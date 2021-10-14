@@ -18,7 +18,7 @@ class UserManager {
         int login(const std::string &, const std::string &);
         int newUser(const std::string &, const std::string &);
         ContactManager getContactManager() const;
-        const std::string &getName() const;
+        std::string getName() const;
     protected:
     private:
         Database _db;
