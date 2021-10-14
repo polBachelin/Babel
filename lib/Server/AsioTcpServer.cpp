@@ -17,7 +17,8 @@
 
 void AsioTcpServer::run()
 {
-    _io->run();
+    if (_io)
+        _io->run();
 }
 
 void AsioTcpServer::acceptConnection()

@@ -22,9 +22,6 @@
 
 int main(int ac, char **av)
 {
-   //std::unordered_map<ConfigFileParser::LIB_TYPE, std::vector<std::string>> _libs = ConfigFileParser::parseFile();
-
-    //std::shared_ptr<ITcpServer> serv = DLLoader<ITcpServer>::getEntryPoint(_libs[ConfigFileParser::LIB_TYPE::NETWORK].front());
     std::shared_ptr<AsioTcpServer> serv = std::make_shared<AsioTcpServer>();
 
     if (serv) {

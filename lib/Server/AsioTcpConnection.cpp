@@ -63,7 +63,7 @@ std::shared_ptr<AAsioTcpConnection> AsioTcpConnection::create(asio::io_context& 
 void AsioTcpConnection::handleWrite(const asio::error_code &e, size_t size)
 {
     if (e || size == 0) {
-        std::cout << e.message() << std::endl;
+        std::cout << "HandleWrite Error : " << e.message() << std::endl;
         throw e.value();
     }
 }
