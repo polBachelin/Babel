@@ -23,7 +23,7 @@ typedef struct packet {
     int magic;
     int code;
     int data_size;
-    char data[2048] = {0};
+    std::array<char, 2048> data;
 } packet_t;
 
 

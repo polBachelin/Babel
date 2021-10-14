@@ -21,7 +21,6 @@
 #include "ITcpConnection.hpp"
 
 class AAsioTcpConnection;
-typedef std::shared_ptr<AAsioTcpConnection> pointer_t;
 
 class AAsioTcpConnection : public ITcpConnection {
     public:
@@ -29,9 +28,11 @@ class AAsioTcpConnection : public ITcpConnection {
         ~AAsioTcpConnection() = default;
 
         virtual void start() = 0;
+
         virtual const std::shared_ptr<asio::ip::tcp::socket> getSocket() const = 0;
         virtual const std::string &getUserName() const = 0;
         virtual const std::string &getUserContactList() const = 0;
+        
         virtual int Login(const std::string &, const std::string &) = 0;
         virtual int NewUser(const std::string &, const std::string &) = 0;
         virtual void addContact(const std::string &new_c, const std::string &your_name) = 0;

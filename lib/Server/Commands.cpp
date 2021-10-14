@@ -17,7 +17,7 @@ const std::map<std::size_t, cmd_ptr> Commands::_cmd_map = {
     {203, Commands::callRefused}
 };
 
-pck_list *Commands::redirect(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::redirect(std::shared_ptr<AAsioTcpConnection> parent, packet_t &pck, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
 {
     try {
         std::cout << "---------Receive------------" << std::endl;
@@ -41,7 +41,7 @@ pck_list *Commands::CreatePacket(pck_list &l, std::shared_ptr<asio::ip::tcp::soc
     tmp->magic = MAGIC;
     tmp->code = code;
     tmp->data_size = data.length();
-    std::strcpy(tmp->data, data.c_str());
+    std::strcpy(tmp->data.data(), data.c_str());
     std::cout << "---------Packet created------------" << std::endl;
     PRINT_PCK((*tmp));
     std::cout << "-----------------------------------" << std::endl;
@@ -51,9 +51,9 @@ pck_list *Commands::CreatePacket(pck_list &l, std::shared_ptr<asio::ip::tcp::soc
     return nullptr;
 }
 
-pck_list *Commands::login(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::login(std::shared_ptr<AAsioTcpConnection> parent, packet_t &pck, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
 {
-    std::string tmp = pck.data;
+    std::string tmp = pck.data.data();
     std::array<std::string, 2> res;
     int value = 0;
     pck_list *pack = new pck_list;
@@ -73,9 +73,9 @@ pck_list *Commands::login(pointer_t parent, packet_t &pck, std::deque<pointer_t>
     return pack;
 }
 
-pck_list *Commands::Register(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::Register(std::shared_ptr<AAsioTcpConnection> parent, packet_t &pck, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
 {
-    std::string tmp = pck.data;
+    std::string tmp = pck.data.data();
     std::array<std::string, 2> res;
     int value = 0;
     pck_list *pack = new pck_list;
@@ -92,10 +92,10 @@ pck_list *Commands::Register(pointer_t parent, packet_t &pck, std::deque<pointer
     return pack;
 }
 
-pck_list *Commands::addContact(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::addContact(std::shared_ptr<AAsioTcpConnection> parent, packet_t &pck, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
 {
     auto name = parent->getUserName();
-    std::string res = pck.data;
+    std::string res = pck.data.data();
     std::string own;
     pck_list *pack = new pck_list;
 
@@ -113,9 +113,9 @@ pck_list *Commands::addContact(pointer_t parent, packet_t &pck, std::deque<point
     return pack;
 }
 
-pck_list *Commands::callX(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::callX(std::shared_ptr<AAsioTcpConnection> parent, packet_t &pck, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
 {
-    std::string s = pck.data;
+    std::string s = pck.data.data();
     std::string delimiter = "\n";
     size_t pos = 0;
     std::string token;
@@ -145,11 +145,11 @@ pck_list *Commands::callX(pointer_t parent, packet_t &pck, std::deque<pointer_t>
     return pack;
 }
 
-pck_list *Commands::ListContact(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::ListContact(std::shared_ptr<AAsioTcpConnection> parent, packet_t &pck, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
 {
     //auto name = parent->getUserName();
     std::string res;
-    std::string name = pck.data;
+    std::string name = pck.data.data();
     pck_list *pack = new pck_list;
 
 
@@ -160,9 +160,9 @@ pck_list *Commands::ListContact(pointer_t parent, packet_t &pck, std::deque<poin
     return pack;
 }
 
-pck_list *Commands::callRefused(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::callRefused(std::shared_ptr<AAsioTcpConnection> parent, packet_t &pck, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
 {
-    std::string s = pck.data;
+    std::string s = pck.data.data();
     auto inc = parent->getSocket();
     pck_list *pack = new pck_list;
 
@@ -180,10 +180,10 @@ pck_list *Commands::callRefused(pointer_t parent, packet_t &pck, std::deque<poin
     return pack;
 }
 
-pck_list *Commands::AcceptInvitation(pointer_t parent, packet_t &pck, std::deque<pointer_t> &list)
+pck_list *Commands::AcceptInvitation(std::shared_ptr<AAsioTcpConnection> parent, packet_t &pck, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
 {
     auto name = parent->getUserName();
-    std::string res = pck.data;
+    std::string res = pck.data.data();
     std::string own;
     pck_list *pack = new pck_list;
 
