@@ -31,6 +31,7 @@ AsioTcpConnection::~AsioTcpConnection()
 
 void AsioTcpConnection::start()
 {
+    std::cout << "STARTING A NEW TCP CONNECTION\n";
     // asio::async_write(_socket, asio::buffer(_message),
     //     std::bind(&tcp_connection::handle_write, shared_from_this(), std::placeholders::_1, std::placeholders::_2));
     auto handler = std::bind(&AsioTcpConnection::handleReadHeader, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
