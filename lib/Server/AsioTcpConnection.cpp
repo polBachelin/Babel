@@ -9,7 +9,12 @@
 
 AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &list)
 {
+    asio::socket_base::receive_buffer_size option_receive_size(sizeof(packet_t));
+    asio::socket_base::send_buffer_size option_send_size(sizeof(packet_t));
+
     _socket = std::make_shared<asio::ip::tcp::socket>(io_context);
+    _socket->set_option(option_receive_size);
+    _socket->set_option(option_send_size);
     _clientManager = std::make_shared<ClientManager>(_socket);
     _clients = list;
     _buffer.fill(0);
