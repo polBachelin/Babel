@@ -65,9 +65,7 @@ pck_list *CommandsManager::login(const packet_t &pck, std::deque<std::shared_ptr
     tmp.erase(0, tmp.find("\n") + 1);
     res[1] = tmp;
     value = currentClient->_um.login(res[0], res[1]);
-    std::cout << "VALUE FROM LOGIN === " << value << std::endl;
     if (value) {
-        std::cout << "NAME AFTER LOGGIN : " << currentClient->_um.getName() << std::endl; 
         CommandsManager::createPacket(*pack, currentClient->getSocket(), 100, currentClient->_um.getName());
         std::cout << "login " << pack->begin()->first->is_open() << std::endl;
     } else {

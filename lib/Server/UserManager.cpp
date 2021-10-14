@@ -27,7 +27,6 @@ int UserManager::login(const std::string &name, const std::string &passwd)
 
     if (tmp.ac >= 2 && tmp.av[1] == passwd) {
         _name = name;
-        std::cout << "setting name in user manager to : " << _name << std::endl;
         _cm.setName(_name);
         _isLog = true;
         std::cout << "Login successful" << std::endl;
