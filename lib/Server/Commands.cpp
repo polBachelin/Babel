@@ -135,7 +135,8 @@ pck_list *Commands::callX(std::shared_ptr<AAsioTcpConnection> parent, packet_t &
     for (auto it = list.begin(); it != list.end(); ++it) {
         if ((*it)->getUserName() == arr[0]) {
             auto dest = (*it)->getSocket();
-            res = parent->getUserName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + arr[2] + "\n";
+            std::cout << "Parent address in CALLX : " << inc->local_endpoint().address().to_string() << std::endl;
+            res = parent->getUserName() + "\n" + arr[1] + "\n" + arr[2] + "\n";
             Commands::CreatePacket(*pack, dest, 303, res);
             Commands::CreatePacket(*pack, parent->getSocket(), 666, "");
             return pack;
