@@ -64,9 +64,11 @@ pck_list *CommandsManager::login(const packet_t &pck, std::deque<std::shared_ptr
     res[0] = tmp.substr(0, tmp.find("\n"));
     tmp.erase(0, tmp.find("\n") + 1);
     res[1] = tmp;
-    value = currentClient.getUserManager().login(res[0], res[1]);
+    value = currentClient._um.login(res[0], res[1]);
+    std::cout << "VALUE FROM LOGIN === " << value << std::endl;
     if (value) {
-        CommandsManager::createPacket(*pack, currentClient.getSocket(), 100, currentClient.getUserManager().getName());
+        std::cout << "NAME AFTER LOGGIN : " << currentClient._um.getName() << std::endl; 
+        CommandsManager::createPacket(*pack, currentClient.getSocket(), 100, currentClient._um.getName());
         std::cout << "login " << pack->begin()->first->is_open() << std::endl;
     } else {
         CommandsManager::createPacket(*pack, currentClient.getSocket(), 200, "failed\n");
@@ -85,9 +87,9 @@ pck_list *CommandsManager::registerUser(const packet_t &pck, std::deque<std::sha
     res[0] = tmp.substr(0, tmp.find("\n"));
     tmp.erase(0, tmp.find("\n") + 1);
     res[1] = tmp;
-    value = currentClient.getUserManager().newUser(res[0], res[1]);
+    value = currentClient._um.newUser(res[0], res[1]);
     if (value == true) {
-        CommandsManager::createPacket(*(pack), currentClient.getSocket(), 101, currentClient.getUserManager().getName());
+        CommandsManager::createPacket(*(pack), currentClient.getSocket(), 101, currentClient._um.getName());
     } else {
         CommandsManager::createPacket(*pack, currentClient.getSocket(), 201, "failed\n");
     }
@@ -96,16 +98,16 @@ pck_list *CommandsManager::registerUser(const packet_t &pck, std::deque<std::sha
 
 pck_list *CommandsManager::addContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient)
 {
-    auto name = currentClient.getUserManager().getName();
+    auto name = currentClient._um.getName();
     std::string res = pck.data.data();
     std::string own;
     pck_list *pack = new pck_list;
 
     res.erase(res.find('\n'));
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->getUserManager().getName() == res) {
+        if ((*it)->_um.getName() == res) {
             auto dest = (*it)->getSocket();
-            own = currentClient.getUserManager().getName() + "\n";
+            own = currentClient._um.getName() + "\n";
             CommandsManager::createPacket(*pack, dest, 12, own);
             CommandsManager::createPacket(*pack, currentClient.getSocket(), 102, res);
             return pack;
@@ -135,10 +137,10 @@ pck_list *CommandsManager::callX(const packet_t &pck, std::deque<std::shared_ptr
     }
     std::cout << "Call " << arr[0] << " at " << arr[1] << ":" << arr[2] << std::endl;
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->getUserManager().getName() == arr[0]) {
+        if ((*it)->_um.getName() == arr[0]) {
             auto dest = (*it)->getSocket();
             std::cout << "Parent address in CALLX : " << inc->local_endpoint().address().to_string() << std::endl;
-            res = currentClient.getUserManager().getName() + "\n" + arr[1] + "\n" + arr[2] + "\n";
+            res = currentClient._um.getName() + "\n" + arr[1] + "\n" + arr[2] + "\n";
             CommandsManager::createPacket(*pack, dest, 303, res);
             CommandsManager::createPacket(*pack, currentClient.getSocket(), 666, "");
             return pack;
@@ -150,14 +152,14 @@ pck_list *CommandsManager::callX(const packet_t &pck, std::deque<std::shared_ptr
 
 pck_list *CommandsManager::listContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient)
 {
-    //auto name = currentClient.getUserManager().getName();
+    //auto name = currentClient._um.getName();
     std::string res;
     std::string name = pck.data.data();
     pck_list *pack = new pck_list;
 
 
     name.erase(name.find('\n'));
-    res = currentClient.getUserManager().getContactManager().getContactList();
+    res = currentClient._um.getContactManager().getContactList();
     std::cout << "Res contact list : " << res << std::endl;
     CommandsManager::createPacket(*pack, currentClient.getSocket(), 4, res);
     return pack;
@@ -171,9 +173,9 @@ pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shar
 
     s.erase(s.find('\n'));
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->getUserManager().getName() == s) {
+        if ((*it)->_um.getName() == s) {
             auto dest = (*it)->getSocket();
-            s = currentClient.getUserManager().getName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + std::to_string(inc->local_endpoint().port()) + "\n";
+            s = currentClient._um.getName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + std::to_string(inc->local_endpoint().port()) + "\n";
             CommandsManager::createPacket(*pack, dest, 203, s);
             CommandsManager::createPacket(*pack, currentClient.getSocket(), 666, "");
             return pack;
@@ -185,17 +187,17 @@ pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shar
 
 pck_list *CommandsManager::acceptInvitation(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, ClientManager &currentClient)
 {
-    auto name = currentClient.getUserManager().getName();
+    auto name = currentClient._um.getName();
     std::string res = pck.data.data();
     std::string own;
     pck_list *pack = new pck_list;
 
     res.erase(res.find('\n'));
-    currentClient.getUserManager().getContactManager().addContact(res, name);
+    currentClient._um.getContactManager().addContact(res, name);
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->getUserManager().getName() == res) {
+        if ((*it)->_um.getName() == res) {
             auto dest = (*it)->getSocket();
-            own = currentClient.getUserManager().getName() + "\n";
+            own = currentClient._um.getName() + "\n";
             CommandsManager::createPacket(*pack, dest, 302, own);
             CommandsManager::createPacket(*pack, currentClient.getSocket(), 666, "");
             return pack;

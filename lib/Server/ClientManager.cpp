@@ -20,7 +20,7 @@ ClientManager::~ClientManager()
 {
 }
 
-UserManager ClientManager::getUserManager() const
+UserManager ClientManager::getUserManager()
 {
 	return _um;
 }
@@ -35,15 +35,26 @@ packet_t ClientManager::getPacket() const
 	return _packet;
 }
 
-void ClientManager::setPacket(const packet_t &packet)
+void ClientManager::setPacket(const packet_t *packet)
 {
-	_packet.code = packet.code;
-	_packet.data = packet.data;
-	_packet.data_size = packet.data_size;
-	_packet.magic = packet.magic;
+	//std::cout << *packet << std::endl;
+	_packet.code = packet->code;
+	_packet.data = packet->data;
+	_packet.data_size = packet->data_size;
+	_packet.magic = packet->magic;
+	//std::cout << _packet << std::endl;
 }
 
 void ClientManager::setPacketData(const std::array<char, 2048> &data)
 {
 	_packet.data = data;
+}
+
+std::ostream &operator<<(std::ostream &os, const packet_t &pck) {
+	os << "------PACKET------" << std::endl;
+	os << "packet.code : " << pck.code << std::endl;
+	os << "packet.magic : " << pck.magic << std::endl;
+	os << "packet.data_size : " << pck.data_size << std::endl;
+	os << "packet.data : " << pck.data.data() << std::endl;
+	return os;
 }

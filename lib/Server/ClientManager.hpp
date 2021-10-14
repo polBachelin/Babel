@@ -32,15 +32,17 @@ class ClientManager {
 		ClientManager(std::shared_ptr<asio::ip::tcp::socket> socket);
 		~ClientManager();
 
-		UserManager getUserManager() const;
+		UserManager getUserManager();
 		std::shared_ptr<asio::ip::tcp::socket> getSocket() const;
 		packet_t getPacket() const;
-		void setPacket(const packet_t &packet);
+		void setPacket(const packet_t *packet);
 		void setPacketData(const std::array<char, 2048> &data);
+
+		UserManager _um;
 	private:
 		std::shared_ptr<asio::ip::tcp::socket> _userSocket;
-		UserManager _um;
 		packet_t _packet;
 };
 
+std::ostream &operator<<(std::ostream &os, const packet_t &pck);
 #endif /* !PACKETMANAGER_HPP_ */
