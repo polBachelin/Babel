@@ -32,8 +32,8 @@ int main(int ac, char **av)
             std::cout << "Port : " << av[1] << std::endl;
             serv->initServer(std::atoi(av[1]));
         }
-        serv->acceptConnection();
-        serv->run();
+        //serv->acceptConnection();
+        //serv->run();
     }
     return 0;
 }

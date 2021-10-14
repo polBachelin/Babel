@@ -51,6 +51,7 @@ void AsioTcpServer::initServer(int port)
 {
     _io = std::make_shared<asio::io_context>();
     _port = port;
+    std::cout << "init server\n";
     _acceptor = std::make_unique<asio::ip::tcp::acceptor>(*_io.get(), asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port));
     _acceptor->set_option(asio::ip::tcp::acceptor::reuse_address(true));
     printLocalAdress();
@@ -61,7 +62,7 @@ void AsioTcpServer::handleAccept(std::shared_ptr<AAsioTcpConnection> new_connect
     if (!error) {
         new_connection->start();
     }
-    AsioTcpServer::acceptConnection();
+    acceptConnection();
     if (error)
         std::cerr << error.message() << std::endl;
 }
