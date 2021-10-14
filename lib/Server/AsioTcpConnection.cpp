@@ -7,19 +7,16 @@
 
 #include "AsioTcpConnection.hpp"
 
-AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
-    : _list(list)
+AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &list)
 {
     _socket = std::make_shared<asio::ip::tcp::socket>(io_context);
+    _clientManager = std::make_shared<ClientManager>(_socket);
+    _clients = list;
     _buffer.fill(0);
-    _packet.code = 84;
-    _packet.magic = 0;
-    _packet.data_size = 0;
-    _packet.data.fill(0);
 }
 
 AsioTcpConnection::AsioTcpConnection(const AsioTcpConnection &ref)
-    : std::enable_shared_from_this<AsioTcpConnection>(), _packet(ref._packet), _list(ref._list)
+    : std::enable_shared_from_this<AsioTcpConnection>()
 {
     _socket = ref._socket;
 }
@@ -29,18 +26,24 @@ AsioTcpConnection::~AsioTcpConnection()
     _socket->close();
 }
 
+std::shared_ptr<asio::ip::tcp::socket> AsioTcpConnection::getSocket() const
+{
+    return _socket;
+}
+
 void AsioTcpConnection::start()
 {
     std::cout << "STARTING A NEW TCP CONNECTION\n";
-    // asio::async_write(_socket, asio::buffer(_message),
-    //     std::bind(&tcp_connection::handle_write, shared_from_this(), std::placeholders::_1, std::placeholders::_2));
+
     auto handler = std::bind(&AsioTcpConnection::handleReadHeader, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
     _socket->async_read_some(asio::buffer(_buffer, sizeof(packet_info_t)), handler);
 }
 
 void AsioTcpConnection::interpret()
 {
-    pck_list *res = Commands::redirect(std::make_shared<AsioTcpConnection>(*this), _packet, _list);
+    pck_list *res = CommandsManager::redirect(_clientManager->getPacket(), _clients, *_clientManager.get());
+    if (!res)
+        return;
     for (auto it = res->begin(); it != res->end(); it++) {
         std::cout << "interpret " << it->first->is_open() << std::endl;
         auto tmp = it->second;
@@ -56,11 +59,6 @@ void AsioTcpConnection::interpret()
     }
 }
 
-std::shared_ptr<AAsioTcpConnection> AsioTcpConnection::create(asio::io_context& io_context, std::deque<std::shared_ptr<AAsioTcpConnection>> &list)
-{
-    return std::make_shared<AsioTcpConnection>(io_context, list);
-}
-
 void AsioTcpConnection::handleWrite(const asio::error_code &e, size_t size)
 {
     if (e || size == 0) {
@@ -72,17 +70,16 @@ void AsioTcpConnection::handleWrite(const asio::error_code &e, size_t size)
 void AsioTcpConnection::handleReadHeader(const asio::error_code &e, std::size_t size)
 {
     if (size > 0 && !e) {
-        _packet = *(packet_t *)_buffer.data();
+        _clientManager->setPacket(*(packet_t *)_buffer.data());
         auto handler = std::bind(&AsioTcpConnection::handleReadData, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
-        _socket->async_read_some(asio::buffer(_buffer, _packet.data_size), handler);
+        _socket->async_read_some(asio::buffer(_buffer, _clientManager->getPacket().data_size), handler);
         return;
     } else if (e) {
         if (e == asio::error::eof) {
             _socket->close();
-            delete this;
             return;
         }
-        std::cout << "An error occur " << e.message() << std::endl;
+        std::cout << "An error occurred " << e.message() << std::endl;
     }
     _buffer.fill(0);
     auto handler = std::bind(&AsioTcpConnection::handleReadHeader, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
@@ -92,7 +89,7 @@ void AsioTcpConnection::handleReadHeader(const asio::error_code &e, std::size_t 
 void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t size)
 {
     if (size > 0 && !e) {
-        _packet.data = _buffer;
+        _clientManager->setPacketData(_buffer);
         interpret();
         _buffer.fill(0);
         auto handler = std::bind(&AsioTcpConnection::handleReadHeader, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
@@ -111,32 +108,7 @@ void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t si
     _socket->async_read_some(asio::buffer(_buffer, sizeof(packet_info_t)), handler);
 }
 
-const std::shared_ptr<asio::ip::tcp::socket> AsioTcpConnection::getSocket() const
+std::shared_ptr<ClientManager> AsioTcpConnection::getClientManager() const
 {
-    return _socket;
-}
-
-const std::string &AsioTcpConnection::getUserName() const
-{
-    return _um.GetName();
-}
-
-const std::string &AsioTcpConnection::getUserContactList() const
-{
-    return _um.GetContactManager().getContactList(_um.GetName());
-}
-
-int AsioTcpConnection::Login(const std::string &name, const std::string &passwd)
-{
-    return _um.login(name, passwd);
-}
-
-int AsioTcpConnection::NewUser(const std::string &name, const std::string &passwd)
-{
-    return _um.new_user(name, passwd);
-}
-
-void AsioTcpConnection::addContact(const std::string &new_c, const std::string &your_name)
-{
-    return _um.GetContactManager().addContact(new_c, your_name);
+    return _clientManager;
 }

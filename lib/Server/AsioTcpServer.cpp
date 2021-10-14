@@ -23,9 +23,9 @@ void AsioTcpServer::run()
 
 void AsioTcpServer::acceptConnection()
 {
-    std::shared_ptr<AAsioTcpConnection> new_connection = std::make_shared<AsioTcpConnection>(*_io.get(), _clients);
+    std::shared_ptr<AsioTcpConnection> new_connection = std::make_shared<AsioTcpConnection>(*_io.get(), _clients);
 
-    _clients.push_back(new_connection);
+    _clients.push_back(new_connection->getClientManager());
     _acceptor->async_accept(*new_connection->getSocket(),
         std::bind(&AsioTcpServer::handleAccept, this, new_connection, std::placeholders::_1));
 }
@@ -56,7 +56,7 @@ void AsioTcpServer::initServer(int port)
     printLocalAdress();
 }
 
-void AsioTcpServer::handleAccept(std::shared_ptr<AAsioTcpConnection> new_connection, const asio::error_code& error)
+void AsioTcpServer::handleAccept(std::shared_ptr<AsioTcpConnection> new_connection, const asio::error_code& error)
 {
     if (!error) {
         new_connection->start();
@@ -66,7 +66,7 @@ void AsioTcpServer::handleAccept(std::shared_ptr<AAsioTcpConnection> new_connect
         std::cerr << error.message() << std::endl;
 }
 
-std::deque<std::shared_ptr<AAsioTcpConnection>> &AsioTcpServer::getClientList()
+std::deque<std::shared_ptr<ClientManager>> &AsioTcpServer::getClientList()
 {
     return _clients;
 }

@@ -8,34 +8,29 @@
 #ifndef ASIOTCPCONNECTION_HPP_
 #define ASIOTCPCONNECTION_HPP_
 
-#include "Commands.hpp"
+#include "CommandsManager.hpp"
+#include "ITcpConnection.hpp"
 
-class AsioTcpConnection : public std::enable_shared_from_this<AsioTcpConnection>, public AAsioTcpConnection {
+
+class AsioTcpConnection : public std::enable_shared_from_this<AsioTcpConnection>, public ITcpConnection {
     public:
-        AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<AAsioTcpConnection>> &);
+        AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &);
         AsioTcpConnection(const AsioTcpConnection &);
-        ~AsioTcpConnection();
-        static std::shared_ptr<AAsioTcpConnection> create(asio::io_context& io_context, std::deque<std::shared_ptr<AAsioTcpConnection>> &);
-        
+        ~AsioTcpConnection();        
         void start() override;
 
         void handleWrite(const asio::error_code& /*error*/, size_t /*bytes_transferred*/);
         void handleReadHeader(const asio::error_code &, std::size_t);
         void handleReadData(const asio::error_code &, std::size_t);
+
+        std::shared_ptr<asio::ip::tcp::socket> getSocket() const;
+        std::shared_ptr<ClientManager> getClientManager() const;
         void interpret();
-        
-        const std::shared_ptr<asio::ip::tcp::socket> getSocket() const;
-        const std::string &getUserName() const;
-        const std::string &getUserContactList() const;
-        
-        int Login(const std::string &, const std::string &);
-        int NewUser(const std::string &, const std::string &);
-        void addContact(const std::string &new_c, const std::string &your_name);
     private:
-        std::string _message;
-        packet_t _packet;
         std::array<char, 2048> _buffer;
-        std::deque<std::shared_ptr<AAsioTcpConnection>> _list;
+        std::shared_ptr<asio::ip::tcp::socket> _socket;
+        std::shared_ptr<ClientManager> _clientManager;
+        std::deque<std::shared_ptr<ClientManager>> _clients;
 };
 
 #endif /* !ASIOTCPCONNECTION_HPP_ */

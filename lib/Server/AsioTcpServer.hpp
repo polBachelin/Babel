@@ -19,13 +19,13 @@ class AsioTcpServer : public ITcpServer {
         void initServer(int port) override;
         void run() override;
         void printLocalAdress();
-        void handleAccept(std::shared_ptr<AAsioTcpConnection> new_connection, const asio::error_code& error);
-        std::deque<std::shared_ptr<AAsioTcpConnection>> &getClientList();
+        void handleAccept(std::shared_ptr<AsioTcpConnection> new_connection, const asio::error_code& error);
+        std::deque<std::shared_ptr<ClientManager>> &getClientList();
     private:
         std::shared_ptr<asio::io_context> _io;
         int _port = 0;
         std::unique_ptr<asio::ip::tcp::acceptor> _acceptor;
-        std::deque<std::shared_ptr<AAsioTcpConnection>> _clients;
+        std::deque<std::shared_ptr<ClientManager>> _clients;
 
 };
 
