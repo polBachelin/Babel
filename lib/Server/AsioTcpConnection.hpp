@@ -11,7 +11,6 @@
 #include "CommandsManager.hpp"
 #include "ITcpConnection.hpp"
 
-
 class AsioTcpConnection : public std::enable_shared_from_this<AsioTcpConnection>, public ITcpConnection {
     public:
         AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &);
