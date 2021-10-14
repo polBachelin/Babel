@@ -38,7 +38,7 @@ void ContactManager::addContact(const std::string &new_c)
         _db.insert(_tableName, "NAME, FRIEND", "\'" +  _myName + "\', \'" + new_c + "\'");
 }
 
-const std::string &ContactManager::getContactList()
+std::string ContactManager::getContactList()
 {
     auto tmp = _db.custom("SELECT * FROM " + _tableName + " WHERE NAME=\'" + _myName + "\' OR FRIEND=\'" +_myName + "\'");
     std::string res; 
@@ -56,7 +56,7 @@ const std::string &ContactManager::getContactList()
     return res;
 }
 
-const std::string &ContactManager::getContactList(const std::string &your_name)
+std::string ContactManager::getContactList(const std::string &your_name)
 {
     auto tmp = _db.custom("SELECT * FROM " + _tableName + " WHERE NAME=\'" + your_name + "\' OR FRIEND=\'" + your_name + "\'");
     std::string res; 

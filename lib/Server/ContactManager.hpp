@@ -18,8 +18,8 @@ class ContactManager {
         void addContact(const std::string &new_c, const std::string &your_name);
         void addContact(const std::string &new_c);
         void setName(const std::string &);
-        const std::string &getContactList();
-        const std::string &getContactList(const std::string &your_name);
+        std::string getContactList();
+        std::string getContactList(const std::string &your_name);
     protected:
     private:
         Database _db;
