@@ -46,7 +46,7 @@ void AsioTcpConnection::start()
 
 void AsioTcpConnection::interpret()
 {
-    pck_list *res = CommandsManager::redirect(_clientManager->getPacket(), _clients, *_clientManager.get());
+    pck_list *res = CommandsManager::redirect(_clientManager->getPacket(), _clients, _clientManager);
     if (!res)
         return;
     for (auto it = res->begin(); it != res->end(); it++) {
