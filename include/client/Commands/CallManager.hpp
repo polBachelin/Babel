@@ -16,7 +16,8 @@
 #include <memory>
 #include <ctime>
 #include <cstring>
-
+#include <netinet/in.h>
+#include <sys/types.h>
 
 namespace Client
 {
@@ -31,7 +32,7 @@ namespace Client
                 ~CallManager();
                  //TODO: paramètre input compressé
                 void connectToHost(const std::string &ip);
-                Client::Network::audioPacket_t createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time);
+                unsigned char *createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time);
                 void beginCall();
                 void endCall();
 
@@ -40,7 +41,6 @@ namespace Client
             public slots:
                 void sendAudioData();
                 void onReadAudioData();
-
 
             private:
                 std::unique_ptr<Client::Network::UDPClient> _udpClient;

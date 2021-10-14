@@ -12,7 +12,7 @@ using namespace Client::Network;
 QDataStream& operator <<(QDataStream& out,packetUDP_t &packet)
 {
     out << QString::fromStdString(packet.host)
-        << QByteArray(packet.data, sizeof(packet.data))
+        << QByteArray((const char *)packet.data, sizeof(packet.data))
         << (qint16)packet.port;
     return out;
 }
@@ -42,7 +42,7 @@ void UDPClient::send(const packetUDP_t &packet)
     std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
     QHostAddress address;
     address.setAddress(QString::fromStdString(packet.host));
-    buf.append(packet.data);
+    buf.append((const char *)packet.data);
     _socket->writeDatagram(buf, address, packet.port);
 }
 
@@ -65,16 +65,25 @@ void UDPClient::onReadyRead()
     datagram.resize(_socket->pendingDatagramSize());
     QDataStream in(&datagram, QIODevice::ReadOnly);
 
-    _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
-
+    int bytesRead = _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+    if (bytesRead == -1) {
+        std::cerr << "Could not read datagram" << std::endl;
+        new_packet.host = "";
+        new_packet.port = 0;
+        new_packet.data = nullptr;
+        new_packet.dataSize = 0;
+        return;
+    }
     new_packet.host = sender.toString().toStdString();
     new_packet.port = senderPort;
-    new_packet.data = datagram.data();
+    new_packet.data = (unsigned char *)datagram.data();
+    new_packet.dataSize = bytesRead;
 
     qDebug() << "Message from: " << QString::fromStdString(new_packet.host);
     qDebug() << "Message port: " << QString::fromStdString(std::to_string(new_packet.port));
-    qDebug() << "Message: " << QString::fromStdString(std::string(new_packet.data));
-
+    qDebug() << "Message: " << QString::fromStdString(std::string((char *)new_packet.data));
+    qDebug() << "Data Size: " << QString::fromStdString(std::to_string(new_packet.dataSize));
+    
     _data.push(new_packet);
     emit getDataFromUDP();
 }
