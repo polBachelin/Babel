@@ -13,30 +13,28 @@
 //     {
 //         return std::make_shared<AsioTcpServer>();
 //     }
-// 
+//
 
 AsioTcpServer::AsioTcpServer()
 {
-    _runThread = std::make_unique<std::thread>(&AsioTcpServer::listen, this);
 }
 
 AsioTcpServer::~AsioTcpServer()
 {
     _runThread->join();
-    pthread_kill(_runThread->native_handle(), SIGINT);
+    _io->stop();
 }
 
 void AsioTcpServer::listen()
 {
-    _mtx.lock();
     if (_io)
         _io->run();
-    _mtx.unlock();
 }
 
 void AsioTcpServer::run()
 {
-    std::cout << "salut" << std::endl;
+    _runThread = std::make_unique<std::thread>(&AsioTcpServer::listen, this);
+    for (;;);
 }
 
 void AsioTcpServer::acceptConnection()
