@@ -15,10 +15,28 @@
 //     }
 // 
 
-void AsioTcpServer::run()
+AsioTcpServer::AsioTcpServer()
 {
+    _runThread = std::make_unique<std::thread>(&AsioTcpServer::listen, this);
+}
+
+AsioTcpServer::~AsioTcpServer()
+{
+    _runThread->join();
+    pthread_kill(_runThread->native_handle(), SIGINT);
+}
+
+void AsioTcpServer::listen()
+{
+    _mtx.lock();
     if (_io)
         _io->run();
+    _mtx.unlock();
+}
+
+void AsioTcpServer::run()
+{
+    std::cout << "salut" << std::endl;
 }
 
 void AsioTcpServer::acceptConnection()
