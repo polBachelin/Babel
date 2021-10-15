@@ -7,16 +7,15 @@
 
 #include "AsioTcpConnection.hpp"
 
-AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &list)
+AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &list) : _clients(list)
 {
     _socket = std::make_shared<asio::ip::tcp::socket>(io_context);
     _clientManager = std::make_shared<ClientManager>(_socket);
-    _clients = list;
     _buffer.fill(0);
 }
 
 AsioTcpConnection::AsioTcpConnection(const AsioTcpConnection &ref)
-    : std::enable_shared_from_this<AsioTcpConnection>()
+    : std::enable_shared_from_this<AsioTcpConnection>(), _clients(ref._clients)
 {
     _socket = ref._socket;
 }
@@ -45,7 +44,6 @@ void AsioTcpConnection::interpret()
     if (!res)
         return;
     for (auto it = res->begin(); it != res->end(); it++) {
-        std::cout << "interpret " << it->first->is_open() << std::endl;
         auto tmp = it->second;
         if (tmp && tmp->code != 666) {
             std::cout << "---------Sent------------" << std::endl;
@@ -91,7 +89,6 @@ void AsioTcpConnection::handleReadHeader(const asio::error_code &e, std::size_t 
 void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t size)
 {
     if (size > 0 && !e) {
-        std::cout << "set packet data -- " << _buffer.data() << std::endl;
         _clientManager->setPacketData(_buffer);
         interpret();
         auto handler = std::bind(&AsioTcpConnection::handleReadHeader, shared_from_this(), std::placeholders::_1, std::placeholders::_2);

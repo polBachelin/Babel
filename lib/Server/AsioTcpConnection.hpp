@@ -29,7 +29,7 @@ class AsioTcpConnection : public std::enable_shared_from_this<AsioTcpConnection>
         std::array<char, 2048> _buffer;
         std::shared_ptr<asio::ip::tcp::socket> _socket;
         std::shared_ptr<ClientManager> _clientManager;
-        std::deque<std::shared_ptr<ClientManager>> _clients;
+        std::deque<std::shared_ptr<ClientManager>> &_clients;
 };
 
 #endif /* !ASIOTCPCONNECTION_HPP_ */
