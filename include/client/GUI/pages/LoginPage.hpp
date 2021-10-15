@@ -18,7 +18,7 @@ class LoginPage : public APage
     Q_OBJECT
 
     public:
-        LoginPage(ClientInfos infos, QWidget *parent = nullptr);
+        LoginPage(ClientInfos_t infos, QWidget *parent = nullptr);
         ~LoginPage() = default;
 
         // member functions
@@ -34,8 +34,8 @@ class LoginPage : public APage
         void btnLoader();
 
     public slots:
-        void validSignIn(ClientInfos);
-        void wrongSignIn(ClientInfos);
+        void validSignIn(ClientInfos_t);
+        void wrongSignIn(ClientInfos_t);
         void changeWidth(int width);
         void changeUsername(QString);
         void changePassword(QString);

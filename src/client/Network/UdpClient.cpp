@@ -68,7 +68,7 @@ void UDPClient::onReadyRead()
     int bytesRead = _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
     if (bytesRead == -1) {
         std::cerr << "Could not read datagram" << std::endl;
-        new_packet.host = "";
+        new_packet.host = "NULL";
         new_packet.port = 0;
         new_packet.data = nullptr;
         new_packet.dataSize = 0;

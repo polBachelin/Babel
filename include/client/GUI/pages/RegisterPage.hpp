@@ -18,7 +18,7 @@ class RegisterPage : public APage
     Q_OBJECT
 
     public:
-        RegisterPage(ClientInfos infos, QWidget *parent = nullptr);
+        RegisterPage(ClientInfos_t infos, QWidget *parent = nullptr);
         ~RegisterPage() = default;
 
         // member functions
@@ -34,8 +34,8 @@ class RegisterPage : public APage
         void btnLoader();
 
     public slots:
-        void validRegister(ClientInfos);
-        void wrongRegister(ClientInfos);
+        void validRegister(ClientInfos_t);
+        void wrongRegister(ClientInfos_t);
         void changeWidth(int width);
         void changeUsername(QString);
         void changePassword(QString);

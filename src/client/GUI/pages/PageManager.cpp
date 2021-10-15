@@ -9,19 +9,16 @@
 
 using namespace Client::GUI;
 
-PageManager::PageManager(QWidget *parent, ClientInfos &infos) : _parent(parent), _infos(infos)
+PageManager::PageManager(QWidget *parent, ClientInfos_t &infos) : _parent(parent), _infos(infos)
 {
-
     this->addPage(LOGIN);
     this->addPage(REGISTER);
     this->addPage(CONTACTS);
     this->addPage(CALL);
-    std::cout << "Page manager created" << std::endl;
 }
 
 Client::GUI::PageManager::~PageManager()
 {
-    std::cout << "PageManager détruit" << std::endl;
 }
 
 void PageManager::addPage(pageNames name)
@@ -46,12 +43,11 @@ void PageManager::addPage(pageNames name)
     this->addWidget(getPage(name));
 }
 
-void PageManager::setCurrentPage(pageNames name, ClientInfos info)
+void PageManager::setCurrentPage(pageNames name, ClientInfos_t info)
 {
     APage *page = getPage(name);
 
-    std::cout << "USERNAME page = " << info.username << std::endl;
-    page->setClientInfos(info);
+    page->setClientInfos_t(info);
     page->onPage();
     this->setCurrentWidget(page);
 }

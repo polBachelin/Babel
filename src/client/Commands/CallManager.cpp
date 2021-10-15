@@ -9,7 +9,7 @@
 
 using namespace Client::Managers;
 
-CallManager::CallManager(const std::string &myIp) : QObject()
+CallManager::CallManager(const std::string &myIp, const unsigned short audioPort) : QObject(), _myIp(myIp), _audioPort(audioPort)
 {
     _udpClient = std::make_unique<Client::Network::UDPClient>();
     _soundManager = std::make_shared<PortAudioManager>();
@@ -30,6 +30,11 @@ CallManager::CallManager(const std::string &myIp) : QObject()
 
 CallManager::~CallManager()
 {
+}
+
+void CallManager::addPair(const std::string &ip)
+{
+    _pairs[ip] = std::time_t(NULL);
 }
 
 unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
@@ -59,6 +64,7 @@ void CallManager::sendAudioData()
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
 
     dataPacket.port = _audioPort;
+    dataPacket.data = audioPacket;
     dataPacket.data = audioPacket;
     dataPacket.host = _myIp;
 
@@ -116,6 +122,7 @@ void CallManager::endCall()
 {
     this->_inCall = false;
     this->_udpClient->disconnect();
+    _pairs.clear();
     //TODO: disable audio ????
 
     QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData));

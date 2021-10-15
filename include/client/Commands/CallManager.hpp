@@ -29,7 +29,7 @@ namespace Client
             Q_OBJECT
 
             public:
-                CallManager(const std::string &myIp);
+                CallManager(const std::string &myIp, const unsigned short audioPort);
                 ~CallManager();
                 void connectToHost();
                 void addPair(const std::string &ip);
@@ -47,9 +47,9 @@ namespace Client
                 std::unique_ptr<Client::Network::UDPClient> _udpClient;
                 callers_t _pairs;
                 const int _magicNum = 1234;
-                const unsigned short _audioPort = 6000;
                 std::string _contactIp;
                 const std::string _myIp;
+                const unsigned short _audioPort;
                 bool _inCall = false;
                 float *_inputBuffer;
                 float *_outputBuffer;

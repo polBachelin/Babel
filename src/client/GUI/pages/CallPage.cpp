@@ -7,14 +7,15 @@
 
 #include "CallPage.hpp"
 
-Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(infos, parent), _callManager(infos.ip)
+Client::GUI::CallPage::CallPage(ClientInfos_t infos, QWidget *parent) : APage(infos, parent)
 {
+    _callManager = std::make_unique<Client::Managers::CallManager>(infos.myIp, infos.audioPort);
     setFixedSize(WIDTH, HEIGHT);
 
-    QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)),
-        this, SLOT(incoming(ClientInfos)));
-    QObject::connect(parent, SIGNAL(callRefused(ClientInfos)),
-        this, SLOT(callWasRefused(ClientInfos)));
+    QObject::connect(parent, SIGNAL(incomingCall(ClientInfos_t)),
+        this, SLOT(incoming(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(callRefused(ClientInfos_t)),
+        this, SLOT(callWasRefused(ClientInfos_t)));
 
     loadPage();
     layoutLoader();
@@ -24,8 +25,9 @@ Client::GUI::CallPage::CallPage(ClientInfos infos, QWidget *parent) : APage(info
 
 void Client::GUI::CallPage::onPage()
 {
+    std::cout << "CALLPAGE = " << _infos << std::endl;
     if (_infos.callHost)
-        _callManager.beginCall();
+        _callManager->beginCall();
     _timer->stop();
     _timer->start();
     _eltimer->restart();
@@ -123,14 +125,14 @@ void Client::GUI::CallPage::layoutLoader()
     _layout->addWidget(_labelLogo.get(), 0, 2, 3, 2);
     _layout->addWidget(_labelPageName.get(), 0, 17, 3, 10);
 
-    inCall();
-    incomingCall();
+    loadInCall_Layout();
+    loadIncomingCall_Layout();
 
     this->setLayout(_layout.get());
     initConnections();
 }
 
-void Client::GUI::CallPage::inCall()
+void Client::GUI::CallPage::loadInCall_Layout()
 {
     _layout->addWidget(_labelProfile.get(), 10, 18, 6, 3);
     _layout->addWidget(_labelTimer.get(), 18, 19, 2, 1);
@@ -142,7 +144,7 @@ void Client::GUI::CallPage::inCall()
     _layout->addWidget(_callOff.get(), 25, 23, 3, 2);
 }
 
-void Client::GUI::CallPage::incomingCall()
+void Client::GUI::CallPage::loadIncomingCall_Layout()
 {
     _layout->addWidget(_labelGif.get(), 8, 17, 10, 5);
     _layout->addWidget(_labelContact.get(), 17, 17, 2, 5);
@@ -214,10 +216,11 @@ void Client::GUI::CallPage::callOff()
     _labelContact->hide();
     _labelGif->hide();
 
+    _callManager->endCall();
     emit changePage(CONTACTS, _infos);
 }
 
-void Client::GUI::CallPage::callWasRefused(ClientInfos info)
+void Client::GUI::CallPage::callWasRefused(ClientInfos_t info)
 {
     callOff();
 }
@@ -240,19 +243,11 @@ void Client::GUI::CallPage::callOn()
     _labelContact->hide();
     _labelGif->hide();
 
-    std::vector<std::string> pairs;
+    std::vector<std::string> words = this->convertCurrentData(_infos.currentData);
 
-    std::cout << "Current Data [" << _infos.currentData << "]";
-    std::replace(_infos.currentData.begin(), _infos.currentData.end(), '\n', ' ');
-    std::istringstream ss(_infos.currentData);
-    std::string word;
-    std::vector<std::string> words;
-
-    while (ss >> word)
-        words.push_back(word);
-    pairs.push_back(words[1]);
-    std::cout << "Accept call from: " << words[2] << ":" << pairs.front() << std::endl;
-    _callManager.connectToHost();
+    std::cout << "Accept call from: " << words[0] << ":" << words[1] << ":" << words[2] << std::endl;
+    _callManager->addPair(words[1]);
+    _callManager->connectToHost();
 }
 
 void Client::GUI::CallPage::updateTimer()
@@ -270,7 +265,7 @@ void Client::GUI::CallPage::updateTimer()
     _labelTimer->setText(time.c_str());
 }
 
-void Client::GUI::CallPage::incoming(ClientInfos info)
+void Client::GUI::CallPage::incoming(ClientInfos_t info)
 {
     _labelProfile->hide();
     _labelTimer->hide();
@@ -283,7 +278,13 @@ void Client::GUI::CallPage::incoming(ClientInfos info)
     _labelContact->show();
     _labelGif->show();
 
+    std::vector<std::string> data = this->convertCurrentData(info.currentData);
+
     _infos.currentData = info.currentData;
+    _infos.callerAudioPort = std::atoi(data[2].c_str());
+    _infos.callerIp = data[1];
+    _infos.userToCall = data[0];
+    std::cout << "CallPage::incoming from : " << _infos.userToCall << ":" << _infos.callerIp << ":" << _infos.callerAudioPort << std::endl;
 }
 
 #include "moc_CallPage.cpp"
