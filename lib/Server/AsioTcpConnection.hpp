@@ -25,11 +25,14 @@ class AsioTcpConnection : public std::enable_shared_from_this<AsioTcpConnection>
         std::shared_ptr<asio::ip::tcp::socket> getSocket() const;
         std::shared_ptr<ClientManager> getClientManager() const;
         void interpret();
+
+        const bool isAlive() const;
     private:
         std::array<char, 2048> _buffer;
         std::shared_ptr<asio::ip::tcp::socket> _socket;
         std::shared_ptr<ClientManager> _clientManager;
         std::deque<std::shared_ptr<ClientManager>> &_clients;
+        bool _isAlive;
 };
 
 #endif /* !ASIOTCPCONNECTION_HPP_ */

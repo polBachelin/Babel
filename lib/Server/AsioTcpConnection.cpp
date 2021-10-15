@@ -12,6 +12,7 @@ AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<st
     _socket = std::make_shared<asio::ip::tcp::socket>(io_context);
     _clientManager = std::make_shared<ClientManager>(_socket);
     _buffer.fill(0);
+    _isAlive = true;
 }
 
 AsioTcpConnection::AsioTcpConnection(const AsioTcpConnection &ref)
@@ -22,7 +23,6 @@ AsioTcpConnection::AsioTcpConnection(const AsioTcpConnection &ref)
 
 AsioTcpConnection::~AsioTcpConnection()
 {
-    _socket->close();
 }
 
 std::shared_ptr<asio::ip::tcp::socket> AsioTcpConnection::getSocket() const
@@ -76,7 +76,7 @@ void AsioTcpConnection::handleReadHeader(const asio::error_code &e, std::size_t 
         return;
     } else if (e) {
         if (e == asio::error::eof) {
-            _socket->close();
+            _isAlive = false;
             return;
         }
         std::cout << "An error occurred " << e.message() << std::endl;
@@ -96,7 +96,7 @@ void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t si
         return;
     } else if (e) {
         if (e == asio::error::eof) {
-            _socket->close();
+            _isAlive = false;
             return;
         }
         std::cout << "An error occur data :" << e.message() << std::endl;
@@ -109,4 +109,9 @@ void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t si
 std::shared_ptr<ClientManager> AsioTcpConnection::getClientManager() const
 {
     return _clientManager;
+}
+
+const bool AsioTcpConnection::isAlive() const
+{
+    return _isAlive;
 }
