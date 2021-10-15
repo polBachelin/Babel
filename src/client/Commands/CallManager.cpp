@@ -33,57 +33,62 @@ CallManager::~CallManager()
 {
 }
 
-Client::Network::audioPacket_t CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
+unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
 {
-    Client::Network::audioPacket_t audioPacket;
+    unsigned char *res = new unsigned char[buffSize + sizeof(time) + sizeof(unsigned char) + sizeof(int)];
+    uintptr_t ptr = reinterpret_cast<uintptr_t >(res);
+    uint32_t networkBuffSize = htonl(buffSize);
+    uint32_t networkTime = htonl(time);
 
-    audioPacket.magicNum = _magicNum;
-    audioPacket.timestamp = time;
-    audioPacket.data = new unsigned char[buffSize];
-    std::memcpy(audioPacket.data, compressedBuff, buffSize);
-    audioPacket.sizeOfData = buffSize;
-    return audioPacket;
+    std::memcpy((void *)ptr, &networkTime, sizeof(time));
+    ptr += sizeof(time);
+    std::memcpy((void *)ptr, &networkBuffSize, sizeof(buffSize));
+    ptr += sizeof(buffSize);
+    std::memcpy((void *)ptr, compressedBuff, buffSize * sizeof(compressedBuff));
+    return res;
 }
 
 void CallManager::sendAudioData()
 {
     Client::Network::packetUDP_t dataPacket;
-    Client::Network::audioPacket_t audioPacket;
-    char *ptr;
+    unsigned char *audioPacket;
     unsigned char *compressedBuffer = new unsigned char[_inputBufferSize];
 
     std::memset(compressedBuffer, 0, _inputBufferSize);
     _soundManager->retrieveInputBytes(_inputBuffer, 480);
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
-    ptr = reinterpret_cast<char *>(&audioPacket);
 
     dataPacket.port = _audioPort;
-    dataPacket.data = ptr;
+    dataPacket.data = audioPacket;
     dataPacket.host = _contactIp;
 
     std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << ":" << compressedSize << std::endl;
     _udpClient->send(dataPacket);
 
     delete [] compressedBuffer;
-    delete [] audioPacket.data;
+    delete [] audioPacket;
 }
 
 void CallManager::onReadAudioData()
 {
 
     Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
-    auto *audioPacket = reinterpret_cast<Client::Network::audioPacket_t *>(dataPacket.data);
+    unsigned char *compressed;
+    uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data);
 
-    if (audioPacket->magicNum != _magicNum) {
-        std::cerr << "OVNI" << std::endl;
-        return;
-    }
     // ? changer la condition pour checker le timestamp
     //if (audioPacket->timestamp < _pairs[dataPacket.host])
         //return;
-    //_pairs[dataPacket.host] = audioPacket->timestamp;
-    _encoderManager->decode(audioPacket->data, _outputBuffer, 480, audioPacket->sizeOfData);
+    std::time_t *timestampPtr = reinterpret_cast<std::time_t *>(ptr);
+    ptr += sizeof(std::time_t);
+    int *buffSizePtr = reinterpret_cast<int *>(ptr);
+    std::time_t timestamp = ntohl(*timestampPtr);
+    (void)timestamp;
+    int buffSize = ntohl(*buffSizePtr);
+    compressed = new unsigned char[buffSize];
+    std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
+    _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
     _soundManager->feedBytesToOutput(_outputBuffer, 480);
 }
 
