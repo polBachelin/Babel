@@ -212,6 +212,8 @@ void Client::GUI::ContactPage::logOut()
     _username = "";
     _labelContactSelected->setText(_contactSelected);
     _call->hide();
+    while (_contactList->count() > 0)
+        _contactList->takeItem(0);
 
     emit changePage(LOGIN, _infos);
 }
@@ -270,6 +272,8 @@ void Client::GUI::ContactPage::fillContactList(ClientInfos info)
     std::istringstream ss(info.currentData);
     std::string word;
 
+    while (_contactList->count() > 0)
+        _contactList->takeItem(0);
     while (ss >> word)
         new QListWidgetItem(tr(word.c_str()), _contactList.get());
         // std::cout << word << "\n";
