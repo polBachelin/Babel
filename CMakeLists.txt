@@ -71,6 +71,7 @@ include_directories(./include/client/Commands/)
 
 set(SRCS_CLI
     src/client/main.cpp
+    src/client/structs.cpp
     src/client/Commands/CommandsFactory.cpp
     src/client/GUI/pages/APage.cpp
     src/client/GUI/pages/LoginPage.cpp
@@ -110,7 +111,7 @@ include_directories(${SERVER_DIR})
 target_link_libraries(${NAME} Babel_Asio)
 target_link_libraries(${NAME_CLI} Babel_Asio)
 
-#Compilation 
+#Compilation
 if(CMAKE_COMPILER_IS_GNUCXX)
     message(STATUS "GCC detected, adding compile flags")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -Wall -Wextra")

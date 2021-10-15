@@ -9,6 +9,7 @@
 #define STRUCTS_HPP
 
 #include <string>
+#include <iostream>
 
 #define MAGIC 388474
 
@@ -30,6 +31,8 @@ namespace Client {
         int data_size;
         char data[2048] = {0};
     } packet_t;
+
+    std::ostream &operator<<(std::ostream &, const Client::packet_t &);
 
 }
 

@@ -109,6 +109,4 @@ class APage : public QWidget
 }
 }
 
-std::ostream &operator<<(std::ostream &, const Client::packet_t &);
-
 #endif /* !APAGE_HPP_ */
