@@ -86,10 +86,14 @@ void CallManager::onReadAudioData()
     std::time_t timestamp = ntohl(*timestampPtr);
     (void)timestamp;
     int buffSize = ntohl(*buffSizePtr);
-    compressed = new unsigned char[buffSize];
-    std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
-    _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
-    _soundManager->feedBytesToOutput(_outputBuffer, 480);
+    std::cout << "-----READING AUDIO DATA----\n";
+    std::cout << "BuffSize : " << buffSize << std::endl;
+    std::cout << "---------------------------\n";
+    //compressed = new unsigned char[buffSize];
+    //std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
+
+    // _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
+    // _soundManager->feedBytesToOutput(_outputBuffer, 480);
 }
 
 void CallManager::connectToHost(const std::string &ip)
