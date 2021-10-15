@@ -37,12 +37,10 @@ packet_t ClientManager::getPacket() const
 
 void ClientManager::setPacket(const packet_t *packet)
 {
-	//std::cout << *packet << std::endl;
 	_packet.code = packet->code;
 	_packet.data = packet->data;
 	_packet.data_size = packet->data_size;
 	_packet.magic = packet->magic;
-	//std::cout << _packet << std::endl;
 }
 
 void ClientManager::setPacketData(const std::array<char, 2048> &data)

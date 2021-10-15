@@ -20,7 +20,7 @@ namespace Client
         typedef struct audioPacket
         {
             unsigned short magicNum;
-            unsigned char *data;
+            unsigned char *audioData;
             unsigned short sizeOfData;
             std::time_t timestamp;
         } audioPacket_t;
@@ -28,8 +28,9 @@ namespace Client
 
         typedef struct packetUDP
         {
-            char *data;
+            unsigned char *data;
             std::string host;
+            int dataSize;
             unsigned short port;
         } packetUDP_t;
 
