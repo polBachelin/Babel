@@ -20,11 +20,8 @@ char *createBuffer(ClientInfos info, GUI::signal_e e, std::string data)
 	strcpy(package.data, data.c_str());
 
 	std::cout << "------------J'ai Envoyé----------------" << std::endl;
-	std::cout << "Magic = " << package.magic << std::endl;
-	std::cout << "Code  = " << package.code << std::endl;
-	std::cout << "size  = " << package.data_size << std::endl;
-	std::cout << "data  = " << package.data << std::endl;
-    std::cout << "---------------------------------------" << std::endl;
+	std::cout << package;
+	std::cout << "---------------------------------------" << std::endl;
 
 	memcpy(buffTemp, &package, sizeof(package));
 	return buffTemp;

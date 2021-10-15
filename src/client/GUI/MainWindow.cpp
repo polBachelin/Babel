@@ -75,25 +75,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::signalReceivedLoader()
 {
-    _signalPageMap[100] = [&](ClientInfos info){
+    _signalPageMap[EloginSuccessful] = [&](ClientInfos info){
         emit MainWindow::validSignInResponse(info);};
-    _signalPageMap[200] = [&](ClientInfos info){
+    _signalPageMap[EloginFailed] = [&](ClientInfos info){
         emit MainWindow::wrongSignInResponse(info);};
-    _signalPageMap[101] = [&](ClientInfos info){
+    _signalPageMap[EregisterSuccessful] = [&](ClientInfos info){
         emit MainWindow::validRegisterResponse(info);};
-    _signalPageMap[201] = [&](ClientInfos info){
+    _signalPageMap[EregisterFailed] = [&](ClientInfos info){
         emit MainWindow::wrongRegisterResponse(info);};
-    _signalPageMap[303] = [&](ClientInfos info){
+    _signalPageMap[EincomingCall] = [&](ClientInfos info){
         emit MainWindow::incomingCall(info);};
-    _signalPageMap[12] = [&](ClientInfos info){
+    _signalPageMap[EinvitationReceive] = [&](ClientInfos info){
         emit MainWindow::invitationContactReceived(info);};
-    _signalPageMap[102] = [&](ClientInfos info){
+    _signalPageMap[EcontactExist] = [&](ClientInfos info){
         emit MainWindow::contactAddSuccess(info);};
-    _signalPageMap[202] = [&](ClientInfos info){
+    _signalPageMap[EcontactAddFailed] = [&](ClientInfos info){
         emit MainWindow::contactAddFailed(info);};
-    _signalPageMap[203] = [&](ClientInfos info){
+    _signalPageMap[EcallWasRefused] = [&](ClientInfos info){
         emit MainWindow::callRefused(info);};
-    _signalPageMap[4] = [&](ClientInfos info){
+    _signalPageMap[EcontactList] = [&](ClientInfos info){
         emit MainWindow::contactList(info);};
 }
 
@@ -106,21 +106,18 @@ void MainWindow::receivedSomething(QByteArray msg)
         return;
     }
     std::cout << "------------- J'ai reçu ---------------" << std::endl;
-    std::cout << "Magic = " << package->magic << std::endl;
-    std::cout << "Code  = " << package->code << std::endl;
-    std::cout << "size  = " << package->data_size << std::endl;
-    std::cout << "data  = " << package->data << std::endl;
+    std::cout << *package;
     std::cout << "---------------------------------------" << std::endl;
 
     std::string test(package->data);
     _infos.username = test;
     _infos.currentData = package->data;
 
-    if (_signalPageMap.find(package->code) == _signalPageMap.end()) {
+    if (_signalPageMap.find((receivedSignal_e)package->code) == _signalPageMap.end()) {
         std::cout << "got an unknown code : " << package->code << std::endl;
     } else {
         std::cout << "got a code : " << package->code << std::endl;
-        _signalPageMap.at(package->code)(_infos);
+        _signalPageMap.at((receivedSignal_e)package->code)(_infos);
     }
 }
 
@@ -140,9 +137,6 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
         _infos.password = infos.password;
     }
 
-    // std::cout << "ip         = " << infos.ip << std::endl;
-    // std::cout << "userToCall = " << infos.userToCall << std::endl;
-    // std::cout << "data       = " << infos.currentData << std::endl;
     _tcpClient.send(QBta);
 }
 

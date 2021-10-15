@@ -47,23 +47,38 @@ namespace Client {
 namespace GUI {
 
     enum pageNames
-        {
-            LOGIN,
-            REGISTER,
-            CONTACTS,
-            CALL
-        };
+    {
+        LOGIN,
+        REGISTER,
+        CONTACTS,
+        CALL
+    };
 
     enum signal_e
-        {
-            Elogin = 0,
-            Eregister = 1,
-            Eaddcontact = 2,
-            Eacceptinvitation = 112,
-            EcallX = 3,
-            Erefuseincomingcall = 203,
-            Easkcontactlist = 4
-        };
+    {
+        Elogin = 0,
+        Eregister = 1,
+        Eaddcontact = 2,
+        Eacceptinvitation = 112,
+        EcallX = 3,
+        Erefuseincomingcall = 203,
+        Easkcontactlist = 4
+    };
+
+    enum receivedSignal_e
+    {
+        EloginSuccessful = 100,
+        EloginFailed = 200,
+        EregisterSuccessful = 101,
+        EregisterFailed = 201,
+        EinvitationReceive = 12,
+        EcontactExist = 102,
+        EcontactAddFailed = 202,
+        EincomingCall = 303,
+        EUserForCallNotFound = 603,
+        EcallWasRefused = 203,
+        EcontactList = 4
+    };
 
 class APage : public QWidget
 {
@@ -90,7 +105,10 @@ class APage : public QWidget
         ClientInfos _infos;
 };
 
+
 }
 }
+
+std::ostream &operator<<(std::ostream &, const Client::packet_t &);
 
 #endif /* !APAGE_HPP_ */
