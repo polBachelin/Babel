@@ -12,7 +12,7 @@
 
 using namespace Client::GUI;
 
-std::map<std::size_t, std::string> errSockMap = {
+static const std::map<std::size_t, std::string> errSockMap = {
     {0, "!! ConnectionRefused Error !!"},
     {1, "!! RemoteHostClosed Error !!"},
     {2, "!! HostNotFound Error !!"},
@@ -142,7 +142,7 @@ void MainWindow::checkSignal(ClientInfos infos, signal_e e)
 
 void MainWindow::gotError(QAbstractSocket::SocketError err)
 {
-    std::cout << errSockMap[err] << std::endl;
+    std::cout << errSockMap.at(err) << std::endl;
 }
 
 void MainWindow::initConnections(void)

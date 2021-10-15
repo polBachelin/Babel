@@ -97,7 +97,7 @@ class APage : public QWidget
         void setClientInfos(const ClientInfos &);
 
     signals:
-        void changePage(pageNames name, ClientInfos);
+        void changePage(pageNames, ClientInfos);
         void checkCommand(ClientInfos, signal_e);
 
     protected:
