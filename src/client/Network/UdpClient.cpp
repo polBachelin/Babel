@@ -17,33 +17,33 @@ QDataStream& operator <<(QDataStream& out,packetUDP_t &packet)
     return out;
 }
 
-UDPClient::UDPClient() : _socket(nullptr)
+UDPClient::UDPClient()
 {
+    _socket = std::make_unique<QUdpSocket>();
 }
 
 UDPClient::~UDPClient()
 {
 }
 
-void UDPClient::connectToHost(const std::string &ip)
+void UDPClient::connectToHost(const std::string &ip, const unsigned short port)
 {
-    _socket = std::make_unique<QUdpSocket>();
     QHostAddress hostAddress;
+
     hostAddress.setAddress(QString::fromStdString(ip));
-    _socket->bind(hostAddress, 6000);
+    _socket->bind(hostAddress, port);
     QObject::connect(_socket.get(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
-void UDPClient::send(const packetUDP_t &packet)
+void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const unsigned short port)
 {
-    //TODO: Faut pouvoir send à plusieurs UDP donc inclure le host et le port du receiver dans UDPPacket
-
     QByteArray buf;
-    std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
-    QHostAddress address;
-    address.setAddress(QString::fromStdString(packet.host));
+    QHostAddress receiverIp;
+
     buf.append((const char *)packet.data);
-    _socket->writeDatagram(buf, address, packet.port);
+    receiverIp.setAddress(QString::fromStdString(ip));
+    std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
+    _socket->writeDatagram(buf, receiverIp, port);
 }
 
 packetUDP_t UDPClient::getData()

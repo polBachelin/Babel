@@ -252,7 +252,7 @@ void Client::GUI::CallPage::callOn()
         words.push_back(word);
     pairs.push_back(words[1]);
     std::cout << "Accept call from: " << words[2] << ":" << pairs.front() << std::endl;
-    _callManager.connectToHost(pairs.front());
+    _callManager.connectToHost();
 }
 
 void Client::GUI::CallPage::updateTimer()

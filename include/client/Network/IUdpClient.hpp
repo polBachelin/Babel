@@ -37,11 +37,10 @@ namespace Client
         class IUDPClient
         {
             public:
-                virtual void connectToHost(const std::string &ip) = 0;
                 virtual packetUDP_t getData() = 0;
                 virtual void disconnect() = 0;
-                virtual void send(const packetUDP_t &packet) = 0;
-
+                virtual void connectToHost(const std::string &ip, const unsigned short port) = 0;
+                virtual void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port) = 0;
         };
     }
 }

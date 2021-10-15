@@ -9,7 +9,7 @@
 
 using namespace Client::Managers;
 
-CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
+CallManager::CallManager(const std::string &myIp) : QObject()
 {
     _udpClient = std::make_unique<Client::Network::UDPClient>();
     _soundManager = std::make_shared<PortAudioManager>();
@@ -24,7 +24,6 @@ CallManager::CallManager(const std::string &myIp) : QObject(), _ip(myIp)
     _encoderManager->initEncoder();
     _soundManager->startInputStream();
     _soundManager->startOutputStream();
-    //TODO: connect input to sendAudio + output to readAudio
     QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP()), this, SLOT(onReadAudioData()));
     QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
@@ -61,10 +60,12 @@ void CallManager::sendAudioData()
 
     dataPacket.port = _audioPort;
     dataPacket.data = audioPacket;
-    dataPacket.host = _contactIp;
+    dataPacket.host = _myIp;
 
-    std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << ":" << compressedSize << std::endl;
-    _udpClient->send(dataPacket);
+    std::cout <<  "PreparePacket: " << std::to_string(dataPacket.port) << ":" << compressedSize << std::endl;
+
+    for (auto &i : _pairs)
+        _udpClient->send(dataPacket, i.first, _audioPort);
 
     delete [] compressedBuffer;
     delete [] audioPacket;
@@ -72,7 +73,6 @@ void CallManager::sendAudioData()
 
 void CallManager::onReadAudioData()
 {
-
     Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
     unsigned char *compressed;
     uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data);
@@ -96,11 +96,10 @@ void CallManager::onReadAudioData()
     // _soundManager->feedBytesToOutput(_outputBuffer, 480);
 }
 
-void CallManager::connectToHost(const std::string &ip)
+void CallManager::connectToHost()
 {
-    std::cout << "CONNECT TO HOST WITH IP : " << ip << std::endl;
-    this->_udpClient->connectToHost(ip);
-    _contactIp = ip;
+    std::cout << "UDP bind my IP : " << _myIp << std::endl;
+    this->_udpClient->connectToHost(_myIp, _audioPort);
     this->_inCall = true;
     this->sendAudioData();
 }
@@ -108,15 +107,17 @@ void CallManager::connectToHost(const std::string &ip)
 void CallManager::beginCall()
 {
     std::cout << "BEGIN CALL" << std::endl;
-    std::cout << "Connect to client caller..." << _ip << std::endl;
-    this->connectToHost(_ip);
-    std::cout << "Send data OK..." << std::endl;
+    std::cout << "Connect to client caller..." << _myIp << std::endl;
+    this->connectToHost();
+    //TODO: set UP audio ????
 }
 
 void CallManager::endCall()
 {
     this->_inCall = false;
     this->_udpClient->disconnect();
+    //TODO: disable audio ????
+
     QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData));
 }
 

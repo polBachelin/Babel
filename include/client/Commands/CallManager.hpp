@@ -23,6 +23,7 @@ namespace Client
 {
     namespace Managers
     {
+        typedef std::unordered_map<std::string, std::time_t> callers_t;
         class CallManager : public QObject
         {
             Q_OBJECT
@@ -30,8 +31,8 @@ namespace Client
             public:
                 CallManager(const std::string &myIp);
                 ~CallManager();
-                 //TODO: paramètre input compressé
-                void connectToHost(const std::string &ip);
+                void connectToHost();
+                void addPair(const std::string &ip);
                 unsigned char *createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time);
                 void beginCall();
                 void endCall();
@@ -44,11 +45,11 @@ namespace Client
 
             private:
                 std::unique_ptr<Client::Network::UDPClient> _udpClient;
-                //std::map<std::string, std::time_t> _pairs;
+                callers_t _pairs;
                 const int _magicNum = 1234;
                 const unsigned short _audioPort = 6000;
-                const std::string _ip;
                 std::string _contactIp;
+                const std::string _myIp;
                 bool _inCall = false;
                 float *_inputBuffer;
                 float *_outputBuffer;
