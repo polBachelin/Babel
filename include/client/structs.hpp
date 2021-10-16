@@ -17,20 +17,6 @@ namespace Client {
 
     struct ClientInfos_t
     {
-        friend std::ostream &operator<<(std::ostream &out, const ClientInfos_t &info)
-    {
-        out << "---Infos---\n"
-        << "MyUsername:" << info.username << "\n"
-        << "PortTCP:" << info.port << "\n"
-        << "myIp:" << info.myIp << "\n"
-        << "MyAudioPort:" << std::to_string(info.audioPort) << "\n"
-        << "caller:" << info.userToCall << "\n"
-        << "callerIp:" << info.callerIp << "\n"
-        << "callerAudioPort:" << std::to_string(info.callerAudioPort) << "\n"
-        << "currentData:" << info.currentData << "\n"
-        << std::endl;
-        return out;
-    }
         std::string username;
         std::string password;
         std::string userToCall;
@@ -52,5 +38,7 @@ namespace Client {
     } packet_t;
 
 }
+
+std::ostream &operator<<(std::ostream &out, const Client::ClientInfos_t &info);
 
 #endif /* STRUCTS_HPP */

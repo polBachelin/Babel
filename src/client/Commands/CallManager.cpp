@@ -70,7 +70,7 @@ void CallManager::sendAudioData()
     dataPacket.data = audioPacket;
     dataPacket.timestamp = std::time_t(NULL);
 
-    std::cout <<  "PrepareMyPacket: "<< dataPacket << std::endl;
+    std::cout << "PrepareMyPacket: "<< dataPacket << std::endl;
 
     for (auto &i : _pairs)
         _udpClient->send(dataPacket, i.first, i.second.first);
