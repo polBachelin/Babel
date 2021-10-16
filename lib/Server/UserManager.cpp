@@ -7,7 +7,7 @@
 
 #include "UserManager.hpp"
 
-UserManager::UserManager() : _db("db/database.db"), _cm()
+UserManager::UserManager() : _db("db/database.db"), _mm(), _cm()
 {
     _db.createTable("User", "ID INTEGER PRIMARY KEY AUTOINCREMENT," \
                     "USERNAME TEXT NOT NULL," \
@@ -62,6 +62,11 @@ int UserManager::newUser(const std::string &name, const std::string &passwd)
 ContactManager UserManager::getContactManager() const
 {
     return _cm;
+}
+
+MessageManager UserManager::getMessageManager() const
+{
+    return _mm;
 }
 
 std::string UserManager::getName() const

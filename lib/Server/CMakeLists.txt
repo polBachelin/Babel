@@ -21,6 +21,7 @@ set(SRCS
     UserManager.cpp
     ClientManager.cpp
     CommandsManager.cpp
+    MessageManager.cpp
     DB/Database.cpp)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
