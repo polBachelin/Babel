@@ -107,7 +107,7 @@ void CallManager::sendAudioData()
 void CallManager::onReadAudioData()
 {
     Client::Network::packetUDP_t dataPacket;
-    unsigned char *compressed = nullptr;
+    char *compressed = nullptr;
     unsigned char *ptr;
 
 
@@ -116,7 +116,7 @@ void CallManager::onReadAudioData()
         if (dataPacket.magicNum == 0) {
             return;
         }
-        ptr = (unsigned char *)dataPacket.data;
+        ptr = dataPacket.data;
         std::time_t timestamp;
         std::memcpy(&timestamp, ptr, sizeof(std::time_t));
         int buffSize;
@@ -125,10 +125,10 @@ void CallManager::onReadAudioData()
         // std::cout << "Network Time : " << timestamp << std::endl;
         // std::cout << "Network BuffSize : " << buffSize << std::endl;
         // std::cout << "---------------------------\n";
-        compressed = new unsigned char[buffSize];
-        std::memcpy(compressed, (ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(unsigned char));
+        compressed = new char[buffSize];
+        std::memcpy(compressed, (ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(char));
         auto outputBuffer = new float[_inputBufferSize];
-        _encoderManager->decode(compressed, outputBuffer, 480, buffSize);
+        _encoderManager->decode(reinterpret_cast<const unsigned char *>(compressed), outputBuffer, 480, buffSize);
         double max = 0;
         double average = 0.0;
         double val = 0;
