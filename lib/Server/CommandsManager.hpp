@@ -28,9 +28,9 @@ class CommandsManager {
     public:
         enum requestCode {
             LOGIN = 0,
+            LOGOUT = 10,
             REGISTER = 1,
             ADD_CONTACT = 2,
-            ACCEPT_CONTACT = 112,
             CALL = 3,
             ASK_CONTACT_LIST = 4,
             CALL_WAS_REFUSE = 203
@@ -63,6 +63,7 @@ class CommandsManager {
         static pck_list *callX(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
         static pck_list *callRefused(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
         static pck_list *listContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
+        static pck_list *logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
     private:
         static const std::map<std::size_t, cmd_ptr> _cmdMap;
 };

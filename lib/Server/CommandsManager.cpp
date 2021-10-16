@@ -140,7 +140,7 @@ pck_list *CommandsManager::callX(const packet_t &pck, std::deque<std::shared_ptr
             return pack;
         }
     }
-    CommandsManager::createPacket(*pack, currentClient->getSocket(), 603, "failed\n");
+    CommandsManager::createPacket(*pack, currentClient->getSocket(), USER_NOT_FOUND, "failed\n");
     return pack;
 }
 
@@ -178,4 +178,9 @@ pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shar
     }
     CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
     return pack;
+}
+
+pck_list *logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient)
+{
+
 }

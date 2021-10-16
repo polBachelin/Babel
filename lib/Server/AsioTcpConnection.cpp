@@ -115,3 +115,8 @@ const bool AsioTcpConnection::isAlive() const
 {
     return _isAlive;
 }
+
+pck_list *logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient)
+{
+
+}
