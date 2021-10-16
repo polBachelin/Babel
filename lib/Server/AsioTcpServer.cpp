@@ -21,20 +21,13 @@ AsioTcpServer::AsioTcpServer()
 
 AsioTcpServer::~AsioTcpServer()
 {
-    _runThread->join();
     _io->stop();
-}
-
-void AsioTcpServer::listen()
-{
-    if (_io)
-        _io->run();
 }
 
 void AsioTcpServer::run()
 {
-    _runThread = std::make_unique<std::thread>(&AsioTcpServer::listen, this);
-    for (;;);
+    if (_io)
+        _io->run();
 }
 
 void AsioTcpServer::acceptConnection()
