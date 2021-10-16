@@ -158,8 +158,9 @@ void CallManager::endCall()
     this->_inCall = false;
     this->_udpClient->disconnect();
     _pairs.clear();
-    //TODO: disable audio ????
 
+    //TODO: disable audio ????
+    QObject::disconnect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
     QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
 
