@@ -9,7 +9,7 @@
 
 using namespace Client::Managers;
 
-CallManager::CallManager(const std::string &myIp, const unsigned short audioPort) 
+CallManager::CallManager(const std::string &myIp, const unsigned short audioPort)
 : QObject(), _myIp(myIp), _audioPort(audioPort)
 {
     _udpClient = std::make_unique<Client::Network::UDPClient>();
@@ -100,13 +100,14 @@ void CallManager::onReadAudioData()
     std::cout << "BuffSize : " << buffSize << std::endl;
     std::cout << "---------------------------\n";
 
-    if (_pairs.find(dataPacket.host) == _pairs.end())
+    // if (_pairs.find(dataPacket.host) == _pairs.end())
         addPair(dataPacket.host, dataPacket.port);
     //compressed = new unsigned char[buffSize];
     //std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
 
     // _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
     // _soundManager->feedBytesToOutput(_outputBuffer, 480);
+    emit sendData();
 }
 
 void CallManager::connectToHost()

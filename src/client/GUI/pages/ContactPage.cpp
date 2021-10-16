@@ -256,18 +256,18 @@ void Client::GUI::ContactPage::invitationReceived(ClientInfos_t info)
 
 void Client::GUI::ContactPage::handleIncomingCall(ClientInfos_t info)
 {
-    std::vector<std::string> data = this->convertCurrentData(info.currentData);
+    std::vector<std::string> data = convertCurrentData(info.currentData, '\n');
 
     info.userToCall = data[0];
     info.callerIp = data[1];
     info.callerAudioPort = (unsigned short) std::atoi(data[2].c_str());
-    _infos = info;
+    // _infos = info;
     emit changePage(CALL, info);
 }
 
 void Client::GUI::ContactPage::fillContactList(ClientInfos_t info)
 {
-    std::vector<std::string> contacts = this->convertCurrentData(info.currentData);
+    std::vector<std::string> contacts = convertCurrentData(info.currentData, '\n');
 
     while (_contactList->count() > 0)
         _contactList->takeItem(0);
