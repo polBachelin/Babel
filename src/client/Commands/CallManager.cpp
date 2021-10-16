@@ -118,6 +118,7 @@ void CallManager::onReadAudioData()
         if (dataPacket.magicNum == 0) {
             return;
         }
+        ptr = (unsigned char *)dataPacket.data.data();
         std::time_t timestamp;
         std::memcpy(&timestamp, reinterpret_cast<void *>(ptr), sizeof(std::time_t));
         int buffSize;
