@@ -215,6 +215,10 @@ pck_list *CommandsManager::listMessage(const packet_t &pck, std::deque<std::shar
     for (auto &it : messageHistory) {
         CommandsManager::createPacket(*pack, currentClient->getSocket(), SEND_ONE_MESSAGE, it);
     }
+    messageHistory = currentClient->_um.getMessageManager().getHistory(elem[1], elem[0]);
+    for (auto &it : messageHistory) {
+        CommandsManager::createPacket(*pack, currentClient->getSocket(), SEND_ONE_MESSAGE, it);
+    }
     return pack;
 }
 
@@ -228,7 +232,7 @@ pck_list *CommandsManager::newMessage(const packet_t &pck, std::deque<std::share
     currentClient->_um.getMessageManager().newMessage(elem[0], elem[1], elem[2]);
     res = currentClient->_um.getMessageManager().getHistory(elem[0], elem[1]).back();
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->_um.getName() == elem[0]) {
+        if ((*it)->_um.getName() == elem[1]) {
             CommandsManager::createPacket(*pack, currentClient->getSocket(), SEND_ONE_MESSAGE, res);
             CommandsManager::createPacket(*pack, (*it)->getSocket(), SEND_ONE_MESSAGE, res);
         }
