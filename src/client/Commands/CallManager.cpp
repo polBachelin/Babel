@@ -113,7 +113,6 @@ void CallManager::onReadAudioData()
     unsigned char *ptr;
 
 
-    std::cout << "-----READING AUDIO DATA----\n";
     while (this->_udpClient->hasPendingDatagram()) {
         dataPacket = this->_udpClient->getData();
         if (dataPacket.magicNum == 0) {
@@ -123,14 +122,15 @@ void CallManager::onReadAudioData()
         std::memcpy(&timestamp, reinterpret_cast<void *>(ptr), sizeof(std::time_t));
         int buffSize;
         std::memcpy(&buffSize, reinterpret_cast<void *>(ptr + sizeof(std::time_t)), sizeof(int));
+        std::cout << "-----READING AUDIO DATA----\n";
         std::cout << "Network Time : " << timestamp << std::endl;
         std::cout << "Network BuffSize : " << buffSize << std::endl;
         std::cout << "---------------------------\n";
         compressed = new unsigned char[buffSize];
         std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
 
-        _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
-        _soundManager->feedBytesToOutput(_outputBuffer, 480);
+        // _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
+        // _soundManager->feedBytesToOutput(_outputBuffer, 480);
     }
     //emit sendData();
 }
