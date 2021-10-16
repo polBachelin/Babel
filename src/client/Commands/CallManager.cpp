@@ -126,7 +126,7 @@ void CallManager::onReadAudioData()
         // std::cout << "Network BuffSize : " << buffSize << std::endl;
         // std::cout << "---------------------------\n";
         compressed = new unsigned char[buffSize];
-        std::memcpy(compressed, (ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(*compressed));
+        std::memcpy(compressed, (ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(unsigned char));
         auto outputBuffer = new float[_inputBufferSize];
         _encoderManager->decode(compressed, outputBuffer, 480, buffSize);
         double max = 0;
