@@ -128,8 +128,8 @@ void CallManager::onReadAudioData()
         compressed = new unsigned char[buffSize];
         std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
 
-        // _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
-        // _soundManager->feedBytesToOutput(_outputBuffer, 480);
+        _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
+        _soundManager->feedBytesToOutput(_outputBuffer, 480);
     }
     //emit sendData();
 }
