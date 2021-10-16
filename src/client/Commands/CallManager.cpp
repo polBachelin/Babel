@@ -70,7 +70,7 @@ void CallManager::sendAudioData()
     double max = 0;
     double average = 0.0;
     double val = 0;
-    for(int i=0; i<480; i++ )
+    for(int i=0; i<10; i++ )
     {
         val = _inputBuffer[i];
         if( val < 0 ) val = -val; /* ABS */
@@ -81,7 +81,7 @@ void CallManager::sendAudioData()
         average += val;
     }
 
-    average = average / (double)480;
+    average = average / (double)10;
     std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
@@ -132,8 +132,9 @@ void CallManager::onReadAudioData()
         double max = 0;
         double average = 0.0;
         double val = 0;
-        for(int i=0; i<480; i++ )
+        for(int i=0; i<10; i++ )
         {
+            std::cout << "outputbuffer[i] " << outputBuffer[i] << " ";
             val = outputBuffer[i];
             if( val < 0 ) val = -val; /* ABS */
             if( val > max )
@@ -143,7 +144,7 @@ void CallManager::onReadAudioData()
             average += val;
         }
 
-        average = average / (double)480;
+        average = average / (double)10;
         std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
         delete [] outputBuffer;
