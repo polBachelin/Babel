@@ -11,6 +11,7 @@
 #include <iostream>
 #include <ctime>
 #include <QtWidgets>
+#include <vector>
 
 namespace Client
 {
@@ -24,16 +25,14 @@ namespace Client
                 out << "\n---Infos UDP packet---\n"
                 << "IpSender:" << info.host << "\n"
                 << "PortSender:" << info.port << "\n"
-                << "dataSize:" << info.dataSize << "\n"
-                << "data:" << info.data << "\n"
+                << "data:" << info.data.data() << "\n"
                 << std::endl;
                 return out;
             }
 
             unsigned short magicNum = 987;
-            unsigned char *data;
+            std::vector<char> data;
             std::string host;
-            int dataSize;
             unsigned short port;
             std::time_t timestamp;
         };

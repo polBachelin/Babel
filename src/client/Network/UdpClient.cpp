@@ -12,7 +12,7 @@ using namespace Client::Network;
 QDataStream& operator <<(QDataStream& out,packetUDP_t &packet)
 {
     out << QString::fromStdString(packet.host)
-        << QByteArray((const char *)packet.data, sizeof(packet.data))
+        << QByteArray((const char *)packet.data.data(), sizeof(packet.data))
         << (qint16)packet.port;
     return out;
 }
@@ -39,14 +39,12 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
 {
     QByteArray buf;
     std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
-    std::cout << "Packet size : " << packet.dataSize << std::endl;
     QHostAddress receiverIp;
 
-    buf.append((const char *)packet.data);
+    //buf.append((const char *)packet.data);
     receiverIp.setAddress(QString::fromStdString(ip));
     std::cout << "Trying to send packet to : " << ip  << " : " << port << std::endl;
-    std::cout << "Packet buf size == " << buf.size() << std::endl;
-    if (_socket->writeDatagram(buf, receiverIp, port) == -1)
+    if (_socket->writeDatagram(packet.data.data(), packet.data.size(), receiverIp, port) == -1)
         std::cout << "Send fail to :" << ip  << ":" << port << std::endl;
 }
 
@@ -83,9 +81,10 @@ void UDPClient::onReadyRead()
         }
         new_packet.host = sender.toString().toStdString();
         new_packet.port = senderPort;
-        new_packet.data = (unsigned char *)datagram.data();
-        new_packet.dataSize = bytesRead;
-        std::cout << "Message: " << QString::fromStdString(std::string((char *)new_packet.data)).toStdString() << std::endl;
+        for (int i = 0; datagram.data()[i]; i++) {
+            new_packet.data.push_back(datagram.data()[i]);
+        }
+        std::cout << "Message: " << QString::fromStdString(std::string((char *)new_packet.data.data())).toStdString() << std::endl;
     } else {
         std::cout << "### ERRR: NO PENDING DATAGRAMS\n";
     }

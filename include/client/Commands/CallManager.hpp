@@ -8,7 +8,7 @@
 #ifndef CALLMANAGER_HPP_
 #define CALLMANAGER_HPP_
 
-#include <UdpClient.hpp>
+#include "UdpClient.hpp"
 #include "PortAudioManager.hpp"
 #include "OpusManager.hpp"
 #include <vector>
@@ -18,6 +18,8 @@
 #include <cstring>
 #include <netinet/in.h>
 #include <sys/types.h>
+#include <unordered_map>
+#include <vector>
 
 namespace Client
 {

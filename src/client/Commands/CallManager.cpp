@@ -42,6 +42,7 @@ void CallManager::addPair(const std::string &ip, unsigned short port)
 unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
 {
     unsigned char *res = new unsigned char[buffSize * sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int)];
+    //std::memset(res, 0, buffSize * sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int));
     std::cout << "SIZE OF BUFFER === " << buffSize *sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int) << std::endl;
     uintptr_t ptr = reinterpret_cast<uintptr_t >(res);
     // uint32_t networkBuffSize = htonl(buffSize);
@@ -70,14 +71,15 @@ void CallManager::sendAudioData()
 
     dataPacket.port = _audioPort;
     dataPacket.host = _myIp;
-    dataPacket.data = audioPacket;
-    dataPacket.dataSize = compressedSize;
-
+    
+    for (int i = 0; audioPacket[i]; i++) {
+        dataPacket.data.push_back(audioPacket[i]);
+    }
     std::cout << "-----SENDING AUDIO DATA----\n";
     //std::cout << "BuffSize : " << compressedSize << std::endl;
     std::cout << "data size == " << strlen((const char *)audioPacket) << std::endl;
-    std::cout << "Message: " << QString::fromStdString(std::string((char *)dataPacket.data)).toStdString() << std::endl;
-    int *ptrBuffSize = reinterpret_cast<int *>(dataPacket.data + sizeof(std::time_t));
+    std::cout << "Message: " << QString::fromStdString(std::string((char *)dataPacket.data.data())).toStdString() << std::endl;
+    int *ptrBuffSize = reinterpret_cast<int *>(dataPacket.data.data() + sizeof(std::time_t));
     std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
     std::cout << "---------------------------\n"; 
     //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
@@ -92,10 +94,8 @@ void CallManager::sendAudioData()
 void CallManager::onReadAudioData()
 {
     Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
-    if (dataPacket.dataSize == -1)
-        return;
     unsigned char *compressed = nullptr;
-    uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data);
+    uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data.data());
 
     std::time_t *timestampPtr = reinterpret_cast<std::time_t *>(ptr);
     int *buffSizePtr = reinterpret_cast<int *>(ptr + sizeof(std::time_t));
