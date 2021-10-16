@@ -32,42 +32,54 @@ std::function<char *(ClientInfos_t, GUI::signal_e)>> CommandsFactory::_commands
 {
 	{GUI::signal_e::Elogin,
 	[](ClientInfos_t infos, GUI::signal_e e) {
-		std::cout << "Sending packet of login to server\n";
+		std::cout << "Sending packet of login to server" << std::endl;
 		return createBuffer(e, infos.username + "\n" + infos.password + "\n");
+	}},
+
+	{GUI::signal_e::Elogout,
+	[](ClientInfos_t infos, GUI::signal_e e) {
+		std::cout << "Sending packet of logout to server" << std::endl;
+		return createBuffer(e, infos.username + "\n");
 	}},
 
 	{GUI::signal_e::Eregister,
 	[](ClientInfos_t infos, GUI::signal_e e) {
-		std::cout << "Sending packet of register to server\n";
+		std::cout << "Sending packet of register to server" << std::endl;
 		return createBuffer(e, infos.username + "\n" + infos.password + "\n");
 	}},
 
 	{GUI::signal_e::Eaddcontact,
 	[](ClientInfos_t infos, GUI::signal_e e) {
-		std::cout << "Sending packet of addContact to server\n";
+		std::cout << "Sending packet of addContact to server" << std::endl;
 		return createBuffer(e, infos.username + "\n");
 	}},
 
 	{GUI::signal_e::Erefuseincomingcall,
 	[](ClientInfos_t infos, GUI::signal_e e) {
-		std::cout << "Sending packet of refuse incoming call to server\n";
+		std::cout << "Sending packet of refuse incoming call to server" << std::endl;
 		return createBuffer(e, infos.username + "\n");
 	}},
 
 	{GUI::signal_e::EcallX,
 	[] (ClientInfos_t infos, GUI::signal_e e) {
-		std::cout << "Telling server to call X\n";
-		return createBuffer(e, infos.userToCall + "\n" + infos.myIp + "\n" + std::to_string(infos.audioPort) + "\n");
+		std::cout << "Telling server to call X" << std::endl;
+		return createBuffer(e, infos.userToCall + "\n" + infos.myIp + "\n6000\n");
 	}},
 
 	{GUI::signal_e::Easkcontactlist,
 	[](ClientInfos_t infos, GUI::signal_e e) {
-		std::cout << "Sending packet of ask contact list to server\n";
+		std::cout << "Sending packet of ask contact list to server" << std::endl;
 		return createBuffer(e, infos.username + "\n");
 	}}
 };
 
 char *CommandsFactory::callCommand(ClientInfos_t info, GUI::signal_e e)
 {
-	return _commands.at(e)(info, e);
+    if (_commands.find(e) == _commands.end()) {
+        std::cout << "unknown call command code : " << e << std::endl;
+		return NULL;
+    } else {
+        std::cout << "call command with code : " << e << std::endl;
+		return _commands.at(e)(info, e);
+    }
 }
