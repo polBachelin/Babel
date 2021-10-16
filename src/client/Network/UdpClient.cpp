@@ -50,6 +50,7 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
     receiverIp.setAddress(QString::fromStdString(ip));
     //std::cout << "Trying to send packet to : " << ip  << " : " << port << std::endl;
     //std::cout << "PACKET DATA SIZE : " << packet.data.size() << std::endl;
+    std::cout << "[SEND] : Buffer[0] " << hex(packet.data[12]) << std::endl;
     if (_socket->writeDatagram((const char *)packet.data, 13, receiverIp, port) == -1)
         std::cout << "Send fail to :" << ip  << ":" << port << std::endl;
 }
@@ -61,8 +62,9 @@ packetUDP_t UDPClient::getData()
 
     recieveDatagram();
     new_packet.magicNum = 0;
-    if (!_data.empty()) {        
+    if (!_data.empty()) {
         new_packet = _data.front();
+        std::cout << "[GETDATA] : Buffer[0] " << hex(new_packet.data[12]) << std::endl;
         _data.pop();
     }
     return new_packet;
@@ -76,6 +78,7 @@ void UDPClient::recieveDatagram()
     packetUDP_t new_packet;
     char buffer[4096];
 
+    std::memset(buffer, 0, 4096);
     int bytesRead = _socket->readDatagram(buffer, _socket->bytesAvailable(), &sender, &senderPort);
     if (bytesRead == -1) {
         std::cout << "Could not read datagram" << std::endl;
@@ -84,12 +87,12 @@ void UDPClient::recieveDatagram()
     new_packet.host = sender.toString().toStdString();
     new_packet.port = senderPort;
     new_packet.data = new unsigned char[bytesRead];
-    std::memcpy(new_packet.data, buffer, bytesRead);
-    // for (int i = bytesRead - 1; i >= 0; i--) {
-    //     new_packet.data.push_back(buffer[i]);
-    //     std::cout << hex(buffer[i]);
-    //     std::cout << " ";
-    // }
+    std::memset(new_packet.data, 0, bytesRead * sizeof(unsigned char));
+    std::memcpy(new_packet.data, buffer, bytesRead * sizeof(unsigned char));
+    for (int i = 0; i < bytesRead; i++) {
+        std::cout << hex(buffer[i]);
+        std::cout << " ";
+    }
     std::cout << std::endl;
     std::cout << "Received Message: " << (char *)buffer << std::endl;
     _data.push(new_packet);

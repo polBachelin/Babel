@@ -19,7 +19,7 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _inputBufferSize =  3 * _soundManager->getSampleRate() * _frameSize;
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
-    _encoderManager->setBitRate(10);
+    _encoderManager->setBitRate(64000);
     _encoderManager->setSamplingRate(_soundManager->getSampleRate());
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
@@ -82,17 +82,17 @@ void CallManager::sendAudioData()
     }
 
     average = average / (double)10;
-    //std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+    std::cout << "-----SENDING AUDIO DATA----\n";
+    std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
-    std::cout << "COMPRESSED BUFFER IN HEXA " << hex((char)compressedBuffer[0]) << std::endl;
+    //std::cout << "[INPUT] COMPRESSED BUFFER IN HEXA " << hex((char)compressedBuffer[0]) << std::endl;
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
     dataPacket.port = _audioPort;
     dataPacket.host = _myIp;
     dataPacket.data = audioPacket;
-    // std::cout << "-----SENDING AUDIO DATA----\n";
     // std::cout << "Message: " << (char *)dataPacket.data << std::endl;
     // std::cout << "Data size == " << 13 << std::endl;
-    // std::cout << "---------------------------\n";
+    std::cout << "---------------------------\n";
 
     //std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
     //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
@@ -107,7 +107,7 @@ void CallManager::sendAudioData()
 void CallManager::onReadAudioData()
 {
     Client::Network::packetUDP_t dataPacket;
-    char *compressed = nullptr;
+    unsigned char *compressed;
     unsigned char *ptr;
 
 
@@ -121,14 +121,15 @@ void CallManager::onReadAudioData()
         std::memcpy(&timestamp, ptr, sizeof(std::time_t));
         int buffSize;
         std::memcpy(&buffSize, (ptr + sizeof(std::time_t)), sizeof(int));
-        // std::cout << "-----READING AUDIO DATA----\n";
+        std::cout << "-----READING AUDIO DATA----\n";
         // std::cout << "Network Time : " << timestamp << std::endl;
-        // std::cout << "Network BuffSize : " << buffSize << std::endl;
-        // std::cout << "---------------------------\n";
-        compressed = new char[buffSize];
-        std::memcpy(compressed, (ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(char));
+        //std::cout << "Network BuffSize : " << buffSize << std::endl;
+        compressed = new unsigned char[buffSize];
+        std::memset(compressed, 0, buffSize);
+        std::memcpy(compressed, (ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(unsigned char));
+        //std::cout << "[OUTPUT] COMPRESSED BUFFER IN HEXA " << hex((char)compressed[0]) << std::endl;
         auto outputBuffer = new float[_inputBufferSize];
-        _encoderManager->decode(reinterpret_cast<const unsigned char *>(compressed), outputBuffer, 480, buffSize);
+        _encoderManager->decode(compressed, outputBuffer, 480, buffSize);
         double max = 0;
         double average = 0.0;
         double val = 0;
@@ -144,7 +145,8 @@ void CallManager::onReadAudioData()
         }
 
         average = average / (double)10;
-        //std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+        std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+        std::cout << "---------------------------\n";
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
         delete [] outputBuffer;
 //    }
