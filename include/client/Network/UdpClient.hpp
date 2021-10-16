@@ -12,6 +12,7 @@
 #include <QtCore/QObject>
 #include <memory>
 #include <QUdpSocket>
+#include <QNetworkDatagram>
 #include <queue>
 
 namespace Client
@@ -39,7 +40,7 @@ namespace Client
 
             private:
                 std::unique_ptr<QUdpSocket> _socket;
-                std::queue<packetUDP_t> _data;
+                std::queue<QNetworkDatagram> _data;
         };
     }
 }
