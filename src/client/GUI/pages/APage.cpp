@@ -38,7 +38,7 @@ std::ostream &operator<<(std::ostream &os, const Client::packet_t &pck)
     for (auto it = data.begin(); it != data.end(); it++) {
         os << *it << ((it == data.end() - 1) ? "]" : ", ");
     }
-	return os;
+    return os << std::endl;
 }
 
 #include "moc_APage.cpp"

@@ -133,7 +133,7 @@ void CallManager::endCall()
     _pairs.clear();
     //TODO: disable audio ????
 
-    QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData));
+    QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
 
 #include "moc_CallManager.cpp"
