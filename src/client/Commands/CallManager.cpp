@@ -91,6 +91,8 @@ void CallManager::sendAudioData()
 void CallManager::onReadAudioData()
 {
     Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
+    if (dataPacket.dataSize == -1)
+        return;
     unsigned char *compressed = nullptr;
     uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data);
 

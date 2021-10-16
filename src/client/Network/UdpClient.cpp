@@ -60,9 +60,9 @@ packetUDP_t UDPClient::getData()
     _data.pop();
     datagram = datagramNetwork.data();
     int bytesRead = _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
-
     if (bytesRead == -1) {
         std::cerr << "Could not read datagram" << std::endl;
+        new_packet.dataSize = -1;
         return new_packet;
     }
     std::cout << "[onReadyRead] bytesRead : " << bytesRead << std::endl;
