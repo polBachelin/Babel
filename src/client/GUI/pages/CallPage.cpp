@@ -286,6 +286,9 @@ void Client::GUI::CallPage::incoming(ClientInfos_t info)
     _infos.callerIp = data[1];
     _infos.userToCall = data[0];
     std::cout << "CallPage::incoming from : " << _infos.userToCall << ":" << _infos.callerIp << ":" << _infos.callerAudioPort << std::endl;
+
+    std::string caller(_infos.userToCall + " is calling you . . .");
+    _labelContact->setText(caller.c_str());
 }
 
 #include "moc_CallPage.cpp"

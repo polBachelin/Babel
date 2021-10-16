@@ -46,9 +46,11 @@ void AsioTcpConnection::interpret()
     for (auto it = res->begin(); it != res->end(); it++) {
         auto tmp = it->second;
         if (tmp && tmp->code != 666) {
-            std::cout << "---------Sent------------" << std::endl;
-            std::cout << *tmp;
-            std::cout << "-------------------------" << std::endl;
+            if (tmp->code != 4) {
+                std::cout << "---------Sent------------" << std::endl;
+                std::cout << *tmp;
+                std::cout << "-------------------------" << std::endl;
+            }
             auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
             it->first->async_send(asio::buffer(tmp, sizeof(packet_t)), handler);
         }

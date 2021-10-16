@@ -210,6 +210,8 @@ void Client::GUI::ContactPage::callClicked()
 
     _infos.userToCall =  _contactSelected.toStdString();
     _infos.callHost = true;
+    if (_timer->isActive())
+        _timer->stop();
     emit checkCommand(_infos, EcallX);
     emit changePage(CALL, _infos);
 }
@@ -225,6 +227,8 @@ void Client::GUI::ContactPage::logOut()
     while (_contactList->count() > 0)
         _contactList->takeItem(0);
 
+    if (_timer->isActive())
+        _timer->stop();
     emit checkCommand(_infos, Elogout);
     emit changePage(LOGIN, _infos);
 }
@@ -288,6 +292,8 @@ void Client::GUI::ContactPage::handleIncomingCall(ClientInfos_t info)
     info.callerAudioPort = (unsigned short) std::atoi(data[2].c_str());
     _infos = info;
 
+    if (_timer->isActive())
+        _timer->stop();
     emit changePage(CALL, info);
 }
 
