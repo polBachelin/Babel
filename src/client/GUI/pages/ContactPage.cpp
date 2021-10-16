@@ -54,7 +54,7 @@ void Client::GUI::ContactPage::timerLoader()
 {
     _timer = std::make_unique<QTimer>();
 
-    _timer->setInterval(5000);
+    _timer->setInterval(1000);
 }
 
 void Client::GUI::ContactPage::formLoader()

@@ -112,20 +112,18 @@ void MainWindow::receivedSomething(QByteArray msg)
         std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
         return;
     }
-    std::cout << "------------- J'ai reçu ---------------" << std::endl;
-    std::cout << *package;
-    std::cout << "---------------------------------------" << std::endl;
+    if (package->code != 4) {
+        std::cout << "------------- J'ai reçu ---------------" << std::endl;
+        std::cout << *package;
+        std::cout << "---------------------------------------" << std::endl;
+    }
 
     if (package->code == EloginSuccessful || package->code == EregisterSuccessful)
         _infos.username = package->data;
     _infos.currentData = package->data;
 
-    if (_signalPageMap.find((receivedSignal_e)package->code) == _signalPageMap.end()) {
-        std::cout << "got an unknown code : " << package->code << std::endl;
-    } else {
-        std::cout << "got a code : " << package->code << std::endl;
+    if (_signalPageMap.find((receivedSignal_e)package->code) != _signalPageMap.end())
         _signalPageMap.at((receivedSignal_e)package->code)(_infos);
-    }
 }
 
 void MainWindow::changeCurrentPage(pageNames name, ClientInfos_t info)
