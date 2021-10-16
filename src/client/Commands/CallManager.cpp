@@ -26,7 +26,7 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _soundManager->startInputStream();
     _soundManager->startOutputStream();
     _timer = new QTimer();
-    _timer->setInterval(1);
+    _timer->setInterval(1000);
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
     // QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP()), this, SLOT(onReadAudioData()));
     // QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
@@ -96,7 +96,6 @@ void CallManager::sendAudioData()
     std::cout << "Data size == " << dataPacket.data.size() << std::endl;
     std::cout << "---------------------------\n";
 
-    //int *ptrBuffSize = reinterpret_cast<int *>(dataPacket.data.data() + sizeof(std::time_t));
     //std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
     //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
     for (auto &i : _pairs)
@@ -113,13 +112,17 @@ void CallManager::onReadAudioData()
     unsigned char *compressed = nullptr;
     unsigned char *ptr;
 
+
+    std::cout << "-----READING AUDIO DATA----\n";
     while (this->_udpClient->hasPendingDatagram()) {
         dataPacket = this->_udpClient->getData();
+        if (dataPacket.magicNum == 0) {
+            return;
+        }
         std::time_t timestamp;
         std::memcpy(&timestamp, reinterpret_cast<void *>(ptr), sizeof(std::time_t));
         int buffSize;
         std::memcpy(&buffSize, reinterpret_cast<void *>(ptr + sizeof(std::time_t)), sizeof(int));
-        std::cout << "-----READING AUDIO DATA----\n";
         std::cout << "Network Time : " << timestamp << std::endl;
         std::cout << "Network BuffSize : " << buffSize << std::endl;
         std::cout << "---------------------------\n";

@@ -60,7 +60,7 @@ packetUDP_t UDPClient::getData()
     packetUDP_t new_packet;
 
     recieveDatagram();
-    new_packet.magicNum = -1;
+    new_packet.magicNum = 0;
     if (!_data.empty()) {        
         new_packet = _data.front();
         _data.pop();
