@@ -66,12 +66,15 @@ void UDPClient::onReadyRead()
     QDataStream in(&datagram, QIODevice::ReadOnly);
 
     int bytesRead = _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+    emit getDataFromUDP();
     if (bytesRead == -1) {
         std::cerr << "Could not read datagram" << std::endl;
         new_packet.host = "NULL";
         new_packet.port = 0;
         new_packet.data = nullptr;
         new_packet.dataSize = 0;
+        new_packet.magicNum = 0;
+        _data.push(new_packet);
         return;
     }
     new_packet.host = sender.toString().toStdString();
@@ -85,7 +88,6 @@ void UDPClient::onReadyRead()
     qDebug() << "Data Size: " << QString::fromStdString(std::to_string(new_packet.dataSize));
 
     _data.push(new_packet);
-    emit getDataFromUDP();
 }
 
 void UDPClient::disconnect()
