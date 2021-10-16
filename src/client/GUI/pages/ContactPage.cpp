@@ -104,6 +104,8 @@ void Client::GUI::ContactPage::contactLoader()
 {
     _addContactBtn = std::make_unique<QPushButton>("Add contact");
     _contactList = std::make_unique<QListWidget>();
+    _messageHistory = std::make_unique<QListWidget>();
+    _messageHistory->hide();
 }
 
 void Client::GUI::ContactPage::delimLoader()
@@ -142,6 +144,7 @@ void Client::GUI::ContactPage::layoutLoader()
     _layout->addWidget(_backButton.get(), 0, WIDTH / 20, 2, 2);
 
     _layout->addWidget(_contactList.get(), 10, 2, 20, 10);
+    _layout->addWidget(_messageHistory.get(), 9, 16, 19, 28);
 
     this->setLayout(_layout.get());
     initConnections();
@@ -194,11 +197,24 @@ void Client::GUI::ContactPage::contactClicked(QListWidgetItem *item)
         _contactSelected = "";
         _call->hide();
         _writeMsg->hide();
+        _messageHistory->hide();
     } else {
         _contactSelected = item->text();
         _call->show();
         _writeMsg->show();
+        _messageHistory->show();
+        while (_messageHistory->count() > 0)
+            _messageHistory->takeItem(0);
+        for (auto &it : _history) {
+            if (it.at(2) != _contactSelected.toStdString())
+                continue;
+            std::string msg;
+            for (auto &jt : it)
+                msg += jt;
+            new QListWidgetItem(tr(msg.c_str()), _messageHistory.get());
+        }
     }
+
     _labelContactSelected->setText(_contactSelected);
     _infos.currentData = _infos.username + _contactSelected.toStdString();
     emit checkCommand(_infos, EaskHistory);
@@ -226,6 +242,8 @@ void Client::GUI::ContactPage::logOut()
     _call->hide();
     while (_contactList->count() > 0)
         _contactList->takeItem(0);
+    while (_messageHistory->count() > 0)
+        _messageHistory->takeItem(0);
 
     if (_timer->isActive())
         _timer->stop();
@@ -241,7 +259,9 @@ void Client::GUI::ContactPage::changeMsg(QString msg)
 void Client::GUI::ContactPage::sendMsg()
 {
     _infos.currentData = _infos.username + _contactSelected.toStdString() + _msg;
-    this->_msg.clear();
+    new QListWidgetItem(tr(_infos.currentData.c_str()), _contactList.get());
+    _msg.clear();
+    _writeMsg->setText("");
     emit checkCommand(_infos, EsendMsg);
 }
 

@@ -78,6 +78,7 @@ class ContactPage : public APage
         std::map<std::string, std::unique_ptr<QFrame>> _delim;
         std::unique_ptr<QPushButton> _backButton;
         std::unique_ptr<QListWidget> _contactList;
+        std::unique_ptr<QListWidget> _messageHistory;
 
         // Timer
         std::unique_ptr<QTimer> _timer;
