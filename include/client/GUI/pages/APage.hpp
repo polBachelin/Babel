@@ -79,7 +79,7 @@ namespace GUI {
         EincomingCall = 303,
         EUserForCallNotFound = 603,
         EcallWasRefused = 203,
-        ECallAccepted = 403,
+        ECallAccepted = 503,
         EcontactList = 4
     };
 
