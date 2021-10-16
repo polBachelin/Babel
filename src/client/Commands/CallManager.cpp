@@ -27,9 +27,9 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _soundManager->startOutputStream();
     _timer = new QTimer();
     _timer->setInterval(1);
-    //QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
-    QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP()), this, SLOT(onReadAudioData()));
-    QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
+    QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
+    // QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP()), this, SLOT(onReadAudioData()));
+    // QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
 
 CallManager::~CallManager()
@@ -104,6 +104,7 @@ void CallManager::sendAudioData()
 
     delete [] compressedBuffer;
     delete [] audioPacket;
+    onReadAudioData();
 }
 
 void CallManager::onReadAudioData()
@@ -112,22 +113,26 @@ void CallManager::onReadAudioData()
     unsigned char *compressed = nullptr;
     unsigned char *ptr;
 
-    std::time_t timestamp;
-    std::memcpy(&timestamp, reinterpret_cast<void *>(ptr), sizeof(std::time_t));
-    int buffSize;
-    std::memcpy(&buffSize, reinterpret_cast<void *>(ptr + sizeof(std::time_t)), sizeof(int));
-    std::cout << "-----READING AUDIO DATA----\n";
-    std::cout << "Network Time : " << timestamp << std::endl;
-    std::cout << "Network BuffSize : " << buffSize << std::endl;
-    std::cout << "---------------------------\n";
+    while (this->_udpClient->hasPendingDatagram()) {
+        std::time_t timestamp;
+        std::memcpy(&timestamp, reinterpret_cast<void *>(ptr), sizeof(std::time_t));
+        int buffSize;
+        std::memcpy(&buffSize, reinterpret_cast<void *>(ptr + sizeof(std::time_t)), sizeof(int));
+        std::cout << "-----READING AUDIO DATA----\n";
+        std::cout << "Network Time : " << timestamp << std::endl;
+        std::cout << "Network BuffSize : " << buffSize << std::endl;
+        std::cout << "---------------------------\n";
 
+    }
     addPair(dataPacket.host, dataPacket.port);
     //compressed = new unsigned char[buffSize];
     //std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
 
     // _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
     // _soundManager->feedBytesToOutput(_outputBuffer, 480);
-    emit sendData();
+    
+    
+    //emit sendData();
 }
 
 void CallManager::connectToHost()
@@ -136,7 +141,7 @@ void CallManager::connectToHost()
     this->_udpClient->connectToHost(_myIp, _audioPort);
     this->_inCall = true;
     _timer->start();
-    this->sendAudioData();
+    //this->sendAudioData();
 }
 
 void CallManager::beginCall()

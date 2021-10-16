@@ -17,7 +17,6 @@ namespace Client
 {
     namespace Network
     {
-        #pragma pack(1)
         typedef struct
         {
             // friend std::ostream &operator<<(std::ostream &out, const packetUDP_t &info)
@@ -43,6 +42,7 @@ namespace Client
                 virtual packetUDP_t getData() = 0;
                 virtual void disconnect() = 0;
                 virtual void connectToHost(const std::string &ip, const unsigned short port) = 0;
+                virtual bool hasPendingDatagram() = 0;
                 virtual void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port) = 0;
         };
     }
