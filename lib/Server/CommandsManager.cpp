@@ -14,7 +14,9 @@ const std::unordered_map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
     {CALL, CommandsManager::callX},
     {ASK_CONTACT_LIST, CommandsManager::listContact},
     {LOGOUT, CommandsManager::logout},
-    {CALL_WAS_REFUSE, CommandsManager::callRefused}
+    {CALL_WAS_REFUSE, CommandsManager::callRefused},
+    {ASK_MESSAGE_HISTORY, CommandsManager::listMessage},
+    {NEW_MESSAGE, CommandsManager::newMessage}
 };
 
 std::vector<std::string> &split(const std::string &s, char delim,std::vector<std::string> &elems)
