@@ -67,4 +67,7 @@ class CommandsManager {
         static const std::map<std::size_t, cmd_ptr> _cmdMap;
 };
 
+std::vector<std::string> convertCurrentData(std::string, const char);
+std::ostream &operator<<(std::ostream &, const packet_t &);
+
 #endif /* !COMMANDS_HPP_ */

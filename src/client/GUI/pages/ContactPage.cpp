@@ -235,7 +235,7 @@ void Client::GUI::ContactPage::validAddContact(ClientInfos_t info)
     QMessageBox msg;
     msg.setText("Contact added successfully !");
     msg.exec();
-    new QListWidgetItem(tr(info.username.c_str()), _contactList.get());
+    new QListWidgetItem(tr(info.currentData.c_str()), _contactList.get());
 }
 
 void Client::GUI::ContactPage::wrongAddContact(ClientInfos_t info)

@@ -48,11 +48,27 @@ void ClientManager::setPacketData(const std::array<char, 2048> &data)
 	_packet.data = data;
 }
 
-std::ostream &operator<<(std::ostream &os, const packet_t &pck) {
-	os << "------PACKET------" << std::endl;
-	os << "packet.code : " << pck.code << std::endl;
-	os << "packet.magic : " << pck.magic << std::endl;
+std::vector<std::string> convertCurrentData(std::string data, const char sep)
+{
+    std::replace(data.begin(), data.end(), sep, ' ');
+    std::istringstream ss(data);
+    std::pair<std::string, std::vector<std::string>> words;
+
+    while (ss >> words.first)
+        words.second.push_back(words.first);
+    return words.second;
+}
+
+std::ostream &operator<<(std::ostream &os, const packet_t &pck)
+{
+    std::vector<std::string> data(convertCurrentData(std::string(pck.data.data()), '\n'));
+
+	os << "packet.magic     : " << pck.magic << std::endl;
+	os << "packet.code      : " << pck.code << std::endl;
 	os << "packet.data_size : " << pck.data_size << std::endl;
-	os << "packet.data : " << pck.data.data() << std::endl;
-	return os;
+	os << "packet.data      : [";
+    for (auto it = data.begin(); it != data.end(); it++) {
+        os << *it << ((it == data.end() - 1) ? "]" : ", ");
+    }
+    return os << std::endl;
 }

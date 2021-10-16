@@ -47,7 +47,7 @@ void AsioTcpConnection::interpret()
         auto tmp = it->second;
         if (tmp && tmp->code != 666) {
             std::cout << "---------Sent------------" << std::endl;
-            PRINT_PCK((*tmp));
+            std::cout << *tmp;
             std::cout << "-------------------------" << std::endl;
             auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
             it->first->async_send(asio::buffer(tmp, sizeof(packet_t)), handler);

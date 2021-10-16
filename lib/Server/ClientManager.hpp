@@ -44,5 +44,7 @@ class ClientManager {
 		packet_t _packet;
 };
 
-std::ostream &operator<<(std::ostream &os, const packet_t &pck);
+std::vector<std::string> convertCurrentData(std::string, const char);
+std::ostream &operator<<(std::ostream &, const packet_t &);
+
 #endif /* !PACKETMANAGER_HPP_ */
