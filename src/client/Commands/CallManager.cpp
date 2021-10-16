@@ -123,15 +123,13 @@ void CallManager::onReadAudioData()
         std::cout << "Network Time : " << timestamp << std::endl;
         std::cout << "Network BuffSize : " << buffSize << std::endl;
         std::cout << "---------------------------\n";
+        compressed = new unsigned char[buffSize];
+        std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
 
+        _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
+        _soundManager->feedBytesToOutput(_outputBuffer, 480);
+        addPair(dataPacket.host, dataPacket.port);
     }
-    addPair(dataPacket.host, dataPacket.port);
-    //compressed = new unsigned char[buffSize];
-    //std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
-
-    // _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
-    // _soundManager->feedBytesToOutput(_outputBuffer, 480);
-    
     
     //emit sendData();
 }
@@ -142,7 +140,6 @@ void CallManager::connectToHost()
     this->_udpClient->connectToHost(_myIp, _audioPort);
     this->_inCall = true;
     _timer->start();
-    //zthis->sendAudioData();
 }
 
 void CallManager::beginCall()
