@@ -40,7 +40,7 @@ namespace Client
 
             private:
                 std::unique_ptr<QUdpSocket> _socket;
-                std::queue<QNetworkDatagram> _data;
+                std::queue<packetUDP_t> _data;
         };
     }
 }

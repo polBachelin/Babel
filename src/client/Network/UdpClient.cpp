@@ -42,7 +42,6 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
     std::cout << "Packet size : " << packet.dataSize << std::endl;
     QHostAddress receiverIp;
 
-    std::cout << "data size == " << strlen((const char *)packet.data) << std::endl;
     buf.append((const char *)packet.data);
     receiverIp.setAddress(QString::fromStdString(ip));
     std::cout << "Trying to send packet to : " << ip  << " : " << port << std::endl;
@@ -57,27 +56,12 @@ packetUDP_t UDPClient::getData()
     QHostAddress sender;
     quint16 senderPort;
     packetUDP_t new_packet;
-    QNetworkDatagram datagramNetwork = _data.front();
 
-
-    _data.pop();
-    datagram = datagramNetwork.data();
-    int bytesRead = _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
-    if (bytesRead == -1) {
-        std::cerr << "Could not read datagram" << std::endl;
-        new_packet.dataSize = -1;
-        return new_packet;
+    if (!_data.empty()) {
+        new_packet = _data.front();
+        _data.pop();
     }
-    std::cout << "[onReadyRead] bytesRead : " << bytesRead << std::endl;
-    new_packet.host = sender.toString().toStdString();
-    new_packet.port = senderPort;
-    new_packet.data = (unsigned char *)datagram.data();
-    new_packet.dataSize = bytesRead;
 
-    qDebug() << "Message from: " << QString::fromStdString(new_packet.host);
-    qDebug() << "Message port: " << QString::fromStdString(std::to_string(new_packet.port));
-    qDebug() << "Message: " << QString::fromStdString(std::string((char *)new_packet.data));
-    qDebug() << "Data Size: " << QString::fromStdString(std::to_string(new_packet.dataSize));
     return new_packet;
 }
 
@@ -89,26 +73,24 @@ void UDPClient::onReadyRead()
     packetUDP_t new_packet;
 
     std::cout << "SOCKET BYTES AVAILBALE : " << _socket->bytesAvailable() << std::endl;
-    // if (_socket->hasPendingDatagrams()) {
-    //     datagram.resize(_socket->bytesAvailable());
-    //     int bytesRead = _socket->readDatagram(datagram.data(), 9, &sender, &senderPort);
-    //     if (bytesRead == -1) {
-    //         std::cout << "Could not read datagram" << std::endl;
-    //         emit getDataFromUDP();
-    //         return;
-    //     }
-    //     new_packet.host = sender.toString().toStdString();
-    //     new_packet.port = senderPort;
-    //     new_packet.data = (unsigned char *)datagram.data();
-    //     new_packet.dataSize = bytesRead;
-    //     std::cout << "Message: " << QString::fromStdString(std::string((char *)new_packet.data)).toStdString() << std::endl;
-    // } else {
-    //     std::cout << "### ERRR: NO PENDING DATAGRAMS\n";
-    while (_socket->hasPendingDatagrams())
-    {
-        _data.push(_socket->receiveDatagram());
-        emit getDataFromUDP();
+    if (_socket->hasPendingDatagrams()) {
+        datagram.resize(_socket->bytesAvailable());
+        int bytesRead = _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+        if (bytesRead == -1) {
+            std::cout << "Could not read datagram" << std::endl;
+            emit getDataFromUDP();
+            return;
+        }
+        new_packet.host = sender.toString().toStdString();
+        new_packet.port = senderPort;
+        new_packet.data = (unsigned char *)datagram.data();
+        new_packet.dataSize = bytesRead;
+        std::cout << "Message: " << QString::fromStdString(std::string((char *)new_packet.data)).toStdString() << std::endl;
+    } else {
+        std::cout << "### ERRR: NO PENDING DATAGRAMS\n";
     }
+    _data.push(new_packet);
+    emit getDataFromUDP();
 }
 
 

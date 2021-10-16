@@ -44,20 +44,16 @@ unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int
     unsigned char *res = new unsigned char[buffSize * sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int)];
     std::cout << "SIZE OF BUFFER === " << buffSize *sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int) << std::endl;
     uintptr_t ptr = reinterpret_cast<uintptr_t >(res);
-    void *newPtr = res;
     // uint32_t networkBuffSize = htonl(buffSize);
     // uint32_t networkTime = htonl(time);
 
     //std::cout << "[createAudioPacket] buffSize : " << buffSize << std::endl;
     std::cout << "[createAudioPacket] networkBuffSize : " << buffSize << std::endl;
     std::cout << "[createAudioPacket] networkTime : " << time << std::endl;
-    std::memcpy(newPtr, &time, sizeof(std::time_t));
-    std::memcpy((std::time_t *)(newPtr) + sizeof(std::time_t), &buffSize, sizeof(int));
-    std::memcpy((std::time_t *)(newPtr) + sizeof(std::time_t) + sizeof(int), compressedBuff, buffSize * sizeof(unsigned char));
 
-    // std::memcpy((void *)ptr, &time, sizeof(std::time_t));
-    // std::memcpy((void *)(ptr + sizeof(std::time_t)), &buffSize, sizeof(int));
-    // std::memcpy((void *)(ptr + sizeof(std::time_t) + sizeof(int)), compressedBuff, buffSize * sizeof(unsigned char));
+    std::memcpy(reinterpret_cast<void *>(ptr), &time, sizeof(std::time_t));
+    std::memcpy(reinterpret_cast<void *>(ptr + sizeof(std::time_t)), &buffSize, sizeof(int));
+    std::memcpy(reinterpret_cast<void *>(ptr + sizeof(std::time_t) + sizeof(int)), compressedBuff, buffSize * sizeof(unsigned char));
     return res;
 }
 
@@ -81,8 +77,8 @@ void CallManager::sendAudioData()
     //std::cout << "BuffSize : " << compressedSize << std::endl;
     std::cout << "data size == " << strlen((const char *)audioPacket) << std::endl;
     std::cout << "Message: " << QString::fromStdString(std::string((char *)dataPacket.data)).toStdString() << std::endl;
-    uint32_t *ptrTime = reinterpret_cast<uint32_t *>(dataPacket.data + sizeof(uint32_t));
-    std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrTime << std::endl;
+    int *ptrBuffSize = reinterpret_cast<int *>(dataPacket.data + sizeof(std::time_t));
+    std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
     std::cout << "---------------------------\n"; 
     //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
 
@@ -101,25 +97,14 @@ void CallManager::onReadAudioData()
     unsigned char *compressed = nullptr;
     uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data);
 
-    // ? changer la condition pour checker le timestamp
-    //if (audioPacket->timestamp < _pairs[dataPacket.host])
-        //return;
-    uint32_t *timestampPtr = reinterpret_cast<uint32_t *>(ptr);
-    uint32_t *buffSizePtr = reinterpret_cast<uint32_t *>(ptr + sizeof(uint32_t));
-    //if (dataPacket.timestamp < _pairs[dataPacket.host].second)
-    //    return;
-    _pairs[dataPacket.host].second = std::time_t(NULL);
-    std::time_t timestamp = ntohl(*timestampPtr);
-    (void)timestamp;
-    int buffSize = ntohl(*buffSizePtr);
+    std::time_t *timestampPtr = reinterpret_cast<std::time_t *>(ptr);
+    int *buffSizePtr = reinterpret_cast<int *>(ptr + sizeof(std::time_t));
     std::cout << dataPacket << std::endl;
     std::cout << "-----READING AUDIO DATA----\n";
     std::cout << "Network Time : " << *timestampPtr << std::endl;
     std::cout << "Network BuffSize : " << *buffSizePtr << std::endl;
-    //std::cout << "BuffSize : " << buffSize << std::endl;
     std::cout << "---------------------------\n";
 
-    //if (_pairs.find(dataPacket.host) == _pairs.end())
     addPair(dataPacket.host, dataPacket.port);
     //compressed = new unsigned char[buffSize];
     //std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
