@@ -40,6 +40,7 @@ void UDPClient::send(const packetUDP_t &packet)
 
     QByteArray buf;
     std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
+    std::cout << "Packet size : " << packet.dataSize << std::endl;
     QHostAddress address;
     address.setAddress(QString::fromStdString(packet.host));
     buf.append((const char *)packet.data);
@@ -74,6 +75,7 @@ void UDPClient::onReadyRead()
         new_packet.dataSize = 0;
         return;
     }
+    std::cout << "[onReadyRead] bytesRead : " << bytesRead << std::endl;
     new_packet.host = sender.toString().toStdString();
     new_packet.port = senderPort;
     new_packet.data = (unsigned char *)datagram.data();
