@@ -213,11 +213,10 @@ void Client::GUI::ContactPage::contactClicked(QListWidgetItem *item)
                 msg += jt;
             new QListWidgetItem(tr(msg.c_str()), _messageHistory.get());
         }
+        _infos.currentData = _infos.username + "\n" + _contactSelected.toStdString() + "\n";
+        emit checkCommand(_infos, EaskHistory);
     }
-
     _labelContactSelected->setText(_contactSelected);
-    _infos.currentData = _infos.username + "\n" + _contactSelected.toStdString() + "\n";
-    emit checkCommand(_infos, EaskHistory);
 }
 
 void Client::GUI::ContactPage::callClicked()
