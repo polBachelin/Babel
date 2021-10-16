@@ -59,7 +59,7 @@ std::function<char *(ClientInfos_t, GUI::signal_e)>> CommandsFactory::_commands
 	{GUI::signal_e::Erefuseincomingcall,
 	[](ClientInfos_t infos, GUI::signal_e e) {
 		std::cout << "Sending packet of refuse incoming call to server" << std::endl;
-		return createBuffer(e, infos.username + "\n");
+		return createBuffer(e, infos.currentData + "\n");
 	}},
 
 	{GUI::signal_e::EcallX,
