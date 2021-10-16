@@ -17,31 +17,36 @@ namespace Client
     namespace Network
     {
         #pragma pack(push, 1)
-        typedef struct audioPacket
+        struct packetUDP_t
         {
-            unsigned short magicNum;
-            unsigned char *audioData;
-            unsigned short sizeOfData;
-            std::time_t timestamp;
-        } audioPacket_t;
-        #pragma pack(pop)
+            friend std::ostream &operator<<(std::ostream &out, const packetUDP_t &info)
+            {
+                out << "\n---Infos UDP packet---\n"
+                << "IpSender:" << info.host << "\n"
+                << "PortSender:" << info.port << "\n"
+                << "dataSize:" << info.dataSize << "\n"
+                << "data:" << info.data << "\n"
+                << std::endl;
+                return out;
+            }
 
-        typedef struct packetUDP
-        {
+            unsigned short magicNum = 987;
             unsigned char *data;
             std::string host;
             int dataSize;
             unsigned short port;
-        } packetUDP_t;
+            std::time_t timestamp;
+        };
+
+        #pragma pack(pop)
 
         class IUDPClient
         {
             public:
-                virtual void connectToHost(const std::string &ip) = 0;
                 virtual packetUDP_t getData() = 0;
                 virtual void disconnect() = 0;
-                virtual void send(const packetUDP_t &packet) = 0;
-
+                virtual void connectToHost(const std::string &ip, const unsigned short port) = 0;
+                virtual void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port) = 0;
         };
     }
 }

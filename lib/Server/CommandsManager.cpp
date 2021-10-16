@@ -22,7 +22,7 @@ std::vector<std::string> &split(const std::string &s, char delim,std::vector<std
     std::string item;
     while (std::getline(ss, item, delim)) {
         if (item.length() > 0) {
-            elems.push_back(item);  
+            elems.push_back(item);
         }
     }
     return elems;
@@ -33,7 +33,7 @@ pck_list *CommandsManager::redirect(const packet_t &pck, std::deque<std::shared_
 {
     try {
         std::cout << "---------Receive------------" << std::endl;
-        PRINT_PCK((pck));
+        std::cout << pck;
         std::cout << "----------------------------" << std::endl;
         if (pck.magic == MAGIC)
             return _cmdMap.at(pck.code)(pck, clients, currentClient);
@@ -103,7 +103,7 @@ pck_list *CommandsManager::addContact(const packet_t &pck, std::deque<std::share
     std::string res;
     std::string own;
     pck_list *pack = new pck_list;
-    
+
     elem = split(pck.data.data(), '\n', elem);
     res = elem[0];
     for (auto it = clients.begin(); it != clients.end(); ++it) {

@@ -1,0 +1,1 @@
+cd build && cmake .. -G "Unix Makefiles" && cmake --build . -j 11  && cd .. && ./build/bin/Babel_server

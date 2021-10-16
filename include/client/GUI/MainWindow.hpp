@@ -28,38 +28,38 @@ namespace Client {
 
             public:
                 MainWindow(const QString hostAddress,
-                            int portVal);
+                            int portVal, int audioPort);
                 ~MainWindow();
 
                 void signalReceivedLoader();
 
             signals:
-                void validSignInResponse(ClientInfos);
-                void wrongSignInResponse(ClientInfos);
-                void validRegisterResponse(ClientInfos);
-                void wrongRegisterResponse(ClientInfos);
-                void contactAddSuccess(ClientInfos);
-                void contactAddFailed(ClientInfos);
-                void incomingCall(ClientInfos);
-                void contactList(ClientInfos);
-                void invitationContactReceived(ClientInfos);
-                void callRefused(ClientInfos);
+                void validSignInResponse(ClientInfos_t);
+                void wrongSignInResponse(ClientInfos_t);
+                void validRegisterResponse(ClientInfos_t);
+                void wrongRegisterResponse(ClientInfos_t);
+                void contactAddSuccess(ClientInfos_t);
+                void contactAddFailed(ClientInfos_t);
+                void incomingCall(ClientInfos_t);
+                void contactList(ClientInfos_t);
+                void invitationContactReceived(ClientInfos_t);
+                void callRefused(ClientInfos_t);
 
             public slots:
-                void checkSignal(ClientInfos, signal_e);
-                void changeCurrentPage(pageNames, ClientInfos);
+                void checkSignal(ClientInfos_t, signal_e);
+                void changeCurrentPage(pageNames, ClientInfos_t);
                 void receivedSomething(QByteArray);
                 void gotError(QAbstractSocket::SocketError err);
                 //void TryConnect
 
             private:
                 void initConnections(void);
+
                 std::unique_ptr<PageManager> _pages;
                 Network::TcpClient _tcpClient;
-                ClientInfos _infos;
-                std::unordered_map<receivedSignal_e, std::function<void(ClientInfos)>> _signalPageMap;
-
-       };
+                ClientInfos_t _infos;
+                std::unordered_map<receivedSignal_e, std::function<void(ClientInfos_t)>> _signalPageMap;
+        };
 
     }
 }
