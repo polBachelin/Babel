@@ -54,7 +54,7 @@ void Client::GUI::ContactPage::timerLoader()
 {
     _timer = std::make_unique<QTimer>();
 
-    _timer->setInterval(5000);
+    _timer->setInterval(1000);
 }
 
 void Client::GUI::ContactPage::formLoader()
@@ -266,10 +266,10 @@ void Client::GUI::ContactPage::wrongAddContact(ClientInfos_t info)
 void Client::GUI::ContactPage::invitationReceived(ClientInfos_t info)
 {
     QMessageBox msg;
-    std::string str(info.username + " added you to his contacts !");
+    std::string str(info.currentData + " added you to his contacts !");
     msg.setText(str.c_str());
     msg.exec();
-    new QListWidgetItem(tr(info.username.c_str()), _contactList.get());
+    new QListWidgetItem(tr(info.currentData.c_str()), _contactList.get());
 }
 
 void Client::GUI::ContactPage::handleIncomingCall(ClientInfos_t info)

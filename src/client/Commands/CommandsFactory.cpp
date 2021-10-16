@@ -19,9 +19,11 @@ static char *createBuffer(GUI::signal_e e, std::string data)
 	package.data_size = data.size();
 	strcpy(package.data, data.c_str());
 
-	std::cout << "------------J'ai Envoyé----------------" << std::endl;
-	std::cout << package;
-	std::cout << "---------------------------------------" << std::endl;
+    if (package.code != 4) {
+		std::cout << "------------J'ai Envoyé----------------" << std::endl;
+		std::cout << package;
+		std::cout << "---------------------------------------" << std::endl;
+	}
 
 	memcpy(buffTemp, &package, sizeof(package));
 	return buffTemp;
@@ -68,18 +70,14 @@ std::function<char *(ClientInfos_t, GUI::signal_e)>> CommandsFactory::_commands
 
 	{GUI::signal_e::Easkcontactlist,
 	[](ClientInfos_t infos, GUI::signal_e e) {
-		std::cout << "Sending packet of ask contact list to server" << std::endl;
+		// std::cout << "Sending packet of ask contact list to server" << std::endl;
 		return createBuffer(e, infos.username + "\n");
 	}}
 };
 
 char *CommandsFactory::callCommand(ClientInfos_t info, GUI::signal_e e)
 {
-    if (_commands.find(e) == _commands.end()) {
-        std::cout << "unknown call command code : " << e << std::endl;
-		return NULL;
-    } else {
-        std::cout << "call command with code : " << e << std::endl;
+    if (_commands.find(e) != _commands.end())
 		return _commands.at(e)(info, e);
-    }
+	return NULL;
 }
