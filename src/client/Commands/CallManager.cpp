@@ -100,8 +100,7 @@ void CallManager::onReadAudioData()
     //if (audioPacket->timestamp < _pairs[dataPacket.host])
         //return;
     uint32_t *timestampPtr = reinterpret_cast<uint32_t *>(ptr);
-    //ptr += sizeof(uint32_t);
-    uint32_t *buffSizePtr = reinterpret_cast<uint32_t *>(ptr + sizeof(timestampPtr));
+    uint32_t *buffSizePtr = reinterpret_cast<uint32_t *>(ptr + sizeof(uint32_t));
     //if (dataPacket.timestamp < _pairs[dataPacket.host].second)
     //    return;
     _pairs[dataPacket.host].second = std::time_t(NULL);
