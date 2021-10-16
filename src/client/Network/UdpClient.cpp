@@ -45,7 +45,9 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
     buf.append((const char *)packet.data);
     receiverIp.setAddress(QString::fromStdString(ip));
     std::cout << "Trying to send packet to : " << ip  << " : " << port << std::endl;
-    _socket->writeDatagram(buf, receiverIp, port);
+    if (_socket->writeDatagram(buf, receiverIp, port) == -1) {
+        std::cout << "### WRITE DATAGRMA ERROR\n";
+    }
 }
 
 packetUDP_t UDPClient::getData()
@@ -62,30 +64,33 @@ packetUDP_t UDPClient::getData()
 
 void UDPClient::onReadyRead()
 {
-    QByteArray datagram;
     QHostAddress sender;
+    QByteArray datagram;
     quint16 senderPort;
     packetUDP_t new_packet;
 
-    datagram.resize(_socket->pendingDatagramSize());
-    QDataStream in(&datagram, QIODevice::ReadOnly);
-
-    int bytesRead = _socket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
-    if (bytesRead == -1) {
-        std::cerr << "Could not read datagram" << std::endl;
-        emit getDataFromUDP();
-        return;
+    
+    
+    std::cout << "SOCKET BYTES AVAILBALE : " << _socket->bytesAvailable() << std::endl;
+    if (_socket->hasPendingDatagrams()) {
+        datagram.resize(9);
+        int bytesRead = _socket->readDatagram(datagram.data(), 9, &sender, &senderPort);
+        if (bytesRead == -1) {
+            std::cout << "Could not read datagram" << std::endl;
+            emit getDataFromUDP();
+            return;
+        }
+        new_packet.host = sender.toString().toStdString();
+        new_packet.port = senderPort;
+        new_packet.data = (unsigned char *)datagram.data();
+        new_packet.dataSize = bytesRead;
+        std::cout << "Message: " << QString::fromStdString(std::string((char *)new_packet.data)).toStdString() << std::endl;
+    } else {
+        std::cout << "### ERRR: NO PENDING DATAGRAMS\n";
     }
-    std::cout << "[onReadyRead] bytesRead : " << bytesRead << std::endl;
-    new_packet.host = sender.toString().toStdString();
-    new_packet.port = senderPort;
-    new_packet.data = (unsigned char *)datagram.data();
-    new_packet.dataSize = bytesRead;
-
-    qDebug() << "Message from: " << QString::fromStdString(new_packet.host);
-    qDebug() << "Message port: " << QString::fromStdString(std::to_string(new_packet.port));
-    qDebug() << "Message: " << QString::fromStdString(std::string((char *)new_packet.data));
-    qDebug() << "Data Size: " << QString::fromStdString(std::to_string(new_packet.dataSize));
+    //std::cout << "Message from: " << QString::fromStdString(new_packet.host).toStdString();
+    //std::cout << "Message port: " << QString::fromStdString(std::to_string(new_packet.port)).toStdString();
+    //std::cout << "Data Size: " << QString::fromStdString(std::to_string(new_packet.dataSize)).toStdString();
 
     _data.push(new_packet);
     emit getDataFromUDP();
