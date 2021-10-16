@@ -116,7 +116,6 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::cout << *package;
     std::cout << "---------------------------------------" << std::endl;
 
-    //_infos.username = package->data;
     _infos.currentData = package->data;
 
     if (_signalPageMap.find((receivedSignal_e)package->code) == _signalPageMap.end()) {

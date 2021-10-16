@@ -101,7 +101,6 @@ class APage : public QWidget
         void checkCommand(ClientInfos_t, signal_e);
 
     protected:
-        std::vector<std::string> convertCurrentData(std::string &data);
         std::unique_ptr<QGridLayout> _layout;
         ClientInfos_t _infos;
 };
@@ -110,6 +109,7 @@ class APage : public QWidget
 }
 }
 
+std::vector<std::string> convertCurrentData(std::string, const char);
 std::ostream &operator<<(std::ostream &, const Client::packet_t &);
 
 #endif /* !APAGE_HPP_ */

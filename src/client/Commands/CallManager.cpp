@@ -9,7 +9,7 @@
 
 using namespace Client::Managers;
 
-CallManager::CallManager(const std::string &myIp, const unsigned short audioPort) 
+CallManager::CallManager(const std::string &myIp, const unsigned short audioPort)
 : QObject(), _myIp(myIp), _audioPort(audioPort)
 {
     _udpClient = std::make_unique<Client::Network::UDPClient>();

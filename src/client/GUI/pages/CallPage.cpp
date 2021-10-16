@@ -243,7 +243,7 @@ void Client::GUI::CallPage::callOn()
     _labelContact->hide();
     _labelGif->hide();
 
-    std::vector<std::string> words = this->convertCurrentData(_infos.currentData);
+    std::vector<std::string> words = convertCurrentData(_infos.currentData, '\n');
 
     std::cout << "Accept call from: " << words[0] << ":" << words[1] << ":" << words[2] << std::endl;
     _callManager->addPair(words[1], std::atoi(words[2].c_str()));
@@ -278,7 +278,7 @@ void Client::GUI::CallPage::incoming(ClientInfos_t info)
     _labelContact->show();
     _labelGif->show();
 
-    std::vector<std::string> data = this->convertCurrentData(info.currentData);
+    std::vector<std::string> data = convertCurrentData(info.currentData, '\n');
 
     _infos.currentData = info.currentData;
     _infos.callerAudioPort = std::atoi(data[2].c_str());
