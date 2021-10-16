@@ -82,10 +82,10 @@ void CallManager::sendAudioData()
     }
 
     average = average / (double)10;
-    std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+    //std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
+    std::cout << "COMPRESSED BUFFER IN HEXA " << hex((char)compressedBuffer[0]) << std::endl;
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
-
     dataPacket.port = _audioPort;
     dataPacket.host = _myIp;
     dataPacket.data = audioPacket;
@@ -134,7 +134,6 @@ void CallManager::onReadAudioData()
         double val = 0;
         for(int i=0; i<10; i++ )
         {
-            std::cout << "outputbuffer[i] " << outputBuffer[i] << " ";
             val = outputBuffer[i];
             if( val < 0 ) val = -val; /* ABS */
             if( val > max )
@@ -145,7 +144,7 @@ void CallManager::onReadAudioData()
         }
 
         average = average / (double)10;
-        std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+        //std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
         delete [] outputBuffer;
 //    }
