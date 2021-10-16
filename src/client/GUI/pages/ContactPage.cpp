@@ -261,7 +261,7 @@ void Client::GUI::ContactPage::handleIncomingCall(ClientInfos_t info)
     info.userToCall = data[0];
     info.callerIp = data[1];
     info.callerAudioPort = (unsigned short) std::atoi(data[2].c_str());
-    _infos = info;
+    //_infos = info;
     emit changePage(CALL, info);
 }
 

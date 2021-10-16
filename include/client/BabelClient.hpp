@@ -28,10 +28,6 @@ class BabelClient : public QApplication
 
     private:
         std::unique_ptr<Client::GUI::MainWindow> _mainWindow;
-
-        //TODO: Network infos(Myip, port, ip server)
-        //TODO: Interface Ipage
-        //TODO: IPageManager
 };
 
 }

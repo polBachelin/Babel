@@ -100,13 +100,14 @@ void CallManager::onReadAudioData()
     std::cout << "BuffSize : " << buffSize << std::endl;
     std::cout << "---------------------------\n";
 
-    if (_pairs.find(dataPacket.host) == _pairs.end())
-        addPair(dataPacket.host, dataPacket.port);
+    //if (_pairs.find(dataPacket.host) == _pairs.end())
+    addPair(dataPacket.host, dataPacket.port);
     //compressed = new unsigned char[buffSize];
     //std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
 
     // _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
     // _soundManager->feedBytesToOutput(_outputBuffer, 480);
+    emit sendData();
 }
 
 void CallManager::connectToHost()
