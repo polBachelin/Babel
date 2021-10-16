@@ -73,6 +73,7 @@ void UserManager::logoutUser()
 {
     _isLog = false;
     _name = "";
+    _cm.setName("");
 }
 
 bool UserManager::isLog()
