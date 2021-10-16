@@ -263,21 +263,6 @@ int PortAudioManager::retrieveInputBytes(float *sample, size_t len)
 
 void PortAudioManager::feedBytesToOutput(float *sample, unsigned long len)
 {
-    float max = 0;
-    float average = 0.0;
-    float val;
-    for(int i=0; i<NUM_SECONDS * SAMPLE_RATE * NUM_CHANNELS; i++ )
-    {
-        val = sample[i];
-        if( val < 0 ) val = -val; /* ABS */
-        if(val > max)
-        {
-            max = val;
-        }
-        average += val;
-    }
-    average = average / (double)(NUM_SECONDS * SAMPLE_RATE * NUM_CHANNELS);
-    std::cout << "average === " << average << " - max == " << max << std::endl;
     _outputBuffer->write(sample, len * _outputChannels * sizeof(float));
 }
 
