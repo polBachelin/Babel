@@ -215,6 +215,7 @@ void Client::GUI::ContactPage::logOut()
     while (_contactList->count() > 0)
         _contactList->takeItem(0);
 
+    emit checkCommand(_infos, Elogout);
     emit changePage(LOGIN, _infos);
 }
 

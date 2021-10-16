@@ -57,6 +57,7 @@ namespace GUI {
     enum signal_e
     {
         Elogin = 0,
+        Elogout = 10,
         Eregister = 1,
         Eaddcontact = 2,
         Eacceptinvitation = 112,

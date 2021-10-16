@@ -32,42 +32,54 @@ std::function<char *(ClientInfos, GUI::signal_e)>> CommandsFactory::_commands
 {
 	{GUI::signal_e::Elogin,
 	[](ClientInfos infos, GUI::signal_e e) {
-		std::cout << "Sending packet of login to server\n";
+		std::cout << "Sending packet of login to server" << std::endl;
 		return createBuffer(infos, e, infos.username + "\n" + infos.password + "\n");
+	}},
+
+	{GUI::signal_e::Elogout,
+	[](ClientInfos infos, GUI::signal_e e) {
+		std::cout << "Sending packet of logout to server" << std::endl;
+		return createBuffer(infos, e, infos.username + "\n");
 	}},
 
 	{GUI::signal_e::Eregister,
 	[](ClientInfos infos, GUI::signal_e e) {
-		std::cout << "Sending packet of register to server\n";
+		std::cout << "Sending packet of register to server" << std::endl;
 		return createBuffer(infos, e, infos.username + "\n" + infos.password + "\n");
 	}},
 
 	{GUI::signal_e::Eaddcontact,
 	[](ClientInfos infos, GUI::signal_e e) {
-		std::cout << "Sending packet of addContact to server\n";
+		std::cout << "Sending packet of addContact to server" << std::endl;
 		return createBuffer(infos, e, infos.username + "\n");
 	}},
 
 	{GUI::signal_e::Erefuseincomingcall,
 	[](ClientInfos infos, GUI::signal_e e) {
-		std::cout << "Sending packet of refuse incoming call to server\n";
+		std::cout << "Sending packet of refuse incoming call to server" << std::endl;
 		return createBuffer(infos, e, infos.username + "\n");
 	}},
 
 	{GUI::signal_e::EcallX,
 	[] (ClientInfos infos, GUI::signal_e e) {
-		std::cout << "Telling server to call X\n";
+		std::cout << "Telling server to call X" << std::endl;
 		return createBuffer(infos, e, infos.userToCall + "\n" + infos.ip + "\n6000\n");
 	}},
 
 	{GUI::signal_e::Easkcontactlist,
 	[](ClientInfos infos, GUI::signal_e e) {
-		std::cout << "Sending packet of ask contact list to server\n";
+		std::cout << "Sending packet of ask contact list to server" << std::endl;
 		return createBuffer(infos, e, infos.username + "\n");
 	}}
 };
 
 char *CommandsFactory::callCommand(ClientInfos info, GUI::signal_e e)
 {
-	return _commands.at(e)(info, e);
+    if (_commands.find(e) == _commands.end()) {
+        std::cout << "unknown call command code : " << e << std::endl;
+		return NULL;
+    } else {
+        std::cout << "call command with code : " << e << std::endl;
+		return _commands.at(e)(info, e);
+    }
 }

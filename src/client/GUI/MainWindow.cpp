@@ -130,6 +130,8 @@ void MainWindow::changeCurrentPage(pageNames name, ClientInfos info)
 void MainWindow::checkSignal(ClientInfos infos, signal_e e)
 {
     char *buffTemp = CommandsFactory::callCommand(infos, e);
+    if (!buffTemp)
+        return;
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
     if (e == Elogin || e == Eregister) {
