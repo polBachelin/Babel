@@ -10,6 +10,11 @@
 
 #include "APage.hpp"
 
+#define IDMSG    (messages.at(0))
+#define SENDER   (messages.at(1))
+#define RECEIVER (messages.at(2))
+#define MESSAGE  (messages.at(3))
+
 namespace Client {
 namespace GUI {
 
@@ -42,10 +47,12 @@ class ContactPage : public APage
         void handleIncomingCall(ClientInfos_t);
         void fillContactList(ClientInfos_t);
         void invitationReceived(ClientInfos_t);
+        void messageReceived(ClientInfos_t);
         void contactClicked(QListWidgetItem *);
         void addContactClicked();
         void callClicked();
         void logOut();
+        void sendMsg();
         void updateTimer();
         void searchContact(QString);
         void changeMsg(QString);
@@ -82,6 +89,7 @@ class ContactPage : public APage
         std::string _search;
         QString _contactSelected;
         std::size_t _cid;
+        std::deque<std::vector<std::string>> _history;
 };
 
 }}

@@ -56,29 +56,32 @@ namespace GUI {
 
     enum signal_e
     {
-        Elogin = 0,
-        Elogout = 10,
-        Eregister = 1,
-        Eaddcontact = 2,
-        Eacceptinvitation = 112,
-        EcallX = 3,
-        Erefuseincomingcall = 203,
-        Easkcontactlist = 4
+        Elogin = 0,                 // 000
+        Eregister = 1,              // 001
+        Eaddcontact = 2,            // 002
+        Elogout = 10,               // 010
+        Eacceptinvitation = 112,    // 112
+        EcallX = 3,                 // 003
+        Erefuseincomingcall = 203,  // 203
+        Easkcontactlist = 4,        // 004
+        EaskHistory = 5,            // 005
+        EsendMsg = 105              // 105
     };
 
     enum receivedSignal_e
     {
-        EloginSuccessful = 100,
-        EloginFailed = 200,
-        EregisterSuccessful = 101,
-        EregisterFailed = 201,
-        EinvitationReceive = 12,
-        EcontactExist = 102,
-        EcontactAddFailed = 202,
-        EincomingCall = 303,
-        EUserForCallNotFound = 603,
-        EcallWasRefused = 203,
-        EcontactList = 4
+        EloginSuccessful = 100,     // 100
+        EloginFailed = 200,         // 200
+        EregisterSuccessful = 101,  // 101
+        EregisterFailed = 201,      // 201
+        EinvitationReceive = 12,    // 012
+        EcontactExist = 102,        // 102
+        EcontactAddFailed = 202,    // 202
+        EcallWasRefused = 203,      // 203
+        EincomingCall = 303,        // 303
+        EUserForCallNotFound = 603, // 603
+        EcontactList = 4,           // 004
+        EreceiveMsg = 205           // 205
     };
 
 class APage : public QWidget

@@ -23,6 +23,8 @@ Client::GUI::ContactPage::ContactPage(Client::ClientInfos_t infos, QWidget *pare
         this, SLOT(fillContactList(ClientInfos_t)));
     QObject::connect(parent, SIGNAL(invitationContactReceived(ClientInfos_t)),
         this, SLOT(invitationReceived(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(receivedMessage(ClientInfos_t)),
+        this, SLOT(messageReceived(ClientInfos_t)));
 
     loadPage();
     layoutLoader();
@@ -151,6 +153,7 @@ void Client::GUI::ContactPage::initConnections()
 {
     QObject::connect(_contactSearch.get(), SIGNAL(textChanged(QString)), this, SLOT(searchContact(QString)));
     QObject::connect(_writeMsg.get(), SIGNAL(textChanged(QString)), this, SLOT(changeMsg(QString)));
+    QObject::connect(_writeMsg.get(), SIGNAL(returnPressed()), this, SLOT(sendMsg()));
     QObject::connect(_backButton.get(), SIGNAL(clicked()), this, SLOT(logOut()));
     QObject::connect(_contactList.get(), SIGNAL(itemClicked(QListWidgetItem *)), SLOT(contactClicked(QListWidgetItem *)));
     QObject::connect(_call.get(), SIGNAL(clicked()), this, SLOT(callClicked()));
@@ -197,6 +200,8 @@ void Client::GUI::ContactPage::contactClicked(QListWidgetItem *item)
         _writeMsg->show();
     }
     _labelContactSelected->setText(_contactSelected);
+    _infos.currentData = _infos.username + _contactSelected.toStdString();
+    emit checkCommand(_infos, EaskHistory);
 }
 
 void Client::GUI::ContactPage::callClicked()
@@ -227,6 +232,13 @@ void Client::GUI::ContactPage::logOut()
 void Client::GUI::ContactPage::changeMsg(QString msg)
 {
     this->_msg = msg.toStdString();
+}
+
+void Client::GUI::ContactPage::sendMsg()
+{
+    _infos.currentData = _infos.username + _contactSelected.toStdString() + _msg;
+    this->_msg.clear();
+    emit checkCommand(_infos, EsendMsg);
 }
 
 void Client::GUI::ContactPage::searchContact(QString search)
@@ -287,6 +299,17 @@ void Client::GUI::ContactPage::fillContactList(ClientInfos_t info)
         _contactList->takeItem(0);
     for (auto &it : contacts)
         new QListWidgetItem(tr(it.c_str()), _contactList.get());
+}
+
+void Client::GUI::ContactPage::messageReceived(ClientInfos_t info)
+{
+    std::vector<std::string> messages = convertCurrentData(info.currentData, '\n');
+
+    if (messages.size() >= 4) {
+        _history.push_back(messages);
+        std::cout << "message ID " << IDMSG << " from " << SENDER << "to " << RECEIVER << std::endl;
+        std::cout << "with content : " << MESSAGE << std::endl;
+    }
 }
 
 #include "moc_ContactPage.cpp"
