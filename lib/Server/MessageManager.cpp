@@ -7,7 +7,7 @@
 
 #include "MessageManager.hpp"
 
-MessageManager::MessageManager()
+MessageManager::MessageManager() : _db("db/database.db")
 {
     _db.createTable("Message", "ID INTEGER PRIMARY KEY AUTOINCREMENT," \
                 "SENDER TEXT NOT NULL," \

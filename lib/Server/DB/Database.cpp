@@ -81,6 +81,7 @@ int Database::createTable(const std::string &name, const std::string &columns)
     int tmp = sqlite3_exec(_db, req.c_str(), verify, nullptr, &_errMsg);
 
     if (tmp != SQLITE_OK) {
+        std::cerr << "SQL CREATE DB ERROR " << name << std::endl;
         std::cerr << "SQL ERROR: " << _errMsg <<  std::endl;
         sqlite3_free(_errMsg);
         return tmp;
