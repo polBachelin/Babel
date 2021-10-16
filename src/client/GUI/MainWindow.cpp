@@ -118,6 +118,7 @@ void MainWindow::receivedSomething(QByteArray msg)
 
     if (package->code == EloginSuccessful || package->code == EregisterSuccessful)
         _infos.username = package->data;
+    _infos.currentData = package->data;
 
     if (_signalPageMap.find((receivedSignal_e)package->code) == _signalPageMap.end()) {
         std::cout << "got an unknown code : " << package->code << std::endl;
