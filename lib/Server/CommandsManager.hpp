@@ -9,6 +9,7 @@
 #define COMMANDS_HPP_
 
 #include <map>
+#include <unordered_map>
 #include <functional>
 #include <utility>
 #include <iostream>
@@ -65,7 +66,7 @@ class CommandsManager {
         static pck_list *listContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
         static pck_list *logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
     private:
-        static const std::map<std::size_t, cmd_ptr> _cmdMap;
+        static const std::unordered_map<std::size_t, cmd_ptr> _cmdMap;
 };
 
 std::vector<std::string> convertCurrentData(std::string, const char);

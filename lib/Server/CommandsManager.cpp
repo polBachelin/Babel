@@ -7,12 +7,13 @@
 
 #include "CommandsManager.hpp"
 
-const std::map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
+const std::unordered_map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
     {LOGIN, CommandsManager::login},
     {REGISTER, CommandsManager::registerUser},
     {ADD_CONTACT, CommandsManager::addContact},
     {CALL, CommandsManager::callX},
     {ASK_CONTACT_LIST, CommandsManager::listContact},
+    {LOGOUT, CommandsManager::logout},
     {CALL_WAS_REFUSE, CommandsManager::callRefused}
 };
 
@@ -189,7 +190,7 @@ pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shar
     return pack;
 }
 
-pck_list *logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient)
+pck_list *CommandsManager::logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient)
 {
     currentClient->clearPacket();
     currentClient->_um.logoutUser();
