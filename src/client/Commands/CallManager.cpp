@@ -146,7 +146,7 @@ void CallManager::onReadAudioData()
         average = average / (double)480;
         std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
-        delete [] outputBuffer
+        delete [] outputBuffer;
 //    }
     //emit sendData();
 }
