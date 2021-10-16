@@ -19,7 +19,7 @@ const std::unordered_map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
     {NEW_MESSAGE, CommandsManager::newMessage}
 };
 
-std::vector<std::string> &split(const std::string &s, char delim,std::vector<std::string> &elems)
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems)
 {
     std::stringstream ss(s);
     std::string item;
@@ -212,10 +212,6 @@ pck_list *CommandsManager::listMessage(const packet_t &pck, std::deque<std::shar
     (void)clients;
     elem = split(pck.data.data(), '\n', elem);
     messageHistory = currentClient->_um.getMessageManager().getHistory(elem[0], elem[1]);
-    for (auto &it : messageHistory) {
-        CommandsManager::createPacket(*pack, currentClient->getSocket(), SEND_ONE_MESSAGE, it);
-    }
-    messageHistory = currentClient->_um.getMessageManager().getHistory(elem[1], elem[0]);
     for (auto &it : messageHistory) {
         CommandsManager::createPacket(*pack, currentClient->getSocket(), SEND_ONE_MESSAGE, it);
     }
