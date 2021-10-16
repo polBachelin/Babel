@@ -116,7 +116,6 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::cout << *package;
     std::cout << "---------------------------------------" << std::endl;
 
-    _infos.currentData = package->data;
     if (package->code == EloginSuccessful || package->code == EregisterSuccessful)
         _infos.username = package->data;
 
@@ -137,6 +136,8 @@ void MainWindow::changeCurrentPage(pageNames name, ClientInfos_t info)
 void MainWindow::checkSignal(ClientInfos_t infos, signal_e e)
 {
     char *buffTemp = CommandsFactory::callCommand(infos, e);
+    if (!buffTemp)
+        return;
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
     if (e == Elogin || e == Eregister) {

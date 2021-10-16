@@ -33,6 +33,9 @@ void Client::GUI::ContactPage::onPage()
     std::cout << "CONTACTPAGE = " << _infos << std::endl;
     _labelContactName->setText(_infos.username.c_str());
     emit checkCommand(_infos, Easkcontactlist);
+    if (_timer->isActive())
+        _timer->stop();
+    _timer->start();
 }
 
 // LOARDERS
@@ -44,6 +47,14 @@ void Client::GUI::ContactPage::loadPage()
     contactLoader();
     delimLoader();
     formLoader();
+    timerLoader();
+}
+
+void Client::GUI::ContactPage::timerLoader()
+{
+    _timer = std::make_unique<QTimer>();
+
+    _timer->setInterval(5000);
 }
 
 void Client::GUI::ContactPage::formLoader()
@@ -150,6 +161,12 @@ void Client::GUI::ContactPage::initConnections()
     QObject::connect(_contactList.get(), SIGNAL(itemClicked(QListWidgetItem *)), SLOT(contactClicked(QListWidgetItem *)));
     QObject::connect(_call.get(), SIGNAL(clicked()), this, SLOT(callClicked()));
     QObject::connect(_addContactBtn.get(), SIGNAL(clicked()), this, SLOT(addContactClicked()));
+    QObject::connect(_timer.get(), SIGNAL(timeout()), this, SLOT(updateTimer()));
+}
+
+void Client::GUI::ContactPage::updateTimer()
+{
+    emit checkCommand(_infos, Easkcontactlist);
 }
 
 void Client::GUI::ContactPage::addContactClicked()
@@ -209,6 +226,7 @@ void Client::GUI::ContactPage::logOut()
     while (_contactList->count() > 0)
         _contactList->takeItem(0);
 
+    emit checkCommand(_infos, Elogout);
     emit changePage(LOGIN, _infos);
 }
 
@@ -248,7 +266,7 @@ void Client::GUI::ContactPage::wrongAddContact(ClientInfos_t info)
 void Client::GUI::ContactPage::invitationReceived(ClientInfos_t info)
 {
     QMessageBox msg;
-    std::string str(info.username + "added you to his contacts !");
+    std::string str(info.username + " added you to his contacts !");
     msg.setText(str.c_str());
     msg.exec();
     new QListWidgetItem(tr(info.username.c_str()), _contactList.get());
