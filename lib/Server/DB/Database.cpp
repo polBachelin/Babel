@@ -148,6 +148,6 @@ CallBackData_t Database::custom(const std::string &req)
     _data.ac = data.ac;
     _data.av = data.av;
     _data.c_name = data.c_name;
-    std::cout << "Custom request succeed" << std::endl;
+    // std::cout << "Custom request succeed" << std::endl;
     return _data;
 }
