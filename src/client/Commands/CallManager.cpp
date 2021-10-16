@@ -24,7 +24,6 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
     _soundManager->startInputStream();
-    _soundManager->startOutputStream();
     _timer = new QTimer();
     _timer->setInterval(1);
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
@@ -82,8 +81,8 @@ void CallManager::sendAudioData()
     }
 
     average = average / (double)10;
-    std::cout << "-----SENDING AUDIO DATA----\n";
-    std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+//    std::cout << "-----SENDING AUDIO DATA----\n";
+//    std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
     //std::cout << "[INPUT] COMPRESSED BUFFER IN HEXA " << hex((char)compressedBuffer[0]) << std::endl;
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
@@ -92,7 +91,7 @@ void CallManager::sendAudioData()
     dataPacket.data = audioPacket;
     // std::cout << "Message: " << (char *)dataPacket.data << std::endl;
     // std::cout << "Data size == " << 13 << std::endl;
-    std::cout << "---------------------------\n";
+    //std::cout << "---------------------------\n";
 
     //std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
     //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
@@ -121,7 +120,7 @@ void CallManager::onReadAudioData()
         std::memcpy(&timestamp, ptr, sizeof(std::time_t));
         int buffSize;
         std::memcpy(&buffSize, (ptr + sizeof(std::time_t)), sizeof(int));
-        std::cout << "-----READING AUDIO DATA----\n";
+        //std::cout << "-----READING AUDIO DATA----\n";
         // std::cout << "Network Time : " << timestamp << std::endl;
         //std::cout << "Network BuffSize : " << buffSize << std::endl;
         compressed = new unsigned char[buffSize];
@@ -145,9 +144,11 @@ void CallManager::onReadAudioData()
         }
 
         average = average / (double)10;
-        std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
-        std::cout << "---------------------------\n";
+        //std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+        //std::cout << "---------------------------\n";
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
+        if (!_soundManager->isOutputStreamActive())
+            _soundManager->startOutputStream();
         delete [] outputBuffer;
 //    }
     //emit sendData();
