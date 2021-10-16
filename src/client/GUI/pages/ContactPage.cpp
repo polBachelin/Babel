@@ -290,8 +290,8 @@ void Client::GUI::ContactPage::fillContactList(ClientInfos_t info)
 
     while (_contactList->count() > 0)
         _contactList->takeItem(0);
-    for (auto &i : contacts)
-        new QListWidgetItem(tr(i.c_str()), _contactList.get());
+    for (auto &it : contacts)
+        new QListWidgetItem(tr(it.c_str()), _contactList.get());
 }
 
 #include "moc_ContactPage.cpp"
