@@ -57,6 +57,7 @@ namespace GUI {
     enum signal_e
     {
         Elogin = 0,
+        Elogout = 10,
         Eregister = 1,
         Eaddcontact = 2,
         Eacceptinvitation = 112,
@@ -85,7 +86,7 @@ class APage : public QWidget
     Q_OBJECT
 
     public:
-        APage(ClientInfos infos, QWidget *parent = nullptr);
+        APage(ClientInfos_t infos, QWidget *parent = nullptr);
         ~APage() = default;
 
         // member functions
@@ -94,19 +95,20 @@ class APage : public QWidget
         virtual void layoutLoader() = 0;
         virtual void onPage() = 0;
 
-        void setClientInfos(const ClientInfos &);
+        void setClientInfos_t(const ClientInfos_t &);
 
     signals:
-        void changePage(pageNames, ClientInfos);
-        void checkCommand(ClientInfos, signal_e);
+        void changePage(pageNames name, ClientInfos_t);
+        void checkCommand(ClientInfos_t, signal_e);
 
     protected:
         std::unique_ptr<QGridLayout> _layout;
-        ClientInfos _infos;
+        ClientInfos_t _infos;
 };
 
+}}
 
-}
-}
+std::vector<std::string> convertCurrentData(std::string, const char);
+std::ostream &operator<<(std::ostream &, const Client::packet_t &);
 
 #endif /* !APAGE_HPP_ */

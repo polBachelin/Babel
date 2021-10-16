@@ -47,7 +47,7 @@ void AsioTcpConnection::interpret()
         auto tmp = it->second;
         if (tmp && tmp->code != 666) {
             std::cout << "---------Sent------------" << std::endl;
-            PRINT_PCK((*tmp));
+            std::cout << *tmp;
             std::cout << "-------------------------" << std::endl;
             auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
             it->first->async_send(asio::buffer(tmp, sizeof(packet_t)), handler);
@@ -77,6 +77,8 @@ void AsioTcpConnection::handleReadHeader(const asio::error_code &e, std::size_t 
     } else if (e) {
         if (e == asio::error::eof) {
             _isAlive = false;
+            _clientManager->clearPacket();
+            _clientManager->_um.logoutUser();
             return;
         }
         std::cout << "An error occurred " << e.message() << std::endl;
@@ -97,6 +99,8 @@ void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t si
     } else if (e) {
         if (e == asio::error::eof) {
             _isAlive = false;
+            _clientManager->clearPacket();
+            _clientManager->_um.logoutUser();
             return;
         }
         std::cout << "An error occur data :" << e.message() << std::endl;
@@ -111,7 +115,7 @@ std::shared_ptr<ClientManager> AsioTcpConnection::getClientManager() const
     return _clientManager;
 }
 
-const bool AsioTcpConnection::isAlive() const
+bool AsioTcpConnection::isAlive() const
 {
     return _isAlive;
 }

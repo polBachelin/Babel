@@ -83,6 +83,7 @@ set(SRCS_CLI
     src/client/Network/TcpClient.cpp
     src/client/BabelClient.cpp
     src/client/Network/UdpClient.cpp
+    src/client/structs.cpp
     src/client/Commands/CallManager.cpp
     )
 

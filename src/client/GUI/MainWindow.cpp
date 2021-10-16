@@ -38,7 +38,24 @@ static const std::map<std::size_t, std::string> errSockMap = {
     {22, "!! Temporary Error !!"}
 };
 
-MainWindow::MainWindow(const QString hostAddress, int portVal)
+static std::string getMyIp()
+{
+    foreach(const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces())
+    {
+        QNetworkInterface::InterfaceFlags flags = netInterface.flags();
+        if((bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)) {
+            foreach (const QNetworkAddressEntry &address, netInterface.addressEntries())
+            {
+                if(address.ip().protocol() == QAbstractSocket::IPv4Protocol) {
+                    return address.ip().toString().toStdString();
+                }
+            }
+        }
+    }
+    return "127.0.0.1";
+}
+
+MainWindow::MainWindow(const QString hostAddress, int portVal, int audioPort)
     : _tcpClient(hostAddress, portVal)
 {
     this->setFixedSize({WIDTH, HEIGHT});
@@ -49,23 +66,13 @@ MainWindow::MainWindow(const QString hostAddress, int portVal)
         "); background-position: center;");
 
     _infos.port = std::to_string(portVal);
+    _infos.audioPort = audioPort;
+    _infos.myIp = getMyIp();
+    _pages = std::make_unique<PageManager>(this, _infos);
 
-    //TODO : faire une fonction pour recup l'ip
-    foreach (const QNetworkInterface &netInterface, QNetworkInterface::allInterfaces()) {
-        QNetworkInterface::InterfaceFlags flags = netInterface.flags();
-        if( (bool)(flags & QNetworkInterface::IsRunning) && !(bool)(flags & QNetworkInterface::IsLoopBack)){
-            foreach (const QNetworkAddressEntry &address, netInterface.addressEntries()) {
-                if(address.ip().protocol() == QAbstractSocket::IPv4Protocol) {
-                    _infos.ip = address.ip().toString().toStdString();
-                    _pages = std::make_unique<PageManager>(this, _infos);
-                    initConnections();
-                    signalReceivedLoader();
-                    this->setCentralWidget(_pages.get());
-                    return;
-                }
-            }
-        }
-    }
+    initConnections();
+    signalReceivedLoader();
+    this->setCentralWidget(_pages.get());
 }
 
 MainWindow::~MainWindow()
@@ -75,25 +82,25 @@ MainWindow::~MainWindow()
 
 void MainWindow::signalReceivedLoader()
 {
-    _signalPageMap[EloginSuccessful] = [&](ClientInfos info){
+    _signalPageMap[EloginSuccessful] = [&](ClientInfos_t info){
         emit MainWindow::validSignInResponse(info);};
-    _signalPageMap[EloginFailed] = [&](ClientInfos info){
+    _signalPageMap[EloginFailed] = [&](ClientInfos_t info){
         emit MainWindow::wrongSignInResponse(info);};
-    _signalPageMap[EregisterSuccessful] = [&](ClientInfos info){
+    _signalPageMap[EregisterSuccessful] = [&](ClientInfos_t info){
         emit MainWindow::validRegisterResponse(info);};
-    _signalPageMap[EregisterFailed] = [&](ClientInfos info){
+    _signalPageMap[EregisterFailed] = [&](ClientInfos_t info){
         emit MainWindow::wrongRegisterResponse(info);};
-    _signalPageMap[EincomingCall] = [&](ClientInfos info){
+    _signalPageMap[EincomingCall] = [&](ClientInfos_t info){
         emit MainWindow::incomingCall(info);};
-    _signalPageMap[EinvitationReceive] = [&](ClientInfos info){
+    _signalPageMap[EinvitationReceive] = [&](ClientInfos_t info){
         emit MainWindow::invitationContactReceived(info);};
-    _signalPageMap[EcontactExist] = [&](ClientInfos info){
+    _signalPageMap[EcontactExist] = [&](ClientInfos_t info){
         emit MainWindow::contactAddSuccess(info);};
-    _signalPageMap[EcontactAddFailed] = [&](ClientInfos info){
+    _signalPageMap[EcontactAddFailed] = [&](ClientInfos_t info){
         emit MainWindow::contactAddFailed(info);};
-    _signalPageMap[EcallWasRefused] = [&](ClientInfos info){
+    _signalPageMap[EcallWasRefused] = [&](ClientInfos_t info){
         emit MainWindow::callRefused(info);};
-    _signalPageMap[EcontactList] = [&](ClientInfos info){
+    _signalPageMap[EcontactList] = [&](ClientInfos_t info){
         emit MainWindow::contactList(info);};
 }
 
@@ -105,31 +112,31 @@ void MainWindow::receivedSomething(QByteArray msg)
         std::cout << "** received a packet with wrong MAGIC number **" << std::endl;
         return;
     }
-    std::cout << "------------- J'ai reçu ---------------" << std::endl;
-    std::cout << *package;
-    std::cout << "---------------------------------------" << std::endl;
+    if (package->code != 4) {
+        std::cout << "------------- J'ai reçu ---------------" << std::endl;
+        std::cout << *package;
+        std::cout << "---------------------------------------" << std::endl;
+    }
 
-    std::string test(package->data);
-    _infos.username = test;
+    if (package->code == EloginSuccessful || package->code == EregisterSuccessful)
+        _infos.username = package->data;
     _infos.currentData = package->data;
 
-    if (_signalPageMap.find((receivedSignal_e)package->code) == _signalPageMap.end()) {
-        std::cout << "got an unknown code : " << package->code << std::endl;
-    } else {
-        std::cout << "got a code : " << package->code << std::endl;
+    if (_signalPageMap.find((receivedSignal_e)package->code) != _signalPageMap.end())
         _signalPageMap.at((receivedSignal_e)package->code)(_infos);
-    }
 }
 
-void MainWindow::changeCurrentPage(pageNames name, ClientInfos info)
+void MainWindow::changeCurrentPage(pageNames name, ClientInfos_t info)
 {
     std::cout << "page change request" << std::endl;
     _pages->setCurrentPage(name, info);
 }
 
-void MainWindow::checkSignal(ClientInfos infos, signal_e e)
+void MainWindow::checkSignal(ClientInfos_t infos, signal_e e)
 {
     char *buffTemp = CommandsFactory::callCommand(infos, e);
+    if (!buffTemp)
+        return;
     QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
     if (e == Elogin || e == Eregister) {
@@ -148,29 +155,29 @@ void MainWindow::gotError(QAbstractSocket::SocketError err)
 void MainWindow::initConnections(void)
 {
     QObject::connect(
-        _pages->getPage(LOGIN), SIGNAL(checkCommand(ClientInfos, signal_e)),
-        this, SLOT(checkSignal(ClientInfos, signal_e)));
+        _pages->getPage(LOGIN), SIGNAL(checkCommand(ClientInfos_t, signal_e)),
+        this, SLOT(checkSignal(ClientInfos_t, signal_e)));
     QObject::connect(
-        _pages->getPage(LOGIN), SIGNAL(changePage(pageNames, ClientInfos)),
-        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
+        _pages->getPage(LOGIN), SIGNAL(changePage(pageNames, ClientInfos_t)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos_t)));
     QObject::connect(
-        _pages->getPage(REGISTER), SIGNAL(checkCommand(ClientInfos, signal_e)),
-        this, SLOT(checkSignal(ClientInfos, signal_e)));
+        _pages->getPage(REGISTER), SIGNAL(checkCommand(ClientInfos_t, signal_e)),
+        this, SLOT(checkSignal(ClientInfos_t, signal_e)));
     QObject::connect(
-        _pages->getPage(REGISTER), SIGNAL(changePage(pageNames, ClientInfos)),
-        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
+        _pages->getPage(REGISTER), SIGNAL(changePage(pageNames, ClientInfos_t)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos_t)));
     QObject::connect(
-        _pages->getPage(CALL), SIGNAL(checkCommand(ClientInfos, signal_e)),
-        this, SLOT(checkSignal(ClientInfos, signal_e)));
+        _pages->getPage(CALL), SIGNAL(checkCommand(ClientInfos_t, signal_e)),
+        this, SLOT(checkSignal(ClientInfos_t, signal_e)));
     QObject::connect(
-        _pages->getPage(CALL), SIGNAL(changePage(pageNames, ClientInfos)),
-        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
+        _pages->getPage(CALL), SIGNAL(changePage(pageNames, ClientInfos_t)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos_t)));
     QObject::connect(
-        _pages->getPage(CONTACTS), SIGNAL(changePage(pageNames, ClientInfos)),
-        this, SLOT(changeCurrentPage(pageNames, ClientInfos)));
+        _pages->getPage(CONTACTS), SIGNAL(changePage(pageNames, ClientInfos_t)),
+        this, SLOT(changeCurrentPage(pageNames, ClientInfos_t)));
     QObject::connect(
-        _pages->getPage(CONTACTS), SIGNAL(checkCommand(ClientInfos, signal_e)),
-        this, SLOT(checkSignal(ClientInfos, signal_e)));
+        _pages->getPage(CONTACTS), SIGNAL(checkCommand(ClientInfos_t, signal_e)),
+        this, SLOT(checkSignal(ClientInfos_t, signal_e)));
     QObject::connect(
         &_tcpClient, &Client::Network::TcpClient::dataAvailable,
         this, &MainWindow::receivedSomething);

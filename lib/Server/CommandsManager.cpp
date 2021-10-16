@@ -7,12 +7,13 @@
 
 #include "CommandsManager.hpp"
 
-const std::map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
+const std::unordered_map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
     {LOGIN, CommandsManager::login},
     {REGISTER, CommandsManager::registerUser},
     {ADD_CONTACT, CommandsManager::addContact},
     {CALL, CommandsManager::callX},
     {ASK_CONTACT_LIST, CommandsManager::listContact},
+    {LOGOUT, CommandsManager::logout},
     {CALL_WAS_REFUSE, CommandsManager::callRefused}
 };
 
@@ -22,7 +23,7 @@ std::vector<std::string> &split(const std::string &s, char delim,std::vector<std
     std::string item;
     while (std::getline(ss, item, delim)) {
         if (item.length() > 0) {
-            elems.push_back(item);  
+            elems.push_back(item);
         }
     }
     return elems;
@@ -33,7 +34,7 @@ pck_list *CommandsManager::redirect(const packet_t &pck, std::deque<std::shared_
 {
     try {
         std::cout << "---------Receive------------" << std::endl;
-        PRINT_PCK((pck));
+        std::cout << pck;
         std::cout << "----------------------------" << std::endl;
         if (pck.magic == MAGIC)
             return _cmdMap.at(pck.code)(pck, clients, currentClient);
@@ -103,7 +104,7 @@ pck_list *CommandsManager::addContact(const packet_t &pck, std::deque<std::share
     std::string res;
     std::string own;
     pck_list *pack = new pck_list;
-    
+
     elem = split(pck.data.data(), '\n', elem);
     res = elem[0];
     for (auto it = clients.begin(); it != clients.end(); ++it) {
@@ -140,7 +141,7 @@ pck_list *CommandsManager::callX(const packet_t &pck, std::deque<std::shared_ptr
             return pack;
         }
     }
-    CommandsManager::createPacket(*pack, currentClient->getSocket(), 603, "failed\n");
+    CommandsManager::createPacket(*pack, currentClient->getSocket(), USER_NOT_FOUND, "failed\n");
     return pack;
 }
 
@@ -152,9 +153,18 @@ pck_list *CommandsManager::listContact(const packet_t &pck, std::deque<std::shar
     pck_list *pack = new pck_list;
     std::vector<std::string> arg;
 
-
     arg = split(name, '\n', arg);
     res = currentClient->_um.getContactManager().getContactList(arg[0]);
+    arg.clear();
+    arg = split(res, '\n', arg);
+    res = "";
+    for (auto it = clients.begin(); it != clients.end(); ++it) {
+        for (auto its = arg.begin(); its != arg.end(); ++its) {
+            if ((*it)->_um.getName() == *its) {
+                res += *its + "\n";
+            }
+        }
+    }
     CommandsManager::createPacket(*pack, currentClient->getSocket(), CONTACT_LIST, res);
     return pack;
 }
@@ -178,4 +188,11 @@ pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shar
     }
     CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
     return pack;
+}
+
+pck_list *CommandsManager::logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient)
+{
+    currentClient->clearPacket();
+    currentClient->_um.logoutUser();
+    return nullptr;
 }

@@ -7,15 +7,15 @@
 
 #include "LoginPage.hpp"
 
-Client::GUI::LoginPage::LoginPage(ClientInfos infos, QWidget *parent) : APage(infos, parent)
+Client::GUI::LoginPage::LoginPage(ClientInfos_t infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(WIDTH, HEIGHT);
     _formError = false;
 
-    QObject::connect(parent, SIGNAL(validSignInResponse(ClientInfos)),
-        this, SLOT(validSignIn(ClientInfos)));
-    QObject::connect(parent, SIGNAL(wrongSignInResponse(ClientInfos)),
-        this, SLOT(wrongSignIn(ClientInfos)));
+    QObject::connect(parent, SIGNAL(validSignInResponse(ClientInfos_t)),
+        this, SLOT(validSignIn(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(wrongSignInResponse(ClientInfos_t)),
+        this, SLOT(wrongSignIn(ClientInfos_t)));
 
     loadPage();
     layoutLoader();
@@ -152,7 +152,7 @@ void Client::GUI::LoginPage::signIn()
     emit checkCommand(_infos, Elogin);
 }
 
-void Client::GUI::LoginPage::validSignIn(ClientInfos info)
+void Client::GUI::LoginPage::validSignIn(ClientInfos_t info)
 {
     std::cout << "GOTO - contact page" << std::endl << std::endl;
 
@@ -165,7 +165,7 @@ void Client::GUI::LoginPage::validSignIn(ClientInfos info)
     emit changePage(CONTACTS, info);
 }
 
-void Client::GUI::LoginPage::wrongSignIn(ClientInfos info)
+void Client::GUI::LoginPage::wrongSignIn(ClientInfos_t info)
 {
     _errorPassword->setText("wrong password");
     _errorUsername->setText("wrong username");

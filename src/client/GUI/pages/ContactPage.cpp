@@ -7,22 +7,22 @@
 
 #include "ContactPage.hpp"
 
-Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent) : APage(infos, parent)
+Client::GUI::ContactPage::ContactPage(Client::ClientInfos_t infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(WIDTH, HEIGHT);
     _contactSelected = "";
     _cid = 0;
 
-    QObject::connect(parent, SIGNAL(contactAddSuccess(ClientInfos)),
-        this, SLOT(validAddContact(ClientInfos)));
-    QObject::connect(parent, SIGNAL(contactAddFailed(ClientInfos)),
-        this, SLOT(wrongAddContact(ClientInfos)));
-    QObject::connect(parent, SIGNAL(incomingCall(ClientInfos)),
-        this, SLOT(handleIncomingCall(ClientInfos)));
-    QObject::connect(parent, SIGNAL(contactList(ClientInfos)),
-        this, SLOT(fillContactList(ClientInfos)));
-    QObject::connect(parent, SIGNAL(invitationContactReceived(ClientInfos)),
-        this, SLOT(invitationReceived(ClientInfos)));
+    QObject::connect(parent, SIGNAL(contactAddSuccess(ClientInfos_t)),
+        this, SLOT(validAddContact(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(contactAddFailed(ClientInfos_t)),
+        this, SLOT(wrongAddContact(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(incomingCall(ClientInfos_t)),
+        this, SLOT(handleIncomingCall(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(contactList(ClientInfos_t)),
+        this, SLOT(fillContactList(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(invitationContactReceived(ClientInfos_t)),
+        this, SLOT(invitationReceived(ClientInfos_t)));
 
     loadPage();
     layoutLoader();
@@ -30,9 +30,12 @@ Client::GUI::ContactPage::ContactPage(Client::ClientInfos infos, QWidget *parent
 
 void Client::GUI::ContactPage::onPage()
 {
-    std::cout << "USERNAME = " << _infos.username << std::endl;
+    std::cout << "CONTACTPAGE = " << _infos << std::endl;
     _labelContactName->setText(_infos.username.c_str());
     emit checkCommand(_infos, Easkcontactlist);
+    if (_timer->isActive())
+        _timer->stop();
+    _timer->start();
 }
 
 // LOARDERS
@@ -44,6 +47,14 @@ void Client::GUI::ContactPage::loadPage()
     contactLoader();
     delimLoader();
     formLoader();
+    timerLoader();
+}
+
+void Client::GUI::ContactPage::timerLoader()
+{
+    _timer = std::make_unique<QTimer>();
+
+    _timer->setInterval(1000);
 }
 
 void Client::GUI::ContactPage::formLoader()
@@ -91,12 +102,6 @@ void Client::GUI::ContactPage::contactLoader()
 {
     _addContactBtn = std::make_unique<QPushButton>("Add contact");
     _contactList = std::make_unique<QListWidget>();
-
-    // new QListWidgetItem(tr("abcdef"), _contactList.get());
-    // new QListWidgetItem(tr("Contact"), _contactList.get());
-    // new QListWidgetItem(tr("jbseri"), _contactList.get());
-    // new QListWidgetItem(tr("nvjserhbdkv"), _contactList.get());
-    // new QListWidgetItem(tr("vgzejbsbdhviosd"), _contactList.get());
 }
 
 void Client::GUI::ContactPage::delimLoader()
@@ -150,6 +155,12 @@ void Client::GUI::ContactPage::initConnections()
     QObject::connect(_contactList.get(), SIGNAL(itemClicked(QListWidgetItem *)), SLOT(contactClicked(QListWidgetItem *)));
     QObject::connect(_call.get(), SIGNAL(clicked()), this, SLOT(callClicked()));
     QObject::connect(_addContactBtn.get(), SIGNAL(clicked()), this, SLOT(addContactClicked()));
+    QObject::connect(_timer.get(), SIGNAL(timeout()), this, SLOT(updateTimer()));
+}
+
+void Client::GUI::ContactPage::updateTimer()
+{
+    emit checkCommand(_infos, Easkcontactlist);
 }
 
 void Client::GUI::ContactPage::addContactClicked()
@@ -166,14 +177,8 @@ void Client::GUI::ContactPage::addContactClicked()
     );
 
     if (ok && !text.isEmpty()) {
-        ClientInfos info = {
-            .username = text.toStdString().c_str(),
-            .password = "",
-            .userToCall = "",
-            .ip = "",
-            .port = "",
-            .currentData = "",
-            };
+        ClientInfos_t info = _infos;
+        info.username = text.toStdString().c_str();
 
         emit checkCommand(info, Eaddcontact);
     }
@@ -215,6 +220,7 @@ void Client::GUI::ContactPage::logOut()
     while (_contactList->count() > 0)
         _contactList->takeItem(0);
 
+    emit checkCommand(_infos, Elogout);
     emit changePage(LOGIN, _infos);
 }
 
@@ -236,47 +242,50 @@ void Client::GUI::ContactPage::searchContact(QString search)
     }
 }
 
-void Client::GUI::ContactPage::validAddContact(ClientInfos info)
+void Client::GUI::ContactPage::validAddContact(ClientInfos_t info)
 {
     QMessageBox msg;
     msg.setText("Contact added successfully !");
     msg.exec();
-    new QListWidgetItem(tr(info.username.c_str()), _contactList.get());
+    new QListWidgetItem(tr(info.currentData.c_str()), _contactList.get());
 }
 
-void Client::GUI::ContactPage::wrongAddContact(ClientInfos info)
+void Client::GUI::ContactPage::wrongAddContact(ClientInfos_t info)
 {
     QMessageBox msg;
     msg.setText("Contact not found !");
     msg.exec();
 }
 
-void Client::GUI::ContactPage::invitationReceived(ClientInfos info)
+void Client::GUI::ContactPage::invitationReceived(ClientInfos_t info)
 {
     QMessageBox msg;
-    std::string str(info.username + "added you to his contacts !");
+    std::string str(info.currentData + " added you to his contacts !");
     msg.setText(str.c_str());
     msg.exec();
-    new QListWidgetItem(tr(info.username.c_str()), _contactList.get());
+    new QListWidgetItem(tr(info.currentData.c_str()), _contactList.get());
 }
 
-void Client::GUI::ContactPage::handleIncomingCall(ClientInfos info)
+void Client::GUI::ContactPage::handleIncomingCall(ClientInfos_t info)
 {
-    info.userToCall = "";
+    std::vector<std::string> data = convertCurrentData(info.currentData, '\n');
+
+    info.userToCall = data[0];
+    info.callerIp = data[1];
+    info.callerAudioPort = (unsigned short) std::atoi(data[2].c_str());
+    _infos = info;
+
     emit changePage(CALL, info);
 }
 
-void Client::GUI::ContactPage::fillContactList(ClientInfos info)
+void Client::GUI::ContactPage::fillContactList(ClientInfos_t info)
 {
-    std::replace(info.currentData.begin(), info.currentData.end(), '\n', ' ');
-    std::istringstream ss(info.currentData);
-    std::string word;
+    std::vector<std::string> contacts = convertCurrentData(info.currentData, '\n');
 
     while (_contactList->count() > 0)
         _contactList->takeItem(0);
-    while (ss >> word)
-        new QListWidgetItem(tr(word.c_str()), _contactList.get());
-        // std::cout << word << "\n";
+    for (auto &it : contacts)
+        new QListWidgetItem(tr(it.c_str()), _contactList.get());
 }
 
 #include "moc_ContactPage.cpp"

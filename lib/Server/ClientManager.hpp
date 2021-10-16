@@ -37,6 +37,7 @@ class ClientManager {
 		packet_t getPacket() const;
 		void setPacket(const packet_t *packet);
 		void setPacketData(const std::array<char, 2048> &data);
+		void clearPacket();
 
 		UserManager _um;
 	private:
@@ -44,5 +45,7 @@ class ClientManager {
 		packet_t _packet;
 };
 
-std::ostream &operator<<(std::ostream &os, const packet_t &pck);
+std::vector<std::string> convertCurrentData(std::string, const char);
+std::ostream &operator<<(std::ostream &, const packet_t &);
+
 #endif /* !PACKETMANAGER_HPP_ */

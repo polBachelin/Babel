@@ -1,16 +1,16 @@
-/*
-** EPITECH PROJECT, 2021
-** Babel
-** File description:
-** structs
-*/
-
 #include "structs.hpp"
 
-std::ostream &Client::operator<<(std::ostream &os, const Client::packet_t &pck) {
-	os << "packet.magic     : " << pck.magic << std::endl;
-	os << "packet.code      : " << pck.code << std::endl;
-	os << "packet.data_size : " << pck.data_size << std::endl;
-	os << "packet.data      : " << pck.data << std::endl;
-	return os;
+std::ostream &operator<<(std::ostream &out, const Client::ClientInfos_t &info)
+{
+    out <<  std::endl <<"---Infos---" << std::endl
+        << "MyUsername:" << info.username << std::endl
+        << "PortTCP:" << info.port << std::endl
+        << "myIp:" << info.myIp << std::endl
+        << "MyAudioPort:" << std::to_string(info.audioPort) << std::endl
+        << "caller:" << info.userToCall << std::endl
+        << "callerIp:" << info.callerIp << std::endl
+        << "callerAudioPort:" << std::to_string(info.callerAudioPort) << std::endl
+        << "currentData:" << info.currentData << std::endl
+        << std::endl;
+    return out;
 }

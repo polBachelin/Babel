@@ -19,6 +19,8 @@ class UserManager {
         int newUser(const std::string &, const std::string &);
         ContactManager getContactManager() const;
         std::string getName() const;
+        void logoutUser();
+        bool isLog();
     protected:
     private:
         Database _db;

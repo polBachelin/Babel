@@ -19,7 +19,7 @@ class ContactPage : public APage
 
     public:
         // Ctor / Dtor
-        ContactPage(Client::ClientInfos infos, QWidget *parent = nullptr);
+        ContactPage(Client::ClientInfos_t infos, QWidget *parent = nullptr);
         ~ContactPage() = default;
 
         // member functions
@@ -34,17 +34,19 @@ class ContactPage : public APage
         void labelLoader();
         void callLoader();
         void formLoader();
+        void timerLoader();
 
     public slots:
-        void validAddContact(ClientInfos);
-        void wrongAddContact(ClientInfos);
-        void handleIncomingCall(ClientInfos);
-        void fillContactList(ClientInfos);
-        void invitationReceived(ClientInfos);
+        void validAddContact(ClientInfos_t);
+        void wrongAddContact(ClientInfos_t);
+        void handleIncomingCall(ClientInfos_t);
+        void fillContactList(ClientInfos_t);
+        void invitationReceived(ClientInfos_t);
         void contactClicked(QListWidgetItem *);
         void addContactClicked();
         void callClicked();
         void logOut();
+        void updateTimer();
         void searchContact(QString);
         void changeMsg(QString);
 
@@ -69,6 +71,9 @@ class ContactPage : public APage
         std::map<std::string, std::unique_ptr<QFrame>> _delim;
         std::unique_ptr<QPushButton> _backButton;
         std::unique_ptr<QListWidget> _contactList;
+
+        // Timer
+        std::unique_ptr<QTimer> _timer;
 
         // member variables
         QSlider * _m_slider;
