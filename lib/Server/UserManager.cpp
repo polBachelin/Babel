@@ -68,3 +68,14 @@ std::string UserManager::getName() const
 {
     return _name;
 }
+
+void UserManager::logoutUser()
+{
+    _isLog = false;
+    _name = "";
+}
+
+bool UserManager::isLog()
+{
+    return _isLog;
+}

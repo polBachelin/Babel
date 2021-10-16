@@ -72,3 +72,11 @@ std::ostream &operator<<(std::ostream &os, const packet_t &pck)
     }
     return os << std::endl;
 }
+
+void ClientManager::clearPacket()
+{
+    _packet.magic = 0;
+    _packet.code = 84;
+    _packet.data_size = 0;
+    _packet.data.fill('\0');
+}

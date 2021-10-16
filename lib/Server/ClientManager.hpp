@@ -37,6 +37,7 @@ class ClientManager {
 		packet_t getPacket() const;
 		void setPacket(const packet_t *packet);
 		void setPacketData(const std::array<char, 2048> &data);
+		void clearPacket();
 
 		UserManager _um;
 	private:

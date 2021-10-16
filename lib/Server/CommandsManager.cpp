@@ -152,9 +152,18 @@ pck_list *CommandsManager::listContact(const packet_t &pck, std::deque<std::shar
     pck_list *pack = new pck_list;
     std::vector<std::string> arg;
 
-
     arg = split(name, '\n', arg);
     res = currentClient->_um.getContactManager().getContactList(arg[0]);
+    arg.clear();
+    arg = split(res, '\n', arg);
+    res = "";
+    for (auto it = clients.begin(); it != clients.end(); ++it) {
+        for (auto its = arg.begin(); its != arg.end(); ++its) {
+            if ((*it)->_um.getName() == *its) {
+                res += *its + "\n";
+            }
+        }
+    }
     CommandsManager::createPacket(*pack, currentClient->getSocket(), CONTACT_LIST, res);
     return pack;
 }
@@ -182,5 +191,7 @@ pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shar
 
 pck_list *logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient)
 {
-
+    currentClient->clearPacket();
+    currentClient->_um.logoutUser();
+    return nullptr;
 }
