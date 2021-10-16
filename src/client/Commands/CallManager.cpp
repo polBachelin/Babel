@@ -41,20 +41,23 @@ void CallManager::addPair(const std::string &ip, unsigned short port)
 
 unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
 {
-    unsigned char *res = new unsigned char[buffSize * sizeof(unsigned char) + sizeof(uint32_t) + sizeof(uint32_t)];
-    std::cout << "SIZE OF BUFFER === " << buffSize *sizeof(unsigned char) + sizeof(uint32_t) + sizeof(uint32_t) << std::endl;
+    unsigned char *res = new unsigned char[buffSize * sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int)];
+    std::cout << "SIZE OF BUFFER === " << buffSize *sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int) << std::endl;
     uintptr_t ptr = reinterpret_cast<uintptr_t >(res);
-    uint32_t networkBuffSize = htonl(buffSize);
-    uint32_t networkTime = htonl(time);
+    void *newPtr = res;
+    // uint32_t networkBuffSize = htonl(buffSize);
+    // uint32_t networkTime = htonl(time);
 
     //std::cout << "[createAudioPacket] buffSize : " << buffSize << std::endl;
-    std::cout << "[createAudioPacket] networkBuffSize : " << networkBuffSize << std::endl;
-    std::cout << "[createAudioPacket] networkTime : " << networkTime << std::endl;
-    std::memcpy((void *)ptr, &networkTime, sizeof(uint32_t));
-    //ptr += sizeof(uint32_t);
-    std::memcpy((void *)(ptr + sizeof(uint32_t)), &networkBuffSize, sizeof(uint32_t));
-    //ptr += sizeof(uint32_t);
-    std::memcpy((void *)(ptr + sizeof(uint32_t) + sizeof(uint32_t)), compressedBuff, buffSize * sizeof(unsigned char));
+    std::cout << "[createAudioPacket] networkBuffSize : " << buffSize << std::endl;
+    std::cout << "[createAudioPacket] networkTime : " << time << std::endl;
+    std::memcpy(newPtr, &time, sizeof(std::time_t));
+    std::memcpy((std::time_t *)(newPtr) + sizeof(std::time_t), &buffSize, sizeof(int));
+    std::memcpy((std::time_t *)(newPtr) + sizeof(std::time_t) + sizeof(int), compressedBuff, buffSize * sizeof(unsigned char));
+
+    // std::memcpy((void *)ptr, &time, sizeof(std::time_t));
+    // std::memcpy((void *)(ptr + sizeof(std::time_t)), &buffSize, sizeof(int));
+    // std::memcpy((void *)(ptr + sizeof(std::time_t) + sizeof(int)), compressedBuff, buffSize * sizeof(unsigned char));
     return res;
 }
 
