@@ -24,6 +24,7 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
     _soundManager->startInputStream();
+    _soundManager->startOutputStream();
     _timer = new QTimer();
     _timer->setInterval(1);
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
@@ -125,15 +126,15 @@ void CallManager::onReadAudioData()
         // std::cout << "Network BuffSize : " << buffSize << std::endl;
         // std::cout << "---------------------------\n";
         compressed = new unsigned char[buffSize];
-        std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
-
-        _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
+        std::memcpy(compressed, (ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
+        auto outputBuffer = new float[_inputBufferSize];
+        _encoderManager->decode(compressed, outputBuffer, 480, buffSize);
         double max = 0;
         double average = 0.0;
         double val = 0;
         for(int i=0; i<480; i++ )
         {
-            val = _outputBuffer[i];
+            val = outputBuffer[i];
             if( val < 0 ) val = -val; /* ABS */
             if( val > max )
             {
@@ -145,9 +146,7 @@ void CallManager::onReadAudioData()
         average = average / (double)480;
         std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
-        if (!_soundManager->isOutputStreamActive()) {
-            _soundManager->startOutputStream();
-        }
+        delete [] outputBuffer
 //    }
     //emit sendData();
 }
