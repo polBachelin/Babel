@@ -42,7 +42,7 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
 
     buf.append((const char *)packet.data);
     receiverIp.setAddress(QString::fromStdString(ip));
-    std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
+    std::cout << "Trying to send packet to : " << ip  << " : " << port << std::endl;
     _socket->writeDatagram(buf, receiverIp, port);
 }
 
@@ -83,7 +83,7 @@ void UDPClient::onReadyRead()
     qDebug() << "Message port: " << QString::fromStdString(std::to_string(new_packet.port));
     qDebug() << "Message: " << QString::fromStdString(std::string((char *)new_packet.data));
     qDebug() << "Data Size: " << QString::fromStdString(std::to_string(new_packet.dataSize));
-    
+
     _data.push(new_packet);
     emit getDataFromUDP();
 }

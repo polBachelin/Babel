@@ -18,15 +18,13 @@ void Client::GUI::APage::setClientInfos_t(const ClientInfos_t &infos)
 
 std::vector<std::string> convertCurrentData(std::string data, const char sep)
 {
-	// std::cout << "Convert Current Data [" << data << "]";
     std::replace(data.begin(), data.end(), sep, ' ');
     std::istringstream ss(data);
-    std::string word;
-    std::vector<std::string> words;
+    std::pair<std::string, std::vector<std::string>> words;
 
-    while (ss >> word)
-        words.push_back(word);
-    return words;
+    while (ss >> words.first)
+        words.second.push_back(words.first);
+    return words.second;
 }
 
 std::ostream &operator<<(std::ostream &os, const Client::packet_t &pck)
@@ -38,7 +36,7 @@ std::ostream &operator<<(std::ostream &os, const Client::packet_t &pck)
 	os << "packet.data_size : " << pck.data_size << std::endl;
 	os << "packet.data      : [";
     for (auto it = data.begin(); it != data.end(); it++) {
-        os << *it << ((it == data.end()) ? "]" : ", ") << std::endl;
+        os << *it << ((it == data.end() - 1) ? "]" : ", ");
     }
 	return os;
 }
