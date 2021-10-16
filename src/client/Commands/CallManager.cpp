@@ -26,7 +26,7 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _soundManager->startInputStream();
     _soundManager->startOutputStream();
     _timer = new QTimer();
-    _timer->setInterval(1000);
+    _timer->setInterval(1);
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
     // QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP()), this, SLOT(onReadAudioData()));
     // QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
@@ -53,9 +53,9 @@ unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int
     //std::cout << "[createAudioPacket] networkBuffSize : " << buffSize << std::endl;
     std::cout << "[createAudioPacket] networkTime : " << time << std::endl;
 
-    std::memcpy(reinterpret_cast<void *>(ptr), &time, sizeof(std::time_t));
-    std::memcpy(reinterpret_cast<void *>(ptr + sizeof(std::time_t)), &buffSize, sizeof(int));
-    std::memcpy(reinterpret_cast<void *>(ptr + sizeof(std::time_t) + sizeof(int)), compressedBuff, buffSize * sizeof(unsigned char));
+    std::memcpy((res), &time, sizeof(std::time_t));
+    std::memcpy((res + sizeof(std::time_t)), &buffSize, sizeof(int));
+    std::memcpy((res + sizeof(std::time_t) + sizeof(int)), compressedBuff, buffSize * sizeof(unsigned char));
     return res;
 }
 
@@ -87,13 +87,11 @@ void CallManager::sendAudioData()
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
 
     dataPacket.port = _audioPort;
-    dataPacket.host = _myIp;    
-    for (int i = 0; audioPacket[i]; i++) {
-        dataPacket.data.push_back(audioPacket[i]);
-    }
+    dataPacket.host = _myIp;
+    dataPacket.data = audioPacket;
     std::cout << "-----SENDING AUDIO DATA----\n";
-    std::cout << "Message: " << (char *)dataPacket.data.data() << std::endl;
-    std::cout << "Data size == " << dataPacket.data.size() << std::endl;
+    std::cout << "Message: " << (char *)dataPacket.data << std::endl;
+    std::cout << "Data size == " << 13 << std::endl;
     std::cout << "---------------------------\n";
 
     //std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
@@ -118,11 +116,11 @@ void CallManager::onReadAudioData()
         if (dataPacket.magicNum == 0) {
             return;
         }
-        ptr = (unsigned char *)dataPacket.data.data();
+        ptr = (unsigned char *)dataPacket.data;
         std::time_t timestamp;
-        std::memcpy(&timestamp, reinterpret_cast<void *>(ptr), sizeof(std::time_t));
+        std::memcpy(&timestamp, ptr, sizeof(std::time_t));
         int buffSize;
-        std::memcpy(&buffSize, reinterpret_cast<void *>(ptr + sizeof(std::time_t)), sizeof(int));
+        std::memcpy(&buffSize, (ptr + sizeof(std::time_t)), sizeof(int));
         std::cout << "-----READING AUDIO DATA----\n";
         std::cout << "Network Time : " << timestamp << std::endl;
         std::cout << "Network BuffSize : " << buffSize << std::endl;

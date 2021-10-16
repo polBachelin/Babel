@@ -19,6 +19,23 @@ namespace Client
 {
     namespace Network
     {
+
+        struct HexCharStruct
+        {
+            char c;
+            HexCharStruct(char _c) : c(_c) { }
+        };
+
+        inline std::ostream& operator<<(std::ostream& o, const HexCharStruct& hs)
+        {
+            return (o << std::hex << (int)hs.c);
+        }
+
+        inline HexCharStruct hex(char _c)
+        {
+            return HexCharStruct(_c);
+        }
+
         class UDPClient : public QObject,  public IUDPClient
         {
             Q_OBJECT

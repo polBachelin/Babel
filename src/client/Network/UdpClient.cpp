@@ -12,7 +12,7 @@ using namespace Client::Network;
 QDataStream& operator <<(QDataStream& out,packetUDP_t &packet)
 {
     out << QString::fromStdString(packet.host)
-        << QByteArray((const char *)packet.data.data(), sizeof(packet.data))
+        << QByteArray((const char *)packet.data, sizeof(packet.data))
         << (qint16)packet.port;
     return out;
 }
@@ -50,7 +50,7 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
     receiverIp.setAddress(QString::fromStdString(ip));
     //std::cout << "Trying to send packet to : " << ip  << " : " << port << std::endl;
     //std::cout << "PACKET DATA SIZE : " << packet.data.size() << std::endl;
-    if (_socket->writeDatagram(packet.data.data(), packet.data.size(), receiverIp, port) == -1)
+    if (_socket->writeDatagram((const char *)packet.data, 13, receiverIp, port) == -1)
         std::cout << "Send fail to :" << ip  << ":" << port << std::endl;
 }
 
@@ -83,10 +83,15 @@ void UDPClient::recieveDatagram()
     }
     new_packet.host = sender.toString().toStdString();
     new_packet.port = senderPort;
-    for (int i = 0; i < bytesRead; i++) {
-        new_packet.data.push_back(buffer[i]);
-    }
-    std::cout << "Received Message: " << (char *)new_packet.data.data() << std::endl;
+    new_packet.data = new unsigned char[bytesRead];
+    std::memcpy(new_packet.data, buffer, bytesRead);
+    // for (int i = bytesRead - 1; i >= 0; i--) {
+    //     new_packet.data.push_back(buffer[i]);
+    //     std::cout << hex(buffer[i]);
+    //     std::cout << " ";
+    // }
+    std::cout << std::endl;
+    std::cout << "Received Message: " << (char *)buffer << std::endl;
     _data.push(new_packet);
 }
 
@@ -106,10 +111,8 @@ void UDPClient::onReadyRead()
         }
         new_packet.host = sender.toString().toStdString();
         new_packet.port = senderPort;
-        for (int i = 0; i < bytesRead; i++) {
-            new_packet.data.push_back(buffer[i]);
-        }
-        std::cout << "Received Message: " << (char *)new_packet.data.data() << std::endl;
+
+        std::cout << "on ready read Message: " << (char *)new_packet.data << std::endl;
     } else {
         std::cout << "### ERRR: NO PENDING DATAGRAMS\n";
     }

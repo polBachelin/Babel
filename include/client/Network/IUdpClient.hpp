@@ -12,7 +12,9 @@
 #include <ctime>
 #include <QtWidgets>
 #include <vector>
-
+#include <array>
+#include <memory>
+#include <cstring>
 namespace Client
 {
     namespace Network
@@ -30,7 +32,7 @@ namespace Client
             // }
 
             unsigned short magicNum = 987;
-            std::vector<char> data;
+            unsigned char *data;
             std::string host;
             unsigned short port;
             std::time_t timestamp;
