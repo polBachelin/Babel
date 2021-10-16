@@ -216,7 +216,7 @@ void Client::GUI::ContactPage::contactClicked(QListWidgetItem *item)
     }
 
     _labelContactSelected->setText(_contactSelected);
-    _infos.currentData = _infos.username + _contactSelected.toStdString();
+    _infos.currentData = _infos.username + "\n" + _contactSelected.toStdString() + "\n";
     emit checkCommand(_infos, EaskHistory);
 }
 
@@ -258,7 +258,7 @@ void Client::GUI::ContactPage::changeMsg(QString msg)
 
 void Client::GUI::ContactPage::sendMsg()
 {
-    _infos.currentData = _infos.username + _contactSelected.toStdString() + _msg;
+    _infos.currentData = _infos.username + "\n" + _contactSelected.toStdString() + "\n" + _msg + "\n";
     new QListWidgetItem(tr(_infos.currentData.c_str()), _contactList.get());
     _msg.clear();
     _writeMsg->setText("");
