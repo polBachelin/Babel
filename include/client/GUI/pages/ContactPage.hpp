@@ -34,6 +34,7 @@ class ContactPage : public APage
         void labelLoader();
         void callLoader();
         void formLoader();
+        void timerLoader();
 
     public slots:
         void validAddContact(ClientInfos);
@@ -45,6 +46,7 @@ class ContactPage : public APage
         void addContactClicked();
         void callClicked();
         void logOut();
+        void updateTimer();
         void searchContact(QString);
         void changeMsg(QString);
 
@@ -69,6 +71,9 @@ class ContactPage : public APage
         std::map<std::string, std::unique_ptr<QFrame>> _delim;
         std::unique_ptr<QPushButton> _backButton;
         std::unique_ptr<QListWidget> _contactList;
+
+        // Timer
+        std::unique_ptr<QTimer> _timer;
 
         // member variables
         QSlider * _m_slider;

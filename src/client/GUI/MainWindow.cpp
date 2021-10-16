@@ -109,8 +109,8 @@ void MainWindow::receivedSomething(QByteArray msg)
     std::cout << *package;
     std::cout << "---------------------------------------" << std::endl;
 
-    std::string test(package->data);
-    _infos.username = test;
+    if (package->code == EloginSuccessful || package->code == EregisterSuccessful)
+        _infos.username = package->data;
     _infos.currentData = package->data;
 
     if (_signalPageMap.find((receivedSignal_e)package->code) == _signalPageMap.end()) {
