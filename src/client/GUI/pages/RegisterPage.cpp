@@ -187,7 +187,6 @@ void Client::GUI::RegisterPage::validRegister(ClientInfos_t info)
     _usernameForm->setText(_username.c_str());
     _passwordForm->setText(_password.c_str());
     _confirmPasswordForm->setText(_confirmPassword.c_str());
-    _infos.username = info.currentData;
 
     this->setDisabled(false);
     emit changePage(CONTACTS, info);
