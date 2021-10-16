@@ -114,6 +114,7 @@ void CallManager::onReadAudioData()
     unsigned char *ptr;
 
     while (this->_udpClient->hasPendingDatagram()) {
+        dataPacket = this->_udpClient->getData();
         std::time_t timestamp;
         std::memcpy(&timestamp, reinterpret_cast<void *>(ptr), sizeof(std::time_t));
         int buffSize;
@@ -141,7 +142,7 @@ void CallManager::connectToHost()
     this->_udpClient->connectToHost(_myIp, _audioPort);
     this->_inCall = true;
     _timer->start();
-    //this->sendAudioData();
+    //zthis->sendAudioData();
 }
 
 void CallManager::beginCall()

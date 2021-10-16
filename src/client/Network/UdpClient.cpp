@@ -57,16 +57,37 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
 packetUDP_t UDPClient::getData()
 {
     QByteArray datagram;
-    QHostAddress sender;
-    quint16 senderPort;
     packetUDP_t new_packet;
 
+    recieveDatagram();
     new_packet.magicNum = -1;
     if (!_data.empty()) {        
         new_packet = _data.front();
         _data.pop();
     }
     return new_packet;
+}
+
+void UDPClient::recieveDatagram()
+{
+    QHostAddress sender;
+    QByteArray datagram;
+    quint16 senderPort;
+    packetUDP_t new_packet;
+    char buffer[4096];
+
+    int bytesRead = _socket->readDatagram(buffer, _socket->bytesAvailable(), &sender, &senderPort);
+    if (bytesRead == -1) {
+        std::cout << "Could not read datagram" << std::endl;
+        return;
+    }
+    new_packet.host = sender.toString().toStdString();
+    new_packet.port = senderPort;
+    for (int i = 0; i < bytesRead; i++) {
+        new_packet.data.push_back(buffer[i]);
+    }
+    std::cout << "Received Message: " << (char *)new_packet.data.data() << std::endl;
+    _data.push(new_packet);
 }
 
 void UDPClient::onReadyRead()

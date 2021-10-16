@@ -32,7 +32,7 @@ namespace Client
                 void disconnect() override;
                 packetUDP_t getData() override;
                 bool hasPendingDatagram() override;
-
+                void recieveDatagram();
             signals:
                 void getDataFromUDP();
 
