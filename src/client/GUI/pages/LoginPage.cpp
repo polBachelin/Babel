@@ -167,6 +167,7 @@ void Client::GUI::LoginPage::validSignIn(ClientInfos_t info)
 
 void Client::GUI::LoginPage::wrongSignIn(ClientInfos_t info)
 {
+    (void)info;
     _errorPassword->setText("wrong password");
     _errorUsername->setText("wrong username");
 

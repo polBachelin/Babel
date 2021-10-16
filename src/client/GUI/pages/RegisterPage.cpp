@@ -194,6 +194,7 @@ void Client::GUI::RegisterPage::validRegister(ClientInfos_t info)
 
 void Client::GUI::RegisterPage::wrongRegister(ClientInfos_t info)
 {
+    (void)info;
     _confirmPassword = "";
     _confirmPasswordForm->setText(_confirmPassword.c_str());
     _errorPassword->setText("wrong password");

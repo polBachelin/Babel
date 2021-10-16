@@ -82,7 +82,7 @@ void CallManager::sendAudioData()
 void CallManager::onReadAudioData()
 {
     Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
-    unsigned char *compressed;
+    // unsigned char *compressed;
     uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data);
 
     // ? changer la condition pour checker le timestamp

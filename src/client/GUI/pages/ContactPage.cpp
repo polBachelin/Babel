@@ -252,6 +252,7 @@ void Client::GUI::ContactPage::validAddContact(ClientInfos_t info)
 
 void Client::GUI::ContactPage::wrongAddContact(ClientInfos_t info)
 {
+    (void)info;
     QMessageBox msg;
     msg.setText("Contact not found !");
     msg.exec();

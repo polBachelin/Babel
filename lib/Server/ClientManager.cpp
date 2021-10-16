@@ -63,8 +63,9 @@ std::ostream &operator<<(std::ostream &os, const packet_t &pck)
 {
     std::vector<std::string> data(convertCurrentData(std::string(pck.data.data()), '\n'));
 
-    if (pck.code == 4)
+    if (pck.code == 4) {
         return os;
+    }
 	os << "packet.magic     : " << pck.magic << std::endl;
 	os << "packet.code      : " << pck.code << std::endl;
 	os << "packet.data_size : " << pck.data_size << std::endl;

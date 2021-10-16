@@ -63,6 +63,7 @@ pck_list *CommandsManager::createPacket(pck_list &l, std::shared_ptr<asio::ip::t
 
 pck_list *CommandsManager::login(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
+    (void)clients;
     std::string tmp = pck.data.data();
     std::vector<std::string> elem;
     std::string res;
@@ -81,6 +82,7 @@ pck_list *CommandsManager::login(const packet_t &pck, std::deque<std::shared_ptr
 
 pck_list *CommandsManager::registerUser(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
+    (void)clients;
     std::string tmp = pck.data.data();
     std::vector<std::string> elem;
     std::string res;
@@ -192,6 +194,8 @@ pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shar
 
 pck_list *CommandsManager::logout(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient)
 {
+    (void)pck;
+    (void)clients;
     currentClient->clearPacket();
     currentClient->_um.logoutUser();
     return nullptr;

@@ -12,7 +12,7 @@
 
 bool PortAudioManager::_init = false;
 
-PortAudioManager::PortAudioManager() : 
+PortAudioManager::PortAudioManager() :
 _inputBuffer(nullptr), _outputBuffer(nullptr), _inputSample(nullptr), _outputSample(nullptr), _inputStream(nullptr), _outputStream(nullptr), _inputChannels(2), _outputChannels(2), _outputIndex(0), _inputIndex(0), _micMute(false), _outputMute(false)
 {
     if (!PortAudioManager::_init) {
@@ -92,10 +92,16 @@ void PortAudioManager::setDefaultOutputDevice()
 }
 
 std::vector<std::string> PortAudioManager::getInputDeviceNames() const
-{}
+{
+    std::vector<std::string> vect;
+    return vect;
+}
 
 std::vector<std::string> PortAudioManager::getOutputDeviceNames() const
-{}
+{
+    std::vector<std::string> vect;
+    return vect;
+}
 
 void PortAudioManager::allocateBuffers()
 {
@@ -169,7 +175,7 @@ int PortAudioManager::openInputStream()
 }
 
 int PortAudioManager::openOutputStream()
-{    
+{
     if (_outputStream) {
         closeOutputStream();
     }
@@ -257,7 +263,7 @@ int PortAudioManager::getBytesInInput()
 int PortAudioManager::retrieveInputBytes(float *sample, size_t len)
 {
     if (!sample)
-        return 0;    
+        return 0;
     return _inputBuffer->read(sample, len * _inputChannels * sizeof(float));
 }
 
@@ -294,7 +300,7 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
-    
+
     if (data->isMicMuted() || inputBuffer == NULL) {
         std::memset(data->_inputSample, 0, framesPerBuffer * data->_inputChannels * sizeof(float));
         data->_inputBuffer->write(data->_inputSample, framesPerBuffer * data->_inputChannels * sizeof(float));

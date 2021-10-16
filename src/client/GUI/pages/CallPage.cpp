@@ -222,6 +222,7 @@ void Client::GUI::CallPage::callOff()
 
 void Client::GUI::CallPage::callWasRefused(ClientInfos_t info)
 {
+    (void)info;
     callOff();
 }
 
