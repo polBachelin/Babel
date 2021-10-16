@@ -9,7 +9,8 @@
 
 using namespace Client::Managers;
 
-CallManager::CallManager(const std::string &myIp, const unsigned short audioPort) : QObject(), _myIp(myIp), _audioPort(audioPort)
+CallManager::CallManager(const std::string &myIp, const unsigned short audioPort) 
+: QObject(), _myIp(myIp), _audioPort(audioPort)
 {
     _udpClient = std::make_unique<Client::Network::UDPClient>();
     _soundManager = std::make_shared<PortAudioManager>();
@@ -32,9 +33,10 @@ CallManager::~CallManager()
 {
 }
 
-void CallManager::addPair(const std::string &ip)
+void CallManager::addPair(const std::string &ip, unsigned short port)
 {
-    _pairs[ip] = std::time_t(NULL);
+    std::cout << "Add Pair: " << ip << ":" << port << std::endl;
+    _pairs[ip] = std::make_pair<unsigned short, std::time_t>((unsigned short)port, std::time_t(NULL));
 }
 
 unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
@@ -64,14 +66,14 @@ void CallManager::sendAudioData()
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
 
     dataPacket.port = _audioPort;
-    dataPacket.data = audioPacket;
-    dataPacket.data = audioPacket;
     dataPacket.host = _myIp;
+    dataPacket.data = audioPacket;
+    dataPacket.timestamp = std::time_t(NULL);
 
-    std::cout <<  "PreparePacket: " << std::to_string(dataPacket.port) << ":" << compressedSize << std::endl;
+    std::cout <<  "PrepareMyPacket: "<< dataPacket << std::endl;
 
     for (auto &i : _pairs)
-        _udpClient->send(dataPacket, i.first, _audioPort);
+        _udpClient->send(dataPacket, i.first, i.second.first);
 
     delete [] compressedBuffer;
     delete [] audioPacket;
@@ -84,17 +86,22 @@ void CallManager::onReadAudioData()
     uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data);
 
     // ? changer la condition pour checker le timestamp
-    //if (audioPacket->timestamp < _pairs[dataPacket.host])
-        //return;
+    //if (dataPacket.timestamp < _pairs[dataPacket.host].second)
+    //    return;
+    _pairs[dataPacket.host].second = std::time_t(NULL);
     std::time_t *timestampPtr = reinterpret_cast<std::time_t *>(ptr);
     ptr += sizeof(std::time_t);
     int *buffSizePtr = reinterpret_cast<int *>(ptr);
     std::time_t timestamp = ntohl(*timestampPtr);
     (void)timestamp;
     int buffSize = ntohl(*buffSizePtr);
+    std::cout << dataPacket << std::endl;
     std::cout << "-----READING AUDIO DATA----\n";
     std::cout << "BuffSize : " << buffSize << std::endl;
     std::cout << "---------------------------\n";
+
+    if (_pairs.find(dataPacket.host) == _pairs.end())
+        addPair(dataPacket.host, dataPacket.port);
     //compressed = new unsigned char[buffSize];
     //std::memcpy(compressed, (void *)(ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(compressed));
 

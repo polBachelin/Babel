@@ -246,7 +246,7 @@ void Client::GUI::CallPage::callOn()
     std::vector<std::string> words = this->convertCurrentData(_infos.currentData);
 
     std::cout << "Accept call from: " << words[0] << ":" << words[1] << ":" << words[2] << std::endl;
-    _callManager->addPair(words[1]);
+    _callManager->addPair(words[1], std::atoi(words[2].c_str()));
     _callManager->connectToHost();
 }
 

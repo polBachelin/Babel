@@ -23,7 +23,7 @@ namespace Client
 {
     namespace Managers
     {
-        typedef std::unordered_map<std::string, std::time_t> callers_t;
+        typedef std::unordered_map<std::string, std::pair<unsigned short, std::time_t>> callers_t;
         class CallManager : public QObject
         {
             Q_OBJECT
@@ -32,7 +32,7 @@ namespace Client
                 CallManager(const std::string &myIp, const unsigned short audioPort);
                 ~CallManager();
                 void connectToHost();
-                void addPair(const std::string &ip);
+                void addPair(const std::string &ip, unsigned short port);
                 unsigned char *createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time);
                 void beginCall();
                 void endCall();
