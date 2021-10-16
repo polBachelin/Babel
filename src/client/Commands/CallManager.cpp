@@ -25,6 +25,9 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _encoderManager->initEncoder();
     _soundManager->startInputStream();
     _soundManager->startOutputStream();
+    _timer = new QTimer();
+    _timer->setInterval(1);
+    //QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
     QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP()), this, SLOT(onReadAudioData()));
     QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
@@ -42,14 +45,12 @@ void CallManager::addPair(const std::string &ip, unsigned short port)
 unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
 {
     unsigned char *res = new unsigned char[buffSize * sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int)];
-    //std::memset(res, 0, buffSize * sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int));
-    std::cout << "SIZE OF BUFFER === " << buffSize *sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int) << std::endl;
     uintptr_t ptr = reinterpret_cast<uintptr_t >(res);
     // uint32_t networkBuffSize = htonl(buffSize);
     // uint32_t networkTime = htonl(time);
 
     //std::cout << "[createAudioPacket] buffSize : " << buffSize << std::endl;
-    std::cout << "[createAudioPacket] networkBuffSize : " << buffSize << std::endl;
+    //std::cout << "[createAudioPacket] networkBuffSize : " << buffSize << std::endl;
     std::cout << "[createAudioPacket] networkTime : " << time << std::endl;
 
     std::memcpy(reinterpret_cast<void *>(ptr), &time, sizeof(std::time_t));
@@ -66,24 +67,38 @@ void CallManager::sendAudioData()
 
     std::memset(compressedBuffer, 0, _inputBufferSize);
     _soundManager->retrieveInputBytes(_inputBuffer, 480);
+    double max = 0;
+    double average = 0.0;
+    double val = 0;
+    for(int i=0; i<480; i++ )
+    {
+        val = _inputBuffer[i];
+        if( val < 0 ) val = -val; /* ABS */
+        if( val > max )
+        {
+            max = val;
+        }
+        average += val;
+    }
+
+    average = average / (double)480;
+    std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
     int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
     audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
 
     dataPacket.port = _audioPort;
-    dataPacket.host = _myIp;
-    
+    dataPacket.host = _myIp;    
     for (int i = 0; audioPacket[i]; i++) {
         dataPacket.data.push_back(audioPacket[i]);
     }
     std::cout << "-----SENDING AUDIO DATA----\n";
-    //std::cout << "BuffSize : " << compressedSize << std::endl;
-    std::cout << "data size == " << strlen((const char *)audioPacket) << std::endl;
-    std::cout << "Message: " << QString::fromStdString(std::string((char *)dataPacket.data.data())).toStdString() << std::endl;
-    int *ptrBuffSize = reinterpret_cast<int *>(dataPacket.data.data() + sizeof(std::time_t));
-    std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
+    std::cout << "Message: " << (char *)dataPacket.data.data() << std::endl;
+    std::cout << "Data size == " << dataPacket.data.size() << std::endl;
     std::cout << "---------------------------\n"; 
-    //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
 
+    //int *ptrBuffSize = reinterpret_cast<int *>(dataPacket.data.data() + sizeof(std::time_t));
+    //std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
+    //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
     for (auto &i : _pairs)
         _udpClient->send(dataPacket, i.first, i.second.first);
 
@@ -93,16 +108,17 @@ void CallManager::sendAudioData()
 
 void CallManager::onReadAudioData()
 {
-    Client::Network::packetUDP_t dataPacket = this->_udpClient->getData();
+    Client::Network::packetUDP_t dataPacket;
     unsigned char *compressed = nullptr;
-    uintptr_t ptr = reinterpret_cast<uintptr_t>(dataPacket.data.data());
+    unsigned char *ptr;
 
-    std::time_t *timestampPtr = reinterpret_cast<std::time_t *>(ptr);
-    int *buffSizePtr = reinterpret_cast<int *>(ptr + sizeof(std::time_t));
-    std::cout << dataPacket << std::endl;
+    std::time_t timestamp;
+    std::memcpy(&timestamp, reinterpret_cast<void *>(ptr), sizeof(std::time_t));
+    int buffSize;
+    std::memcpy(&buffSize, reinterpret_cast<void *>(ptr + sizeof(std::time_t)), sizeof(int));
     std::cout << "-----READING AUDIO DATA----\n";
-    std::cout << "Network Time : " << *timestampPtr << std::endl;
-    std::cout << "Network BuffSize : " << *buffSizePtr << std::endl;
+    std::cout << "Network Time : " << timestamp << std::endl;
+    std::cout << "Network BuffSize : " << buffSize << std::endl;
     std::cout << "---------------------------\n";
 
     addPair(dataPacket.host, dataPacket.port);
@@ -119,6 +135,7 @@ void CallManager::connectToHost()
     std::cout << "UDP bind my IP : " << _myIp << std::endl;
     this->_udpClient->connectToHost(_myIp, _audioPort);
     this->_inCall = true;
+    _timer->start();
     this->sendAudioData();
 }
 

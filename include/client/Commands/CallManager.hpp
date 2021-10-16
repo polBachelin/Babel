@@ -57,6 +57,7 @@ namespace Client
                 float *_outputBuffer;
                 int _frameSize;
                 int _inputBufferSize;
+                QTimer *_timer;
                 std::shared_ptr<OpusManager> _encoderManager;
                 std::shared_ptr<PortAudioManager> _soundManager;
         };
