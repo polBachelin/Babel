@@ -7,23 +7,22 @@
 
 #include "AsioTcpConnection.hpp"
 
-AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &list)
+AsioTcpConnection::AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &list) : _clients(list)
 {
     _socket = std::make_shared<asio::ip::tcp::socket>(io_context);
     _clientManager = std::make_shared<ClientManager>(_socket);
-    _clients = list;
     _buffer.fill(0);
+    _isAlive = true;
 }
 
 AsioTcpConnection::AsioTcpConnection(const AsioTcpConnection &ref)
-    : std::enable_shared_from_this<AsioTcpConnection>()
+    : std::enable_shared_from_this<AsioTcpConnection>(), _clients(ref._clients)
 {
     _socket = ref._socket;
 }
 
 AsioTcpConnection::~AsioTcpConnection()
 {
-    _socket->close();
 }
 
 std::shared_ptr<asio::ip::tcp::socket> AsioTcpConnection::getSocket() const
@@ -45,11 +44,10 @@ void AsioTcpConnection::interpret()
     if (!res)
         return;
     for (auto it = res->begin(); it != res->end(); it++) {
-        std::cout << "interpret " << it->first->is_open() << std::endl;
         auto tmp = it->second;
         if (tmp && tmp->code != 666) {
             std::cout << "---------Sent------------" << std::endl;
-            PRINT_PCK((*tmp));
+            std::cout << *tmp;
             std::cout << "-------------------------" << std::endl;
             auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
             it->first->async_send(asio::buffer(tmp, sizeof(packet_t)), handler);
@@ -78,7 +76,7 @@ void AsioTcpConnection::handleReadHeader(const asio::error_code &e, std::size_t 
         return;
     } else if (e) {
         if (e == asio::error::eof) {
-            _socket->close();
+            _isAlive = false;
             return;
         }
         std::cout << "An error occurred " << e.message() << std::endl;
@@ -91,7 +89,6 @@ void AsioTcpConnection::handleReadHeader(const asio::error_code &e, std::size_t 
 void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t size)
 {
     if (size > 0 && !e) {
-        std::cout << "set packet data -- " << _buffer.data() << std::endl;
         _clientManager->setPacketData(_buffer);
         interpret();
         auto handler = std::bind(&AsioTcpConnection::handleReadHeader, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
@@ -99,7 +96,7 @@ void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t si
         return;
     } else if (e) {
         if (e == asio::error::eof) {
-            _socket->close();
+            _isAlive = false;
             return;
         }
         std::cout << "An error occur data :" << e.message() << std::endl;
@@ -112,4 +109,9 @@ void AsioTcpConnection::handleReadData(const asio::error_code &e, std::size_t si
 std::shared_ptr<ClientManager> AsioTcpConnection::getClientManager() const
 {
     return _clientManager;
+}
+
+const bool AsioTcpConnection::isAlive() const
+{
+    return _isAlive;
 }

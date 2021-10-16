@@ -7,15 +7,15 @@
 
 #include "RegisterPage.hpp"
 
-Client::GUI::RegisterPage::RegisterPage(ClientInfos infos, QWidget *parent) : APage(infos, parent)
+Client::GUI::RegisterPage::RegisterPage(ClientInfos_t infos, QWidget *parent) : APage(infos, parent)
 {
     setFixedSize(WIDTH, HEIGHT);
     _formError = false;
 
-    QObject::connect(parent, SIGNAL(validRegisterResponse(ClientInfos)),
-        this, SLOT(validRegister(ClientInfos)));
-    QObject::connect(parent, SIGNAL(wrongRegisterResponse(ClientInfos)),
-        this, SLOT(wrongRegister(ClientInfos)));
+    QObject::connect(parent, SIGNAL(validRegisterResponse(ClientInfos_t)),
+        this, SLOT(validRegister(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(wrongRegisterResponse(ClientInfos_t)),
+        this, SLOT(wrongRegister(ClientInfos_t)));
 
     loadPage();
     layoutLoader();
@@ -177,7 +177,7 @@ void Client::GUI::RegisterPage::createAccount()
     emit checkCommand(_infos, Eregister);
 }
 
-void Client::GUI::RegisterPage::validRegister(ClientInfos info)
+void Client::GUI::RegisterPage::validRegister(ClientInfos_t info)
 {
     std::cout << "GOTO - contact page" << std::endl << std::endl;
 
@@ -192,7 +192,7 @@ void Client::GUI::RegisterPage::validRegister(ClientInfos info)
     emit changePage(CONTACTS, info);
 }
 
-void Client::GUI::RegisterPage::wrongRegister(ClientInfos info)
+void Client::GUI::RegisterPage::wrongRegister(ClientInfos_t info)
 {
     _confirmPassword = "";
     _confirmPasswordForm->setText(_confirmPassword.c_str());

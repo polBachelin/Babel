@@ -20,7 +20,7 @@ class NextPage : public APage
     Q_OBJECT
 
     public:
-        NextPage(ClientInfos infos, QWidget *parent = nullptr);
+        NextPage(ClientInfos_t infos, QWidget *parent = nullptr);
         ~NextPage();
 
         void initConnections() override;

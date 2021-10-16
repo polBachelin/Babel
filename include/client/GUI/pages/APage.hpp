@@ -47,30 +47,45 @@ namespace Client {
 namespace GUI {
 
     enum pageNames
-        {
-            LOGIN,
-            REGISTER,
-            CONTACTS,
-            CALL
-        };
+    {
+        LOGIN,
+        REGISTER,
+        CONTACTS,
+        CALL
+    };
 
     enum signal_e
-        {
-            Elogin = 0,
-            Eregister = 1,
-            Eaddcontact = 2,
-            Eacceptinvitation = 112,
-            EcallX = 3,
-            Erefuseincomingcall = 203,
-            Easkcontactlist = 4
-        };
+    {
+        Elogin = 0,
+        Eregister = 1,
+        Eaddcontact = 2,
+        Eacceptinvitation = 112,
+        EcallX = 3,
+        Erefuseincomingcall = 203,
+        Easkcontactlist = 4
+    };
+
+    enum receivedSignal_e
+    {
+        EloginSuccessful = 100,
+        EloginFailed = 200,
+        EregisterSuccessful = 101,
+        EregisterFailed = 201,
+        EinvitationReceive = 12,
+        EcontactExist = 102,
+        EcontactAddFailed = 202,
+        EincomingCall = 303,
+        EUserForCallNotFound = 603,
+        EcallWasRefused = 203,
+        EcontactList = 4
+    };
 
 class APage : public QWidget
 {
     Q_OBJECT
 
     public:
-        APage(ClientInfos infos, QWidget *parent = nullptr);
+        APage(ClientInfos_t infos, QWidget *parent = nullptr);
         ~APage() = default;
 
         // member functions
@@ -79,18 +94,22 @@ class APage : public QWidget
         virtual void layoutLoader() = 0;
         virtual void onPage() = 0;
 
-        void setClientInfos(const ClientInfos &);
+        void setClientInfos_t(const ClientInfos_t &);
 
     signals:
-        void changePage(pageNames name, ClientInfos);
-        void checkCommand(ClientInfos, signal_e);
+        void changePage(pageNames name, ClientInfos_t);
+        void checkCommand(ClientInfos_t, signal_e);
 
     protected:
         std::unique_ptr<QGridLayout> _layout;
-        ClientInfos _infos;
+        ClientInfos_t _infos;
 };
+
 
 }
 }
+
+std::vector<std::string> convertCurrentData(std::string, const char);
+std::ostream &operator<<(std::ostream &, const Client::packet_t &);
 
 #endif /* !APAGE_HPP_ */

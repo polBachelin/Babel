@@ -19,7 +19,7 @@ class CallPage : public APage
     Q_OBJECT
 
     public:
-        CallPage(ClientInfos infos, QWidget *parent = nullptr);
+        CallPage(ClientInfos_t infos, QWidget *parent = nullptr);
         ~CallPage() = default;
 
         // member functions
@@ -33,8 +33,8 @@ class CallPage : public APage
         void labelLoader();
         void btnLoader();
         void timerLoader();
-        void inCall();
-        void incomingCall();
+        void loadInCall_Layout();
+        void loadIncomingCall_Layout();
 
     public slots:
         void soundOff();
@@ -45,8 +45,8 @@ class CallPage : public APage
         void callOn();
         void updateTimer();
         void endCall();
-        void incoming(ClientInfos);
-        void callWasRefused(ClientInfos);
+        void incoming(ClientInfos_t);
+        void callWasRefused(ClientInfos_t);
 
     private:
         // Layout
@@ -86,7 +86,7 @@ class CallPage : public APage
 
         // member variables
         std::string _username;
-        Client::Managers::CallManager _callManager;
+        std::unique_ptr<Client::Managers::CallManager> _callManager;
 };
 
 }}

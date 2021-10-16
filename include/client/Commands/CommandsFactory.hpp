@@ -19,9 +19,9 @@ namespace Client {
 			CommandsFactory() = default;
 			~CommandsFactory() = default;
 
-			static char *callCommand(ClientInfos, GUI::signal_e);
+			static char *callCommand(ClientInfos_t, GUI::signal_e);
 		private:
-			static const std::unordered_map<GUI::signal_e, std::function<char *(ClientInfos, GUI::signal_e)>> _commands;
+			static const std::unordered_map<GUI::signal_e, std::function<char *(ClientInfos_t, GUI::signal_e)>> _commands;
 	};
 }
 

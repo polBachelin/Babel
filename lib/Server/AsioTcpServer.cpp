@@ -13,7 +13,16 @@
 //     {
 //         return std::make_shared<AsioTcpServer>();
 //     }
-// 
+//
+
+AsioTcpServer::AsioTcpServer()
+{
+}
+
+AsioTcpServer::~AsioTcpServer()
+{
+    _io->stop();
+}
 
 void AsioTcpServer::run()
 {

@@ -8,21 +8,32 @@
 #include "CommandsManager.hpp"
 
 const std::map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
-    {0, CommandsManager::login},
-    {1, CommandsManager::registerUser},
-    {2, CommandsManager::addContact},
-    {112, CommandsManager::acceptInvitation},
-    {3, CommandsManager::callX},
-    {4, CommandsManager::listContact},
-    {203, CommandsManager::callRefused}
+    {LOGIN, CommandsManager::login},
+    {REGISTER, CommandsManager::registerUser},
+    {ADD_CONTACT, CommandsManager::addContact},
+    {CALL, CommandsManager::callX},
+    {ASK_CONTACT_LIST, CommandsManager::listContact},
+    {CALL_WAS_REFUSE, CommandsManager::callRefused}
 };
+
+std::vector<std::string> &split(const std::string &s, char delim,std::vector<std::string> &elems)
+{
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        if (item.length() > 0) {
+            elems.push_back(item);
+        }
+    }
+    return elems;
+}
 
 
 pck_list *CommandsManager::redirect(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
     try {
         std::cout << "---------Receive------------" << std::endl;
-        PRINT_PCK((pck));
+        std::cout << pck;
         std::cout << "----------------------------" << std::endl;
         if (pck.magic == MAGIC)
             return _cmdMap.at(pck.code)(pck, clients, currentClient);
@@ -44,10 +55,6 @@ pck_list *CommandsManager::createPacket(pck_list &l, std::shared_ptr<asio::ip::t
     tmp->data_size = data.length();
     tmp->data.fill(0);
     std::strcpy(tmp->data.data(), data.c_str());
-    std::cout << "---------Packet created------------" << std::endl;
-    PRINT_PCK((*tmp));
-    std::cout << "-----------------------------------" << std::endl;
-    std::cout << "create " << s->is_open() << std::endl;
     auto sal = std::make_pair(s, tmp);
     l.push_back(sal);
     return nullptr;
@@ -56,21 +63,17 @@ pck_list *CommandsManager::createPacket(pck_list &l, std::shared_ptr<asio::ip::t
 pck_list *CommandsManager::login(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
     std::string tmp = pck.data.data();
-    std::array<std::string, 2> res;
-    int value = 0;
+    std::vector<std::string> elem;
+    std::string res;
     pck_list *pack = new pck_list;
+    int value = 0;
 
-    std::cout << "Login" << std::endl;
-    res[0] = tmp.substr(0, tmp.find("\n"));
-    tmp.erase(0, tmp.find("\n") + 1);
-    res[1] = tmp;
-    value = currentClient->_um.login(res[0], res[1]);
+    elem = split(pck.data.data(), '\n', elem);
+    value = currentClient->_um.login(elem[0], elem[1]);
     if (value) {
-        CommandsManager::createPacket(*pack, currentClient->getSocket(), 100, currentClient->_um.getName());
-        std::cout << "login " << pack->begin()->first->is_open() << std::endl;
+        CommandsManager::createPacket(*pack, currentClient->getSocket(), LOGIN_SUCCESS, currentClient->_um.getName());
     } else {
-        CommandsManager::createPacket(*pack, currentClient->getSocket(), 200, "failed\n");
-        std::cout << "login " << pack->begin()->first->is_open() << std::endl;
+        CommandsManager::createPacket(*pack, currentClient->getSocket(), LOGIN_FAILED, "failed\n");
     }
     return pack;
 }
@@ -78,18 +81,17 @@ pck_list *CommandsManager::login(const packet_t &pck, std::deque<std::shared_ptr
 pck_list *CommandsManager::registerUser(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
     std::string tmp = pck.data.data();
-    std::array<std::string, 2> res;
+    std::vector<std::string> elem;
+    std::string res;
     int value = 0;
     pck_list *pack = new pck_list;
 
-    res[0] = tmp.substr(0, tmp.find("\n"));
-    tmp.erase(0, tmp.find("\n") + 1);
-    res[1] = tmp;
-    value = currentClient->_um.newUser(res[0], res[1]);
+    elem = split(pck.data.data(), '\n', elem);
+    value = currentClient->_um.newUser(elem[0], elem[1]);
     if (value == true) {
-        CommandsManager::createPacket(*(pack), currentClient->getSocket(), 101, currentClient->_um.getName());
+        CommandsManager::createPacket(*(pack), currentClient->getSocket(), REGISTER_SUCCESS, currentClient->_um.getName());
     } else {
-        CommandsManager::createPacket(*pack, currentClient->getSocket(), 201, "failed\n");
+        CommandsManager::createPacket(*pack, currentClient->getSocket(), REGISTER_FAILED, "failed\n");
     }
     return pack;
 }
@@ -97,50 +99,44 @@ pck_list *CommandsManager::registerUser(const packet_t &pck, std::deque<std::sha
 pck_list *CommandsManager::addContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
     auto name = currentClient->_um.getName();
-    std::string res = pck.data.data();
+    std::vector<std::string> elem;
+    std::string res;
     std::string own;
     pck_list *pack = new pck_list;
 
-    res.erase(res.find('\n'));
+    elem = split(pck.data.data(), '\n', elem);
+    res = elem[0];
     for (auto it = clients.begin(); it != clients.end(); ++it) {
         if ((*it)->_um.getName() == res) {
+            currentClient->getUserManager().getContactManager().addContact(name, res);
             auto dest = (*it)->getSocket();
             own = currentClient->_um.getName() + "\n";
-            CommandsManager::createPacket(*pack, dest, 12, own);
-            CommandsManager::createPacket(*pack, currentClient->getSocket(), 102, res);
+            CommandsManager::createPacket(*pack, dest, INVTATION_RECEIVE, own);
+            CommandsManager::createPacket(*pack, currentClient->getSocket(), CONTACT_EXIST, res);
             return pack;
         }
     }
-    CommandsManager::createPacket(*pack, currentClient->getSocket(), 202, "failed");
+    CommandsManager::createPacket(*pack, currentClient->getSocket(), CONTACT_ADD_FAILED, "failed");
     return pack;
 }
 
 pck_list *CommandsManager::callX(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
     std::string s = pck.data.data();
-    std::string delimiter = "\n";
-    size_t pos = 0;
-    std::string token;
-    std::array<std::string, 3> arr;
-    int i = 0;
-    std::string res;
     auto inc = currentClient->getSocket();
     pck_list *pack = new pck_list;
+    std::vector<std::string> elem;
+    std::string res;
 
-    while ((pos = s.find(delimiter)) != std::string::npos) {
-        token = s.substr(0, pos);
-        arr[i] = token;
-        s.erase(0, pos + delimiter.length());
-        i++;
-    }
-    std::cout << "Call " << arr[0] << " at " << arr[1] << ":" << arr[2] << std::endl;
+    elem = split(pck.data.data(), '\n', elem);
+    std::cout << "Call " << elem[0] << " at " << elem[1] << ":" << elem[2] << std::endl;
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->_um.getName() == arr[0]) {
+        if ((*it)->_um.getName() == elem[0]) {
             auto dest = (*it)->getSocket();
             std::cout << "Parent address in CALLX : " << inc->local_endpoint().address().to_string() << std::endl;
-            res = currentClient->_um.getName() + "\n" + arr[1] + "\n" + arr[2] + "\n";
-            CommandsManager::createPacket(*pack, dest, 303, res);
-            CommandsManager::createPacket(*pack, currentClient->getSocket(), 666, "");
+            res = currentClient->_um.getName() + "\n" + elem[1] + "\n" + elem[2] + "\n";
+            CommandsManager::createPacket(*pack, dest, INCOMING_CALL, res);
+            CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
             return pack;
         }
     }
@@ -154,53 +150,32 @@ pck_list *CommandsManager::listContact(const packet_t &pck, std::deque<std::shar
     std::string res;
     std::string name = pck.data.data();
     pck_list *pack = new pck_list;
+    std::vector<std::string> arg;
 
 
-    name.erase(name.find('\n'));
-    res = currentClient->_um.getContactManager().getContactList();
-    std::cout << "Res contact list : " << res << std::endl;
-    CommandsManager::createPacket(*pack, currentClient->getSocket(), 4, res);
+    arg = split(name, '\n', arg);
+    res = currentClient->_um.getContactManager().getContactList(arg[0]);
+    CommandsManager::createPacket(*pack, currentClient->getSocket(), CONTACT_LIST, res);
     return pack;
 }
 
 pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
-    std::string s = pck.data.data();
     auto inc = currentClient->getSocket();
     pck_list *pack = new pck_list;
+    std::vector<std::string> elem;
+    std::string res;
 
-    s.erase(s.find('\n'));
+    elem = split(pck.data.data(), '\n', elem);
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->_um.getName() == s) {
+        if ((*it)->_um.getName() == elem[0]) {
             auto dest = (*it)->getSocket();
-            s = currentClient->_um.getName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + std::to_string(inc->local_endpoint().port()) + "\n";
-            CommandsManager::createPacket(*pack, dest, 203, s);
-            CommandsManager::createPacket(*pack, currentClient->getSocket(), 666, "");
+            elem[0] = currentClient->_um.getName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + std::to_string(inc->local_endpoint().port()) + "\n";
+            CommandsManager::createPacket(*pack, dest, CALL_REFUSED, elem[0] + "\n");
+            CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
             return pack;
         }
     }
-    CommandsManager::createPacket(*pack, currentClient->getSocket(), 666, "");
-    return pack;
-}
-
-pck_list *CommandsManager::acceptInvitation(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
-{
-    auto name = currentClient->_um.getName();
-    std::string res = pck.data.data();
-    std::string own;
-    pck_list *pack = new pck_list;
-
-    res.erase(res.find('\n'));
-    currentClient->_um.getContactManager().addContact(res, name);
-    for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->_um.getName() == res) {
-            auto dest = (*it)->getSocket();
-            own = currentClient->_um.getName() + "\n";
-            CommandsManager::createPacket(*pack, dest, 302, own);
-            CommandsManager::createPacket(*pack, currentClient->getSocket(), 666, "");
-            return pack;
-        }
-    }
-    CommandsManager::createPacket(*pack, currentClient->getSocket(), 666, "");
+    CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
     return pack;
 }

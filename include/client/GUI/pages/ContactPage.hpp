@@ -19,7 +19,7 @@ class ContactPage : public APage
 
     public:
         // Ctor / Dtor
-        ContactPage(Client::ClientInfos infos, QWidget *parent = nullptr);
+        ContactPage(Client::ClientInfos_t infos, QWidget *parent = nullptr);
         ~ContactPage() = default;
 
         // member functions
@@ -36,11 +36,11 @@ class ContactPage : public APage
         void formLoader();
 
     public slots:
-        void validAddContact(ClientInfos);
-        void wrongAddContact(ClientInfos);
-        void handleIncomingCall(ClientInfos);
-        void fillContactList(ClientInfos);
-        void invitationReceived(ClientInfos);
+        void validAddContact(ClientInfos_t);
+        void wrongAddContact(ClientInfos_t);
+        void handleIncomingCall(ClientInfos_t);
+        void fillContactList(ClientInfos_t);
+        void invitationReceived(ClientInfos_t);
         void contactClicked(QListWidgetItem *);
         void addContactClicked();
         void callClicked();
