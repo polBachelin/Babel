@@ -40,11 +40,13 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
     QByteArray buf;
     std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
     std::cout << "Packet size : " << packet.dataSize << std::endl;
-    QHostAddress receiverIp;
+   QHostAddress receiverIp;
 
+    std::cout << "data size == " << strlen((const char *)packet.data) << std::endl;
     buf.append((const char *)packet.data);
     receiverIp.setAddress(QString::fromStdString(ip));
     std::cout << "Trying to send packet to : " << ip  << " : " << port << std::endl;
+    std::cout << "Packet buf size == " << buf.size() << std::endl;
     _socket->writeDatagram(buf, receiverIp, port);
 }
 
