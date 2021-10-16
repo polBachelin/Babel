@@ -64,6 +64,12 @@ std::function<char *(ClientInfos_t, GUI::signal_e)>> CommandsFactory::_commands
 	[](ClientInfos_t infos, GUI::signal_e e) {
 		std::cout << "Sending packet of ask contact list to server\n";
 		return createBuffer(e, infos.username + "\n");
+	}},
+
+	{GUI::signal_e::EAcceptIncomingCall,
+	[](ClientInfos_t infos, GUI::signal_e e) {
+		std::cout << "Sending accept call from " << infos.username << " to server\n";
+		return createBuffer(e, infos.username + "\n" + infos.myIp + "\n" + std::to_string(infos.audioPort) + "\n");
 	}}
 };
 

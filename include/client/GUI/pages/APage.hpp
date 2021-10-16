@@ -62,7 +62,9 @@ namespace GUI {
         Eacceptinvitation = 112,
         EcallX = 3,
         Erefuseincomingcall = 203,
-        Easkcontactlist = 4
+        Easkcontactlist = 4,
+        EAcceptIncomingCall = 403
+
     };
 
     enum receivedSignal_e
@@ -77,6 +79,7 @@ namespace GUI {
         EincomingCall = 303,
         EUserForCallNotFound = 603,
         EcallWasRefused = 203,
+        ECallAccepted = 403,
         EcontactList = 4
     };
 

@@ -33,7 +33,8 @@ class CommandsManager {
             ACCEPT_CONTACT = 112,
             CALL = 3,
             ASK_CONTACT_LIST = 4,
-            CALL_WAS_REFUSE = 203
+            CALL_WAS_REFUSE = 203,
+            CALL_ACCEPTED = 403,
         };
 
         enum responseCode {
@@ -45,6 +46,7 @@ class CommandsManager {
             CONTACT_EXIST = 102,
             CONTACT_ADD_FAILED = 202,
             INCOMING_CALL = 303,
+            CALL_ACCEPTED_SUCCESS = 503,
             USER_NOT_FOUND = 603,
             CALL_REFUSED = 203,
             DONT_SEND = 666,
@@ -62,6 +64,7 @@ class CommandsManager {
         static pck_list *addContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
         static pck_list *callX(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
         static pck_list *callRefused(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
+        static pck_list *callAccepted(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
         static pck_list *listContact(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager>currentClient);
     private:
         static const std::map<std::size_t, cmd_ptr> _cmdMap;

@@ -94,7 +94,7 @@ void CallManager::sendAudioData()
     std::cout << "-----SENDING AUDIO DATA----\n";
     std::cout << "Message: " << (char *)dataPacket.data.data() << std::endl;
     std::cout << "Data size == " << dataPacket.data.size() << std::endl;
-    std::cout << "---------------------------\n"; 
+    std::cout << "---------------------------\n";
 
     //int *ptrBuffSize = reinterpret_cast<int *>(dataPacket.data.data() + sizeof(std::time_t));
     //std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
@@ -128,9 +128,7 @@ void CallManager::onReadAudioData()
 
         _encoderManager->decode(compressed, _outputBuffer, 480, buffSize);
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
-        addPair(dataPacket.host, dataPacket.port);
     }
-    
     //emit sendData();
 }
 

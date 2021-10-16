@@ -47,6 +47,7 @@ class CallPage : public APage
         void endCall();
         void incoming(ClientInfos_t);
         void callWasRefused(ClientInfos_t);
+        void callWasAccepted(ClientInfos_t);
 
     private:
         // Layout

@@ -16,6 +16,8 @@ Client::GUI::CallPage::CallPage(ClientInfos_t infos, QWidget *parent) : APage(in
         this, SLOT(incoming(ClientInfos_t)));
     QObject::connect(parent, SIGNAL(callRefused(ClientInfos_t)),
         this, SLOT(callWasRefused(ClientInfos_t)));
+    QObject::connect(parent, SIGNAL(callAccepted(ClientInfos_t)),
+        this, SLOT(callWasAccepted(ClientInfos_t)));
 
     loadPage();
     layoutLoader();
@@ -225,6 +227,15 @@ void Client::GUI::CallPage::callWasRefused(ClientInfos_t info)
     callOff();
 }
 
+void Client::GUI::CallPage::callWasAccepted(ClientInfos_t info)
+{   
+    std::vector<std::string> data = convertCurrentData(info.currentData, '\n');
+    std::cout << "CALL ACCEPTED of ["  << info.currentData << "]" << std::endl;
+    _infos.callerIp = data[1];
+    _infos.callerAudioPort = std::atoi(data[2].c_str());
+    this->_callManager->addPair(_infos.callerIp, _infos.callerAudioPort);
+}
+
 void Client::GUI::CallPage::callOn()
 {
     _timer->stop();
@@ -246,6 +257,7 @@ void Client::GUI::CallPage::callOn()
     std::vector<std::string> words = convertCurrentData(_infos.currentData, '\n');
 
     std::cout << "Accept call from: " << words[0] << ":" << words[1] << ":" << words[2] << std::endl;
+    emit checkCommand(_infos, EAcceptIncomingCall);
     _callManager->addPair(words[1], std::atoi(words[2].c_str()));
     _callManager->connectToHost();
 }

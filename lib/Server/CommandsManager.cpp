@@ -13,7 +13,8 @@ const std::map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
     {ADD_CONTACT, CommandsManager::addContact},
     {CALL, CommandsManager::callX},
     {ASK_CONTACT_LIST, CommandsManager::listContact},
-    {CALL_WAS_REFUSE, CommandsManager::callRefused}
+    {CALL_WAS_REFUSE, CommandsManager::callRefused},
+    {CALL_ACCEPTED, CommandsManager::callAccepted}
 };
 
 std::vector<std::string> &split(const std::string &s, char delim,std::vector<std::string> &elems)
@@ -172,6 +173,28 @@ pck_list *CommandsManager::callRefused(const packet_t &pck, std::deque<std::shar
             auto dest = (*it)->getSocket();
             elem[0] = currentClient->_um.getName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + std::to_string(inc->local_endpoint().port()) + "\n";
             CommandsManager::createPacket(*pack, dest, CALL_REFUSED, elem[0] + "\n");
+            CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
+            return pack;
+        }
+    }
+    CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
+    return pack;
+}
+
+pck_list *CommandsManager::callAccepted(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
+{
+    auto inc = currentClient->getSocket();
+    pck_list *pack = new pck_list;
+    std::vector<std::string> elem;
+    std::string res;
+
+
+    elem = split(pck.data.data(), '\n', elem);
+    for (auto &it : clients) {
+        if (it->_um.getName() == elem[0]) {
+            auto dest = it->getSocket();
+            elem[0] = currentClient->_um.getName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + std::to_string(inc->local_endpoint().port()) + "\n";
+            CommandsManager::createPacket(*pack, dest, CALL_ACCEPTED_SUCCESS, elem[0] + "\n");
             CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
             return pack;
         }
