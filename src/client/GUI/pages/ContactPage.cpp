@@ -102,12 +102,6 @@ void Client::GUI::ContactPage::contactLoader()
 {
     _addContactBtn = std::make_unique<QPushButton>("Add contact");
     _contactList = std::make_unique<QListWidget>();
-
-    // new QListWidgetItem(tr("abcdef"), _contactList.get());
-    // new QListWidgetItem(tr("Contact"), _contactList.get());
-    // new QListWidgetItem(tr("jbseri"), _contactList.get());
-    // new QListWidgetItem(tr("nvjserhbdkv"), _contactList.get());
-    // new QListWidgetItem(tr("vgzejbsbdhviosd"), _contactList.get());
 }
 
 void Client::GUI::ContactPage::delimLoader()
