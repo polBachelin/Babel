@@ -68,12 +68,10 @@ void UDPClient::onReadyRead()
     QByteArray datagram;
     quint16 senderPort;
     packetUDP_t new_packet;
-
-    
     
     std::cout << "SOCKET BYTES AVAILBALE : " << _socket->bytesAvailable() << std::endl;
     if (_socket->hasPendingDatagrams()) {
-        datagram.resize(9);
+        datagram.resize(_socket->bytesAvailable());
         int bytesRead = _socket->readDatagram(datagram.data(), 9, &sender, &senderPort);
         if (bytesRead == -1) {
             std::cout << "Could not read datagram" << std::endl;

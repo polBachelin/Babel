@@ -77,7 +77,7 @@ void CallManager::sendAudioData()
     //std::cout << "BuffSize : " << compressedSize << std::endl;
     std::cout << "Message: " << QString::fromStdString(std::string((char *)dataPacket.data)).toStdString() << std::endl;
     uint32_t *ptrTime = reinterpret_cast<uint32_t *>(dataPacket.data + sizeof(uint32_t));
-    //std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrTime << std::endl;
+    std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrTime << std::endl;
     std::cout << "---------------------------\n"; 
     //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
 
