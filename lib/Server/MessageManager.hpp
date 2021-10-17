@@ -8,6 +8,7 @@
 #ifndef MessageManager_h
 #define MessageManager_h
 
+#include <algorithm>
 #include "ContactManager.hpp"
 
 class MessageManager {

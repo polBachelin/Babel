@@ -36,7 +36,8 @@ void MessageManager::newMessage(const std::string &sender, const std::string &re
 {
     std::string res = data;
 
-    res.replace(data.begin(), data.end(), '\'', ' ');
-    res.replace(data.begin(), data.end(), '\"', ' ');
+    
+    std::replace(res.begin(), res.end(), '\'', ' ');
+    std::replace(res.begin(), res.end(), '\"', ' ');
     _db.insert("Message", "SENDER, RECEIVER, DATA", "\'" + sender + "\', \'" + rec + "\', \'" + res + "\'");
 }
