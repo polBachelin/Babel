@@ -106,6 +106,8 @@ void Client::GUI::ContactPage::contactLoader()
     _contactList = std::make_unique<QListWidget>();
     _messageHistory = std::make_unique<QListWidget>();
     _messageHistory->hide();
+    _messageHistory->setStyleSheet("background: none;");
+    _contactList->setStyleSheet("background: none;");
 }
 
 void Client::GUI::ContactPage::delimLoader()
