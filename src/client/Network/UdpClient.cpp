@@ -32,7 +32,6 @@ void UDPClient::connectToHost(const std::string &ip, const unsigned short port)
 
     hostAddress.setAddress(QString::fromStdString(ip));
     _socket->bind(hostAddress, port);
-    //QObject::connect(_socket.get(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
 
 bool UDPClient::hasPendingDatagram()
@@ -93,30 +92,6 @@ void UDPClient::recieveDatagram()
     std::memcpy(new_packet.data, buffer, bytesRead * sizeof(unsigned char));
     _data.push(new_packet);
 }
-
-void UDPClient::onReadyRead()
-{
-    QHostAddress sender;
-    QByteArray datagram;
-    quint16 senderPort;
-    packetUDP_t new_packet;
-    char buffer[4096];
-
-    if (_socket->hasPendingDatagrams()) {
-        int bytesRead = _socket->readDatagram(buffer, _socket->bytesAvailable(), &sender, &senderPort);
-        if (bytesRead == -1) {
-            std::cout << "Could not read datagram" << std::endl;
-            return;
-        }
-        new_packet.host = sender.toString().toStdString();
-        new_packet.port = senderPort;
-        std::cout << "on ready read Message: " << (char *)new_packet.data << std::endl;
-    } else {
-        std::cout << "### ERRR: NO PENDING DATAGRAMS\n";
-    }
-    _data.push(new_packet);
-}
-
 
 void UDPClient::disconnect()
 {

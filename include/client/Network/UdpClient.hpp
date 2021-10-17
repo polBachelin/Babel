@@ -54,9 +54,6 @@ namespace Client
             signals:
                 void getDataFromUDP();
 
-            private slots:
-                void onReadyRead();
-
             private:
                 std::unique_ptr<QUdpSocket> _socket;
                 std::queue<packetUDP_t> _data;

@@ -47,7 +47,7 @@ void CallManager::addPair(const std::string &ip, unsigned short port)
 unsigned char *CallManager::createAudioPacket(unsigned char *compressedBuff, int buffSize, std::time_t time)
 {
     unsigned char *res = new unsigned char[buffSize * sizeof(unsigned char) + sizeof(std::time_t) + sizeof(int)];
-    uintptr_t ptr = reinterpret_cast<uintptr_t >(res);
+    // uintptr_t ptr = reinterpret_cast<uintptr_t >(res);
 
     std::memcpy((res), &time, sizeof(std::time_t));
     std::memcpy((res + sizeof(std::time_t)), &buffSize, sizeof(int));
