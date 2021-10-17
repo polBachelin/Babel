@@ -135,6 +135,8 @@ void PortAudioManager::loadApi()
     loadDefaultDevices();
     openInputStream();
     openOutputStream();
+    startOutputStream();
+    startInputStream();
 }
 
 void PortAudioManager::loadDevices(const int &inputChannels, const int &outputChannels)

@@ -27,8 +27,6 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _timer = new QTimer();
     _timer->setInterval(1);
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
-    // QObject::connect(_udpClient.get(), SIGNAL(getDataFromUDP()), this, SLOT(onReadAudioData()));
-    // QObject::connect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
 
 CallManager::~CallManager()
@@ -67,7 +65,6 @@ void CallManager::sendAudioData()
         dataPacket.data = audioPacket;
         for (auto &i : _pairs)
             _udpClient->send(dataPacket, i.first, i.second.first, compressedSize);
-
         delete [] compressedBuffer;
         delete [] audioPacket;
     }
