@@ -60,7 +60,6 @@ void CallManager::sendAudioData()
     Client::Network::packetUDP_t dataPacket;
 
     while (_soundManager->getBytesInInput() >= 480) {
-        std::cout << "----SENDING AUDIO DATA----" << std::endl;
         unsigned char *audioPacket;
         unsigned char *compressedBuffer = new unsigned char[_inputBufferSize];
         std::memset(compressedBuffer, 0, _inputBufferSize);
@@ -84,7 +83,6 @@ void CallManager::onReadAudioData()
     unsigned char *ptr;
 
     while (this->_udpClient->hasPendingDatagram() && _udpClient->getNbData() < 5) {
-        std::cout << "UDP CLIENT NB DATA === " << _udpClient->getNbData() << std::endl;
         _udpClient->recieveDatagram();
     }
     while ((dataPacket = _udpClient->getData()).magicNum != 0) {
@@ -92,7 +90,6 @@ void CallManager::onReadAudioData()
             std::cout << "WRONG MAGIC NUMBER\n";
             return;
         }
-        std::cout << "------READING OUTPUT----" << std::endl;
         ptr = dataPacket.data;
         std::time_t timestamp;
         std::memcpy(&timestamp, ptr, sizeof(std::time_t));
@@ -120,8 +117,6 @@ void CallManager::connectToHost()
 
 void CallManager::beginCall()
 {
-    std::cout << "BEGIN CALL" << std::endl;
-    std::cout << "Connect to client caller..." << _myIp << std::endl;
     this->connectToHost();
 }
 
