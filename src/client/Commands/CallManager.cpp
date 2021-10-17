@@ -25,7 +25,10 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _encoderManager->initEncoder();
     _soundManager->setMicMute(true);
     _timer = new QTimer();
+    _readTimer = new QTimer();
+    _readTimer->setInterval(1);
     _timer->setInterval(1);
+    QObject::connect(_readTimer, SIGNAL(timeout()), this, SLOT(onReadAudioData()));
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
 }
 
@@ -35,6 +38,7 @@ CallManager::~CallManager()
 
 void CallManager::addPair(const std::string &ip, unsigned short port)
 {
+    std::cout << "[ADD_PAIR] : " << ip << " : " << port << std::endl;
     _pairs[ip] = std::make_pair<unsigned short, std::time_t>((unsigned short)port, std::time_t(NULL));
 }
 
@@ -54,6 +58,7 @@ void CallManager::sendAudioData()
     Client::Network::packetUDP_t dataPacket;
 
     while (_soundManager->getBytesInInput() >= 480) {
+        std::cout << "----SENDING AUDIO DATA----" << std::endl;
         unsigned char *audioPacket;
         unsigned char *compressedBuffer = new unsigned char[_inputBufferSize];
         std::memset(compressedBuffer, 0, _inputBufferSize);
@@ -64,11 +69,10 @@ void CallManager::sendAudioData()
         dataPacket.host = _myIp;
         dataPacket.data = audioPacket;
         for (auto &i : _pairs)
-            _udpClient->send(dataPacket, i.first, i.second.first, compressedSize);
+            _udpClient->send(dataPacket, i.first, i.second.first, compressedSize + sizeof(int) + sizeof(std::time_t));
         delete [] compressedBuffer;
         delete [] audioPacket;
     }
-    onReadAudioData();
 }
 
 void CallManager::onReadAudioData()
@@ -77,7 +81,8 @@ void CallManager::onReadAudioData()
     unsigned char *compressed;
     unsigned char *ptr;
 
-    while (this->_udpClient->hasPendingDatagram()) {
+    while (this->_udpClient->hasPendingDatagram() && _udpClient->getNbData() < 5) {
+        std::cout << "UDP CLIENT NB DATA === " << _udpClient->getNbData() << std::endl;
         _udpClient->recieveDatagram();
     }
     while ((dataPacket = _udpClient->getData()).magicNum != 0) {
@@ -85,6 +90,7 @@ void CallManager::onReadAudioData()
             std::cout << "WRONG MAGIC NUMBER\n";
             return;
         }
+        std::cout << "------READING OUTPUT----" << std::endl;
         ptr = dataPacket.data;
         std::time_t timestamp;
         std::memcpy(&timestamp, ptr, sizeof(std::time_t));
@@ -106,6 +112,8 @@ void CallManager::connectToHost()
     this->_udpClient->connectToHost(_myIp, _audioPort);
     this->_inCall = true;
     _timer->start();
+    _readTimer->start();
+    _soundManager->setMicMute(false);
 }
 
 void CallManager::beginCall()
@@ -113,7 +121,6 @@ void CallManager::beginCall()
     std::cout << "BEGIN CALL" << std::endl;
     std::cout << "Connect to client caller..." << _myIp << std::endl;
     this->connectToHost();
-    _soundManager->setMicMute(false);
 }
 
 void CallManager::endCall()
@@ -124,6 +131,7 @@ void CallManager::endCall()
     _soundManager->setMicMute(true);
     
     QObject::disconnect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
+    QObject::disconnect(_readTimer, SIGNAL(timeout()), this, SLOT(onReadAudioData()));
     QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
 

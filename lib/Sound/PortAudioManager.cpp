@@ -12,7 +12,7 @@
 
 bool PortAudioManager::_init = false;
 
-PortAudioManager::PortAudioManager() :
+PortAudioManager::PortAudioManager() : 
 _inputBuffer(nullptr), _outputBuffer(nullptr), _inputSample(nullptr), _outputSample(nullptr), _inputStream(nullptr), _outputStream(nullptr), _inputChannels(2), _outputChannels(2), _outputIndex(0), _inputIndex(0), _micMute(false), _outputMute(false)
 {
     if (!PortAudioManager::_init) {
@@ -93,14 +93,12 @@ void PortAudioManager::setDefaultOutputDevice()
 
 std::vector<std::string> PortAudioManager::getInputDeviceNames() const
 {
-    std::vector<std::string> vect;
-    return vect;
+    return std::vector<std::string>();
 }
 
 std::vector<std::string> PortAudioManager::getOutputDeviceNames() const
 {
-    std::vector<std::string> vect;
-    return vect;
+    return std::vector<std::string>();
 }
 
 void PortAudioManager::allocateBuffers()
@@ -135,8 +133,8 @@ void PortAudioManager::loadApi()
     loadDefaultDevices();
     openInputStream();
     openOutputStream();
-    startOutputStream();
     startInputStream();
+    startOutputStream();
 }
 
 void PortAudioManager::loadDevices(const int &inputChannels, const int &outputChannels)
@@ -178,7 +176,7 @@ int PortAudioManager::openInputStream()
 }
 
 int PortAudioManager::openOutputStream()
-{
+{    
     if (_outputStream) {
         closeOutputStream();
     }
@@ -294,7 +292,6 @@ int PortAudioManager::retrieveInputBytes(float *sample, size_t len)
 
 void PortAudioManager::feedBytesToOutput(float *sample, unsigned long len)
 {
-    std::memcpy(_outputSample, sample, len * _outputChannels * sizeof(float));
     _outputBuffer->write(sample, len * _outputChannels * sizeof(float));
 }
 
@@ -311,12 +308,11 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     (void) timeInfo;
     (void) statusFlags;
     (void) userData;
-
+    
     if (data->isMicMuted() || inputBuffer == NULL) {
         std::memset(data->_inputSample, 0, framesPerBuffer * data->_inputChannels * sizeof(float));
         data->_inputBuffer->write(data->_inputSample, framesPerBuffer * data->_inputChannels * sizeof(float));
     } else {
-        std::memcpy(data->_inputSample, rptr, framesPerBuffer * data->_inputChannels * sizeof(float));
         data->_inputBuffer->write(rptr, framesPerBuffer * data->_inputChannels * sizeof(float));
     }
     return paContinue;

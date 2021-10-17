@@ -91,10 +91,6 @@ void UDPClient::recieveDatagram()
     new_packet.data = new unsigned char[bytesRead];
     std::memset(new_packet.data, 0, bytesRead * sizeof(unsigned char));
     std::memcpy(new_packet.data, buffer, bytesRead * sizeof(unsigned char));
-    // for (int i = 0; i < bytesRead; i++) {
-    //     std::cout << hex(buffer[i]);
-    //     std::cout << " ";
-    // }
     _data.push(new_packet);
 }
 
@@ -114,7 +110,6 @@ void UDPClient::onReadyRead()
         }
         new_packet.host = sender.toString().toStdString();
         new_packet.port = senderPort;
-
         std::cout << "on ready read Message: " << (char *)new_packet.data << std::endl;
     } else {
         std::cout << "### ERRR: NO PENDING DATAGRAMS\n";

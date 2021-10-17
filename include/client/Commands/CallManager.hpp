@@ -74,6 +74,7 @@ namespace Client
                 int _frameSize;
                 int _inputBufferSize;
                 QTimer *_timer;
+                QTimer *_readTimer;
                 std::shared_ptr<OpusManager> _encoderManager;
                 std::shared_ptr<PortAudioManager> _soundManager;
         };

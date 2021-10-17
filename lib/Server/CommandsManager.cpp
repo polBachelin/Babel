@@ -253,7 +253,7 @@ pck_list *CommandsManager::callAccepted(const packet_t &pck, std::deque<std::sha
     for (auto &it : clients) {
         if (it->_um.getName() == elem[0]) {
             auto dest = it->getSocket();
-            elem[0] = currentClient->_um.getName() + "\n" + inc->local_endpoint().address().to_string() + "\n" + elem[2] + "\n";
+            elem[0] = currentClient->_um.getName() + "\n" + elem[1] + "\n" + elem[2] + "\n";
             CommandsManager::createPacket(*pack, dest, CALL_ACCEPTED_SUCCESS, elem[0] + "\n");
             CommandsManager::createPacket(*pack, currentClient->getSocket(), DONT_SEND, "");
             return pack;
