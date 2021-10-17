@@ -66,7 +66,7 @@ packetUDP_t UDPClient::getData()
 
 int UDPClient::getNbData()
 {
-    if (_data.empty)
+    if (_data.empty())
         return 0;
     return _data.size();
 }
