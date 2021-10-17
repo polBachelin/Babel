@@ -35,7 +35,7 @@ std::vector<std::string> &split(const std::string &s, char delim, std::vector<st
 pck_list *CommandsManager::redirect(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
     try {
-        if (pck.code != 4 && pck.magic == MAGIC) {
+        if (pck.code != 4 && pck.magic == MAGIC && pck.code != 5) {
             std::cout << "---------Receive------------" << std::endl;
             std::cout << pck;
             std::cout << "----------------------------" << std::endl;
