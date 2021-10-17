@@ -9,6 +9,7 @@
 #define QTCPCLIENT_HPP_
 
 #include "ITcpClient.hpp"
+#include "structs.hpp"
 #include <iostream>
 #include <memory>
 #include <QString>
@@ -22,7 +23,7 @@ namespace Client
 {
     namespace Network
     {
-        class TcpClient : public QObject
+        class TcpClient : public QObject, public ITcpClient
         {
             Q_OBJECT
 
@@ -30,22 +31,22 @@ namespace Client
                 TcpClient(const QString hostAddress, int portVal);
                 ~TcpClient();
 
-                bool getStatus();
+                bool getStatus() final;
                 QAbstractSocket *getSocket();
-                void send(const QByteArray);
+                void send(const char *data) final;
 
             public slots:
-                void closeConnection();
-                void connectTohost();
+                void closeConnection() final;
+                void connectToHost() final;
 
             signals:
                 void statusChanged(bool);
                 void dataAvailable(QByteArray qbt);
 
             private slots:
-                void readyForRead();
-                void connected();
-                void connectionTimeout();
+                void readyForRead() final;
+                void connected() final;
+                void connectionTimeout() final;
 
             private:
                 QString _host;

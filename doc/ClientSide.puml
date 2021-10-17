@@ -1,0 +1,274 @@
+@startuml Babel
+
+!include GUIClientSide.puml
+!theme spacelab
+
+
+namespace Client {
+
+    class BabelClient extends QApplication
+    {
+        +BabelClient(int argc, char *argv[]);
+        +~BabelClient();
+        +int start();
+
+        -Client::GUI::MainWindow _mainWindow;
+    }
+
+namespace GUI {
+    enum pageNames
+    {
+        LOGIN,
+        CONTACTS,
+        NEXT
+    }
+
+    enum signal_e
+    {
+        Elogin = 000,
+        Eregister = 001,
+        Eaddcontact = 002,
+        Eacceptinvitation = 112,
+        EcallX = 003,
+        Erefuseincomingcall = 203,
+        Easkcontactlist = 004
+    }
+
+    enum receivedSignal_e
+    {
+        EloginSuccessful = 100,
+        EloginFailed = 200,
+        EregisterSuccessful = 101,
+        EregisterFailed = 201,
+        EinvitationReceive = 012,
+        EcontactExist = 102,
+        EcontactAddFailed = 202,
+        EincomingCall = 303,
+        EUserForCallNotFound = 603,
+        EcallWasRefused = 203,
+        EcontactList = 004
+    }
+
+    entity ClientInfos
+    {
+        -std::string username;
+        -std::string password;
+        -std::string userToCall;
+        -std::string ip;
+        -std::string port;
+        -std::string currentData;
+        -bool callHost = false;
+    }
+
+    entity packet_t
+    {
+        -int magic;
+        -int code;
+        -int data_size;
+        -char data[2048] = {0};
+    }
+
+    class MainWindow extends QMainWindow
+    {
+        .. Q_OBJECT ..
+        +MainWindow(const QString hostAddress, int portVal);
+        +~MainWindow();
+
+        +void signalReceivedLoader();
+        +void initConnections();
+
+        .. signals: ..
+            +void validSignInResponse(ClientInfos);
+            +void wrongSignInResponse(ClientInfos);
+            +void validRegisterResponse(ClientInfos);
+            +void wrongRegisterResponse(ClientInfos);
+            +void contactAddSuccess(ClientInfos);
+            +void contactAddFailed(ClientInfos);
+            +void incomingCall(ClientInfos);
+            +void contactList(ClientInfos);
+            +void invitationContactReceived(ClientInfos);
+            +void callRefused(ClientInfos);
+
+        .. public slots: ..
+            +void checkSignal(ClientInfos, signal_e);
+            +void changeCurrentPage(pageNames, ClientInfos);
+            +void receivedSomething(QByteArray);
+            +void gotError(QAbstractSocket::SocketError err);
+
+        -std::unique_ptr<PageManager> _pages;
+        -Network::TcpClient _tcpClient;
+        -ClientInfos _infos;
+        -std::unordered_map<receivedSignal_e, std::function<void(ClientInfos)>> _signalPageMap;
+    }
+
+    namespace pages {
+
+        class PageManager extends QStackedWidget
+        {
+            +PageManager(QWidget *parent);
+            +~PageManager();
+
+            +void addPage(pageNames name);
+            +void setCurrentPage(pageNames name);
+            +APage *getPage(pageNames name);
+
+            -std::map<pageNames, std::unique_ptr<APage>> _pages;
+            -QWidget *_parent;
+            -ClientInfos _infos;
+        }
+
+        abstract APage extends QWidget
+        {
+            .. Q_OBJECT ..
+            +APage(ClientInfos infos, QWidget *parent = nullptr);
+            +~APage() = default;
+
+            +virtual void initConnections() = 0;
+            +virtual void loadPage() = 0;
+            +virtual void layoutLoader() = 0;
+            +virtual void onPage() = 0;
+
+            +void setClientInfos(const ClientInfos &);
+            .. signals: ..
+                +void changePage(pageNames, ClientInfos);
+                +void checkCommand(ClientInfos, signal_e);
+
+            -std::unique_ptr<QGridLayout> _layout;
+            -ClientInfos _infos;
+        }
+
+        class LoginPage implements APage
+        {
+            .. Q_OBJECT ..
+                +LoginPage(ClientInfos infos, QWidget *parent = nullptr);
+                +~LoginPage() = default;
+
+            // member functions
+                +void initConnections() override;
+                +void loadPage() override;
+                +void layoutLoader() override;
+                +void onPage() override;
+            .. public slots : ..
+                +void validSignIn(ClientInfos);
+                +void wrongSignIn(ClientInfos);
+                +void changeWidth(int width);
+                +void changeUsername(QString);
+                +void changePassword(QString);
+                +void signIn();
+                +void createAccount();
+
+            // Layout
+                -std::unique_ptr<QGridLayout> _layout;
+            // member variables
+                -std::string _username;
+                -std::string _password;
+                -bool _formError;
+        }
+
+        class RegisterPage implements APage
+        {
+            .. Q_OBJECT ..
+                +RegisterPage(ClientInfos infos, QWidget *parent = nullptr);
+                +~RegisterPage() = default;
+
+            // member functions
+                +void initConnections() override;
+                +void loadPage() override;
+                +void layoutLoader() override;
+                +void onPage() override;
+            .. public slots: ..
+                +void validRegister(ClientInfos);
+                +void wrongRegister(ClientInfos);
+                +void changeWidth(int width);
+                +void changeUsername(QString);
+                +void changePassword(QString);
+                +void changeConfirmPassword(QString);
+                +void createAccount();
+                +void signIn();
+
+            // Layout
+                -std::unique_ptr<QGridLayout> _layout;
+            // member variables
+                -std::string _username;
+                -std::string _password;
+                -std::string _confirmPassword;
+                -bool _formError;
+        }
+
+        class ContactPage implements APage
+        {
+            .. Q_OBJECT..
+
+            // Ctor / Dtor
+                +ContactPage(Client::ClientInfos infos, QWidget *parent = nullptr);
+                +~ContactPage() = default;
+
+            // member functions
+                +void initConnections() override;
+                +void loadPage() override;
+                +void layoutLoader() override;
+                +void onPage() override;
+            .. public slots: ..
+                +void validAddContact(ClientInfos);
+                +void wrongAddContact(ClientInfos);
+                +void handleIncomingCall(ClientInfos);
+                +void fillContactList(ClientInfos);
+                +void invitationReceived(ClientInfos);
+                +void contactClicked(QListWidgetItem *);
+                +void addContactClicked();
+                +void callClicked();
+                +void logOut();
+                +void searchContact(QString);
+                +void changeMsg(QString);
+
+            // Layout
+                -std::unique_ptr<QGridLayout> _layout;
+            // member variables
+                -QSlider * _m_slider;
+                -std::string _username;
+                -std::string _msg;
+                -std::string _search;
+                -QString _contactSelected;
+                -std::size_t _cid;
+        }
+
+        class CallPage implements APage
+        {
+            .. Q_OBJECT ..
+                +CallPage(ClientInfos infos, QWidget *parent = nullptr);
+                +~CallPage() = default;
+
+            // member functions
+                +void initConnections() override;
+                +void loadPage() override;
+                +void layoutLoader() override;
+                +void onPage() override;
+            .. public slots: ..
+                +void soundOff();
+                +void soundOn();
+                +void micOff();
+                +void micOn();
+                +void callOff();
+                +void callOn();
+                +void updateTimer();
+                +void endCall();
+                +void incoming(ClientInfos);
+                +void callWasRefused(ClientInfos);
+
+            // Layout
+                -std::unique_ptr<QGridLayout> _layout;
+            // member variables
+                -std::string _username;
+                -Client::Managers::CallManager _callManager;
+        }
+    }
+
+
+
+}
+
+
+}
+
+
+@enduml

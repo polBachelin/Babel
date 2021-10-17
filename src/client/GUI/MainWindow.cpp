@@ -141,14 +141,13 @@ void MainWindow::checkSignal(ClientInfos_t infos, signal_e e)
     char *buffTemp = CommandsFactory::callCommand(infos, e);
     if (!buffTemp)
         return;
-    QByteArray QBta = QByteArray::fromRawData(buffTemp, sizeof(packet_t));
 
     if (e == Elogin || e == Eregister) {
         _infos.username = infos.username;
         _infos.password = infos.password;
     }
 
-    _tcpClient.send(QBta);
+    _tcpClient.send(buffTemp);
 }
 
 void MainWindow::gotError(QAbstractSocket::SocketError err)

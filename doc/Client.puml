@@ -1,0 +1,427 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+namespace Client {
+	class CommandsFactory {
+		+CommandsFactory()
+		+~CommandsFactory()
+		+{static} callCommand(ClientInfos_t, GUI::signal_e) : char*
+		-{static} *(ClientInfos_t, GUI::signal_e) : std::unordered_map<GUI::signal_e , std::function<char
+	}
+
+	namespace GUI {
+		abstract class APage {
+			+APage(ClientInfos_t infos, QWidget* parent)
+			+~APage()
+			#_infos : ClientInfos_t
+			+changePage(pageNames name, ClientInfos_t) : signals : void
+			#_layout : std::unique_ptr<QGridLayout>
+			+checkCommand(ClientInfos_t, signal_e) : void
+			+{abstract} initConnections() : void
+			+{abstract} layoutLoader() : void
+			+{abstract} loadPage() : void
+			+{abstract} onPage() : void
+			+setClientInfos_t(const ClientInfos_t &) : void
+		}
+
+		class CallPage {
+			+CallPage(ClientInfos_t infos, QWidget* parent)
+			+~CallPage()
+			-_username : std::string
+			-_callManager : std::unique_ptr<Client::Managers::CallManager>
+			-_eltimer : std::unique_ptr<QElapsedTimer>
+			-_layout : std::unique_ptr<QGridLayout>
+			-_imgLogo : std::unique_ptr<QImage>
+			-_imgProfile : std::unique_ptr<QImage>
+			-_emptyLabel : std::unique_ptr<QLabel>
+			-_labelContact : std::unique_ptr<QLabel>
+			-_labelGif : std::unique_ptr<QLabel>
+			-_labelLogo : std::unique_ptr<QLabel>
+			-_labelPageName : std::unique_ptr<QLabel>
+			-_labelProfile : std::unique_ptr<QLabel>
+			-_labelTimer : std::unique_ptr<QLabel>
+			-_gif : std::unique_ptr<QMovie>
+			-_imgCallOff : std::unique_ptr<QPixmap>
+			-_imgMicOff : std::unique_ptr<QPixmap>
+			-_imgMicOn : std::unique_ptr<QPixmap>
+			-_imgRefuse : std::unique_ptr<QPixmap>
+			-_imgSoundOff : std::unique_ptr<QPixmap>
+			-_imgSoundOn : std::unique_ptr<QPixmap>
+			-_imgValidate : std::unique_ptr<QPixmap>
+			-_callOff : std::unique_ptr<QPushButton>
+			-_micOff : std::unique_ptr<QPushButton>
+			-_micOn : std::unique_ptr<QPushButton>
+			-_refuse : std::unique_ptr<QPushButton>
+			-_soundOff : std::unique_ptr<QPushButton>
+			-_soundOn : std::unique_ptr<QPushButton>
+			-_validate : std::unique_ptr<QPushButton>
+			-_timer : std::unique_ptr<QTimer>
+			+btnLoader() : void
+			+callOff() : void
+			+callOn() : void
+			+callWasAccepted(ClientInfos_t) : void
+			+callWasRefused(ClientInfos_t) : void
+			+delimLoader() : void
+			+endCall() : void
+			+incoming(ClientInfos_t) : void
+			+initConnections() : void
+			+labelLoader() : void
+			+layoutLoader() : void
+			+loadInCall_Layout() : void
+			+loadIncomingCall_Layout() : void
+			+loadPage() : void
+			+micOff() : void
+			+micOn() : void
+			+onPage() : void
+			+soundOff() : void
+			+soundOn() : void
+			+timerLoader() : void
+			+updateTimer() : void
+		}
+
+		class ContactPage {
+			+ContactPage(Client::ClientInfos_t infos, QWidget* parent)
+			+~ContactPage()
+			-_m_slider : QSlider*
+			-_contactSelected : QString
+			-_history : std::deque<std::vector<std::string>>
+			-_delim : std::map<std::string, std::unique_ptr<QFrame>>
+			-_cid : std::size_t
+			-_msg : std::string
+			-_search : std::string
+			-_username : std::string
+			-_layout : std::unique_ptr<QGridLayout>
+			-_imgLogo : std::unique_ptr<QImage>
+			-_emptyLabel : std::unique_ptr<QLabel>
+			-_labelContactName : std::unique_ptr<QLabel>
+			-_labelContactSelected : std::unique_ptr<QLabel>
+			-_labelLogo : std::unique_ptr<QLabel>
+			-_labelPageName : std::unique_ptr<QLabel>
+			-_contactSearch : std::unique_ptr<QLineEdit>
+			-_writeMsg : std::unique_ptr<QLineEdit>
+			-_contactList : std::unique_ptr<QListWidget>
+			-_messageHistory : std::unique_ptr<QListWidget>
+			-_imgCall : std::unique_ptr<QPixmap>
+			-_addContactBtn : std::unique_ptr<QPushButton>
+			-_backButton : std::unique_ptr<QPushButton>
+			-_call : std::unique_ptr<QPushButton>
+			-_timer : std::unique_ptr<QTimer>
+			+addContactClicked() : void
+			+callClicked() : void
+			+callLoader() : void
+			+changeMsg(QString) : void
+			+contactClicked(QListWidgetItem*) : void
+			+contactLoader() : void
+			+delimLoader() : void
+			+fillContactList(ClientInfos_t) : void
+			+formLoader() : void
+			+handleIncomingCall(ClientInfos_t) : void
+			+initConnections() : void
+			+invitationReceived(ClientInfos_t) : void
+			+labelLoader() : void
+			+layoutLoader() : void
+			+loadPage() : void
+			+logOut() : void
+			+messageReceived(ClientInfos_t) : void
+			+onPage() : void
+			+searchContact(QString) : void
+			+sendMsg() : void
+			+timerLoader() : void
+			+updateTimer() : void
+			+validAddContact(ClientInfos_t) : void
+			+wrongAddContact(ClientInfos_t) : void
+		}
+
+		class LoginPage {
+			+LoginPage(ClientInfos_t infos, QWidget* parent)
+			+~LoginPage()
+			-_formError : bool
+			-_password : std::string
+			-_username : std::string
+			-_layout : std::unique_ptr<QGridLayout>
+			-_imgLogo : std::unique_ptr<QImage>
+			-_emptyLabel : std::unique_ptr<QLabel>
+			-_errorPassword : std::unique_ptr<QLabel>
+			-_errorUsername : std::unique_ptr<QLabel>
+			-_labelLogo : std::unique_ptr<QLabel>
+			-_labelPageName : std::unique_ptr<QLabel>
+			-_textLabel : std::unique_ptr<QLabel>
+			-_passwordForm : std::unique_ptr<QLineEdit>
+			-_usernameForm : std::unique_ptr<QLineEdit>
+			-_registerButton : std::unique_ptr<QPushButton>
+			-_signButton : std::unique_ptr<QPushButton>
+			+btnLoader() : void
+			+changePassword(QString) : void
+			+changeUsername(QString) : void
+			+changeWidth(int width) : void
+			+createAccount() : void
+			+delimLoader() : void
+			+formLoader() : void
+			+initConnections() : void
+			+labelLoader() : void
+			+layoutLoader() : void
+			+loadPage() : void
+			+onPage() : void
+			+signIn() : void
+			+validSignIn(ClientInfos_t) : void
+			+wrongSignIn(ClientInfos_t) : void
+		}
+
+		class NextPage {
+			+NextPage(ClientInfos_t infos, QWidget* parent)
+			+~NextPage()
+			-username : std::string
+			-_formLayout : std::unique_ptr<QFormLayout>
+			-_backButton : std::unique_ptr<QPushButton>
+			+goBack() : void
+			+initConnections() : void
+		}
+
+		class PageManager {
+			+PageManager(QWidget* parent, ClientInfos_t& infos)
+			+~PageManager()
+			+getPage(pageNames name) : APage*
+			-_infos : ClientInfos_t
+			-_parent : QWidget*
+			-_pages : std::map<pageNames, std::unique_ptr<APage>>
+			+addPage(pageNames name) : void
+			+setCurrentPage(pageNames name, ClientInfos_t) : void
+		}
+
+		class RegisterPage {
+			+RegisterPage(ClientInfos_t infos, QWidget* parent)
+			+~RegisterPage()
+			-_formError : bool
+			-_confirmPassword : std::string
+			-_password : std::string
+			-_username : std::string
+			-_layout : std::unique_ptr<QGridLayout>
+			-_imgLogo : std::unique_ptr<QImage>
+			-_emptyLabel : std::unique_ptr<QLabel>
+			-_errorConfirmPassword : std::unique_ptr<QLabel>
+			-_errorPassword : std::unique_ptr<QLabel>
+			-_errorUsername : std::unique_ptr<QLabel>
+			-_labelLogo : std::unique_ptr<QLabel>
+			-_labelPageName : std::unique_ptr<QLabel>
+			-_textLabel : std::unique_ptr<QLabel>
+			-_confirmPasswordForm : std::unique_ptr<QLineEdit>
+			-_passwordForm : std::unique_ptr<QLineEdit>
+			-_usernameForm : std::unique_ptr<QLineEdit>
+			-_registerButton : std::unique_ptr<QPushButton>
+			-_signButton : std::unique_ptr<QPushButton>
+			+btnLoader() : void
+			+changeConfirmPassword(QString) : void
+			+changePassword(QString) : void
+			+changeUsername(QString) : void
+			+changeWidth(int width) : void
+			+createAccount() : void
+			+delimLoader() : void
+			+formLoader() : void
+			+initConnections() : void
+			+labelLoader() : void
+			+layoutLoader() : void
+			+loadPage() : void
+			+onPage() : void
+			+signIn() : void
+			+validRegister(ClientInfos_t) : void
+			+wrongRegister(ClientInfos_t) : void
+		}
+
+		enum pageNames {
+			CALL
+			CONTACTS
+			LOGIN
+			REGISTER
+		}
+
+		enum receivedSignal_e {
+			ECallAccepted
+			EUserForCallNotFound
+			EcallWasRefused
+			EcontactAddFailed
+			EcontactExist
+			EcontactList
+			EincomingCall
+			EinvitationReceive
+			EloginFailed
+			EloginSuccessful
+			EreceiveMsg
+			EregisterFailed
+			EregisterSuccessful
+		}
+
+		enum signal_e {
+			EAcceptIncomingCall
+			Eacceptinvitation
+			Eaddcontact
+			EaskHistory
+			Easkcontactlist
+			EcallX
+			Elogin
+			Elogout
+			Erefuseincomingcall
+			Eregister
+			EsendMsg
+		}
+	}
+
+	namespace Managers {
+		class CallManager {
+			+CallManager(const std::string& myIp, const unsigned short audioPort)
+			+~CallManager()
+			-_pairs : Client::Managers::callers_t
+			-_timer : QTimer*
+			-_inCall : bool
+			-_magicNum : const int
+			-_myIp : const std::string
+			-_audioPort : const unsigned short
+			-_inputBuffer : float*
+			-_outputBuffer : float*
+			-_frameSize : int
+			-_inputBufferSize : int
+			+sendData() : signals : void
+			-_encoderManager : std::shared_ptr<OpusManager>
+			-_soundManager : std::shared_ptr<PortAudioManager>
+			-_contactIp : std::string
+			-_udpClient : std::unique_ptr<Client::Network::UDPClient>
+			+createAudioPacket(unsigned char* compressedBuff, int buffSize, std::time_t time) : unsigned char*
+			+addPair(const std::string& ip, unsigned short port) : void
+			+beginCall() : void
+			+connectToHost() : void
+			+endCall() : void
+			+onReadAudioData() : void
+			+sendAudioData() : void
+		}
+
+		class HexCharStruct {
+			+HexCharStruct(char _c)
+			+c : char
+		}
+	}
+
+	namespace Network {
+		abstract class ITcpClient {
+			+closeConnection() : void
+			+{abstract} connectToHost() : void
+			+{abstract} readyRead() : void
+			+{abstract} send(const std::string) : void
+		}
+
+		abstract class IUDPClient {
+			+{abstract} hasPendingDatagram() : bool
+			+{abstract} getData() : packetUDP_t
+			+{abstract} connectToHost(const std::string& ip, const unsigned short port) : void
+			+{abstract} disconnect() : void
+			+{abstract} send(const packetUDP_t& packet, const std::string& ip, const unsigned short port, const int& size) : void
+		}
+
+		class TcpClient {
+			+TcpClient(const QString hostAddress, int portVal)
+			+~TcpClient()
+			+getSocket() : QAbstractSocket*
+			-_host : QString
+			-_tcpSocket : QTcpSocket*
+			-_timeoutTimer : QTimer*
+			-_status : bool
+			+getStatus() : bool
+			-_port : int
+			-_m_nNextBlockSize : quint16
+			+statusChanged(bool) : signals : void
+			+closeConnection() : void
+			+connectToHost() : void
+			-connected() : void
+			-connectionTimeout() : void
+			+dataAvailable(QByteArray qbt) : void
+			-readyForRead() : void
+			+send(const QByteArray) : void
+		}
+
+		class UDPClient {
+			+UDPClient()
+			+~UDPClient()
+			+hasPendingDatagram() : bool
+			+getNbData() : int
+			+getData() : packetUDP_t
+			+getDataFromUDP() : signals : void
+			-_data : std::queue<packetUDP_t>
+			-_socket : std::unique_ptr<QUdpSocket>
+			+connectToHost(const std::string& myIp, const unsigned short port) : void
+			+disconnect() : void
+			-onReadyRead() : void
+			+recieveDatagram() : void
+			+send(const packetUDP_t& packet, const std::string& ip, const unsigned short port, const int& size) : void
+		}
+
+		class HexCharStruct {
+			+HexCharStruct(char _c)
+			+c : char
+		}
+
+		class packetUDP_t {
+			+host : std::string
+			+timestamp : std::time_t
+			+data : unsigned char*
+			+magicNum : unsigned short
+			+port : unsigned short
+		}
+	}
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+Client.GUI.APage <|-- Client.GUI.CallPage
+
+
+Client.GUI.APage <|-- Client.GUI.ContactPage
+
+
+Client.GUI.APage <|-- Client.GUI.LoginPage
+
+
+Client.GUI.APage <|-- Client.GUI.NextPage
+
+
+Client.GUI.APage <|-- Client.GUI.RegisterPage
+
+
+Client.Network.IUDPClient <|-- Client.Network.UDPClient
+
+
+
+
+
+/' Aggregation relationships '/
+
+Client.Managers.CallManager *-- Client.Network.UDPClient
+
+
+Client.GUI.CallPage *-- Client.Managers.CallManager
+
+
+Client.GUI.PageManager *-- Client.GUI.APage
+
+
+Client.GUI.PageManager *-- Client.GUI.pageNames
+
+
+Client.Network.UDPClient *-- Client.Network.packetUDP_t
+
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml

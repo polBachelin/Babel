@@ -19,10 +19,12 @@ namespace Client
         {
             public:
                 virtual void connectToHost() = 0;
-                virtual void send(const std::string) = 0;
-                virtual void closeConnection();
-                virtual void readyRead() = 0;
-            protected:
+                virtual void send(const char *) = 0;
+                virtual void closeConnection() = 0;
+                virtual void readyForRead() = 0;
+                virtual void connected() = 0;
+                virtual void connectionTimeout() = 0;
+                virtual bool getStatus() = 0;
         };
     }
 }

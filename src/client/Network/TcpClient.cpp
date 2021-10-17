@@ -22,7 +22,7 @@ TcpClient::TcpClient(
     _timeoutTimer = new QTimer();
     _timeoutTimer->setSingleShot(true);
     QObject::connect(_timeoutTimer, &QTimer::timeout, this, &TcpClient::connectionTimeout);
-    connectTohost();
+    connectToHost();
 }
 
 TcpClient::~TcpClient()
@@ -36,7 +36,7 @@ QAbstractSocket *TcpClient::getSocket()
     return _tcpSocket;
 }
 
-void TcpClient::connectTohost()
+void TcpClient::connectToHost()
 {
     _timeoutTimer->start(3000);
 
@@ -96,9 +96,10 @@ void TcpClient::readyForRead()
     // }
 }
 
-void TcpClient::send(const QByteArray data)
+void TcpClient::send(const char *data)
 {
-    _tcpSocket->write(data);
+    QByteArray QBta = QByteArray::fromRawData(data, sizeof(packet_t));
+    _tcpSocket->write(QBta);
 }
 
 void TcpClient::closeConnection()
