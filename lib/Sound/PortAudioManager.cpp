@@ -213,7 +213,7 @@ void PortAudioManager::startInputStream()
     if (_inputStream) {
         err = Pa_StartStream(_inputStream);
         if (err != paNoError)
-            throw PortAudioException("Could not start output Stream");
+            throw PortAudioException("Could not start input Stream");
     }
 }
 
@@ -224,7 +224,7 @@ void PortAudioManager::startOutputStream()
     if (_outputStream) {
         err = Pa_StartStream(_outputStream);
         if (err != paNoError)
-            throw PortAudioException("Could not start input stream");
+            throw PortAudioException("Could not start output stream");
     }
 }
 

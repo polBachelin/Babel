@@ -16,9 +16,6 @@
 #include "asio.hpp"
 #include "PortAudioManager.hpp"
 #include "AsioTcpServer.hpp"
-#define SAMPLE_RATE  (48000)
-#define FRAMES_PER_BUFFER (512)
-#define NUM_SECONDS     (5)
 
 int main(int ac, char **av)
 {

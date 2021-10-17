@@ -164,8 +164,6 @@ void CallManager::beginCall()
     std::cout << "BEGIN CALL" << std::endl;
     std::cout << "Connect to client caller..." << _myIp << std::endl;
     this->connectToHost();
-    _soundManager->startInputStream();
-    _soundManager->startOutputStream();
     //TODO: set UP audio ????
 }
 
