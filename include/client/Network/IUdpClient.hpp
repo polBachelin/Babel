@@ -11,34 +11,32 @@
 #include <iostream>
 #include <ctime>
 #include <QtWidgets>
-
+#include <vector>
+#include <array>
+#include <memory>
+#include <cstring>
 namespace Client
 {
     namespace Network
     {
-        #pragma pack(push, 1)
-        struct packetUDP_t
+        typedef struct
         {
-            friend std::ostream &operator<<(std::ostream &out, const packetUDP_t &info)
-            {
-                out << "\n---Infos UDP packet---\n"
-                << "IpSender:" << info.host << "\n"
-                << "PortSender:" << info.port << "\n"
-                << "dataSize:" << info.dataSize << "\n"
-                << "data:" << info.data << "\n"
-                << std::endl;
-                return out;
-            }
+            // friend std::ostream &operator<<(std::ostream &out, const packetUDP_t &info)
+            // {
+            //     out << "\n---Infos UDP packet---\n"
+            //     << "IpSender:" << info.host << "\n"
+            //     << "PortSender:" << info.port << "\n"
+            //     << "data:" << info.data.data() << "\n"
+            //     << std::endl;
+            //     return out;
+            // }
 
             unsigned short magicNum = 987;
             unsigned char *data;
             std::string host;
-            int dataSize;
             unsigned short port;
             std::time_t timestamp;
-        };
-
-        #pragma pack(pop)
+        }  packetUDP_t;
 
         class IUDPClient
         {
@@ -46,7 +44,8 @@ namespace Client
                 virtual packetUDP_t getData() = 0;
                 virtual void disconnect() = 0;
                 virtual void connectToHost(const std::string &ip, const unsigned short port) = 0;
-                virtual void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port) = 0;
+                virtual bool hasPendingDatagram() = 0;
+                virtual void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port, const int &size) = 0;
         };
     }
 }

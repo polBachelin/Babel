@@ -12,12 +12,30 @@
 #include <QtCore/QObject>
 #include <memory>
 #include <QUdpSocket>
+#include <QNetworkDatagram>
 #include <queue>
 
 namespace Client
 {
     namespace Network
     {
+
+        struct HexCharStruct
+        {
+            char c;
+            HexCharStruct(char _c) : c(_c) { }
+        };
+
+        inline std::ostream& operator<<(std::ostream& o, const HexCharStruct& hs)
+        {
+            return (o << std::hex << (int)hs.c);
+        }
+
+        inline HexCharStruct hex(char _c)
+        {
+            return HexCharStruct(_c);
+        }
+
         class UDPClient : public QObject,  public IUDPClient
         {
             Q_OBJECT
@@ -27,10 +45,12 @@ namespace Client
                 UDPClient();
                 ~UDPClient();
                 void connectToHost(const std::string &myIp, const unsigned short port) override;
-                void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port) override;
+                void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port, const int &size) override;
                 void disconnect() override;
                 packetUDP_t getData() override;
-
+                int getNbData();
+                bool hasPendingDatagram() override;
+                void recieveDatagram();
             signals:
                 void getDataFromUDP();
 

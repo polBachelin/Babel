@@ -135,6 +135,8 @@ void PortAudioManager::loadApi()
     loadDefaultDevices();
     openInputStream();
     openOutputStream();
+    startInputStream();
+    startOutputStream();
 }
 
 void PortAudioManager::loadDevices(const int &inputChannels, const int &outputChannels)
@@ -162,13 +164,14 @@ int PortAudioManager::openInputStream()
     if (_inputStream) {
         closeInputStream();
     }
+    _inputStream = nullptr;
     Pa_OpenStream(
             &_inputStream,
             &_inputParameters,
             NULL,
             SAMPLE_RATE,
             FRAMES_PER_BUFFER,
-            paClipOff,
+            paNoFlag,
             recordCallback,
             this);
     return 0;
@@ -179,15 +182,19 @@ int PortAudioManager::openOutputStream()
     if (_outputStream) {
         closeOutputStream();
     }
-    Pa_OpenStream(
-            &_outputStream,
-            NULL, /* no input */
-            &_outputParameters,
-            SAMPLE_RATE,
-            FRAMES_PER_BUFFER,
-            paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-            playCallback,
-            this);
+    _outputStream = nullptr;
+    PaError err = Pa_OpenStream(
+                    &_outputStream,
+                    NULL, /* no input */
+                    &_outputParameters,
+                    SAMPLE_RATE,
+                    FRAMES_PER_BUFFER,
+                    paNoFlag,      /* we won't output out of range samples so don't bother clipping them */
+                    playCallback,
+                    this);
+    if (err != paNoError) {
+        std::cout << "[PortAudio] : Could not open output stream" << std::endl;
+    }
     return 0;
 }
 
@@ -212,7 +219,7 @@ void PortAudioManager::startInputStream()
     if (_inputStream) {
         err = Pa_StartStream(_inputStream);
         if (err != paNoError)
-            throw PortAudioException("Could not start output Stream");
+            throw PortAudioException("Could not start input Stream");
     }
 }
 
@@ -223,7 +230,7 @@ void PortAudioManager::startOutputStream()
     if (_outputStream) {
         err = Pa_StartStream(_outputStream);
         if (err != paNoError)
-            throw PortAudioException("Could not start input stream");
+            throw PortAudioException("Could not start output stream");
     }
 }
 
@@ -269,21 +276,7 @@ int PortAudioManager::retrieveInputBytes(float *sample, size_t len)
 
 void PortAudioManager::feedBytesToOutput(float *sample, unsigned long len)
 {
-    float max = 0;
-    float average = 0.0;
-    float val;
-    for(int i=0; i<NUM_SECONDS * SAMPLE_RATE * NUM_CHANNELS; i++ )
-    {
-        val = sample[i];
-        if( val < 0 ) val = -val; /* ABS */
-        if(val > max)
-        {
-            max = val;
-        }
-        average += val;
-    }
-    average = average / (double)(NUM_SECONDS * SAMPLE_RATE * NUM_CHANNELS);
-    std::cout << "average === " << average << " - max == " << max << std::endl;
+    std::memcpy(_outputSample, sample, len * _outputChannels * sizeof(float));
     _outputBuffer->write(sample, len * _outputChannels * sizeof(float));
 }
 
@@ -304,8 +297,10 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     if (data->isMicMuted() || inputBuffer == NULL) {
         std::memset(data->_inputSample, 0, framesPerBuffer * data->_inputChannels * sizeof(float));
         data->_inputBuffer->write(data->_inputSample, framesPerBuffer * data->_inputChannels * sizeof(float));
-    } else
+    } else {
+        std::memcpy(data->_inputSample, rptr, framesPerBuffer * data->_inputChannels * sizeof(float));
         data->_inputBuffer->write(rptr, framesPerBuffer * data->_inputChannels * sizeof(float));
+    }
     return paContinue;
 }
 
@@ -317,7 +312,7 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
 {
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *wptr = static_cast<float *>(outputBuffer);
-    size_t frameSize = FRAMES_PER_BUFFER * data->_outputChannels * sizeof(float);
+    size_t frameSize = framesPerBuffer * data->_outputChannels * sizeof(float);
     size_t outputSize = data->_outputBuffer->size();
     size_t toRead;
 

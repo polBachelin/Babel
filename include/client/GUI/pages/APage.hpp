@@ -66,7 +66,9 @@ namespace GUI {
         Erefuseincomingcall = 203,  // 203
         Easkcontactlist = 4,        // 004
         EaskHistory = 5,            // 005
-        EsendMsg = 105              // 105
+        EsendMsg = 105,             // 105
+        EAcceptIncomingCall = 403
+
     };
 
     enum receivedSignal_e
@@ -82,7 +84,8 @@ namespace GUI {
         EincomingCall = 303,        // 303
         EUserForCallNotFound = 603, // 603
         EcontactList = 4,           // 004
-        EreceiveMsg = 205           // 205
+        EreceiveMsg = 205,          // 205
+        ECallAccepted = 503,
     };
 
 class APage : public QWidget

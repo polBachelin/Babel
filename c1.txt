@@ -1,0 +1,2076 @@
+LOCAL : 1234
+10.19.234.34 | 5000
+ALLOCATING BUFFER
+ALLOCATING BUFFER
+Sending packet of login to server
+------------J'ai Envoyé----------------
+packet.magic     : 388474
+packet.code      : 0
+packet.data_size : 8
+packet.data      : [r#876, r]
+---------------------------------------
+------------- J'ai reçu ---------------
+packet.magic     : 388474
+packet.code      : 100
+packet.data_size : 5
+packet.data      : [r#876]
+---------------------------------------
+got a code : 100
+GOTO - contact page
+
+page change request
+CONTACTPAGE = 
+---Infos---
+MyUsername:r#876
+PortTCP:5000
+myIp:10.19.234.34
+MyAudioPort:1234
+caller:
+callerIp:
+callerAudioPort:0
+currentData:r#876
+
+
+Sending packet of ask contact list to server
+------------J'ai Envoyé----------------
+packet.magic     : 388474
+packet.code      : 4
+packet.data_size : 6
+packet.data      : [r#876]
+---------------------------------------
+------------- J'ai reçu ---------------
+packet.magic     : 388474
+packet.code      : 4
+packet.data_size : 25
+packet.data      : [sim#75, evan#223, evan#808]
+---------------------------------------
+got a code : 4
+------------- J'ai reçu ---------------
+packet.magic     : 388474
+packet.code      : 303
+packet.data_size : 27
+packet.data      : [evan#223, 10.19.234.34, 4321]
+---------------------------------------
+got a code : 303
+page change request
+CALLPAGE = 
+---Infos---
+MyUsername:r#876
+PortTCP:5000
+myIp:10.19.234.34
+MyAudioPort:1234
+caller:evan#223
+callerIp:10.19.234.34
+callerAudioPort:4321
+currentData:evan#223
+10.19.234.34
+4321
+
+
+
+CallPage::incoming from : evan#223:10.19.234.34:4321
+Accept call from: evan#223:10.19.234.34:4321
+Sending accept call from evan#223 to server
+------------J'ai Envoyé----------------
+packet.magic     : 388474
+packet.code      : 403
+packet.data_size : 27
+packet.data      : [evan#223, 10.19.234.34, 1234]
+---------------------------------------
+UDP bind my IP : 10.19.234.34
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 44 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 42 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 3c 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 43 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 40 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 42 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 41 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff3 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3e 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 41 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3d 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 42 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3a 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 41 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3c 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 40 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 42 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 42 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 47 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3d 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 48 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 45 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 41 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 40 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 41 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3c 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 45 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 41 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4d 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 55 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 5e 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 5a 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 54 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 54 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 54 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 58 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 59 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 5c 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 5b 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 59 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 52 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 52 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 58 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 51 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 51 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 50 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4b 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4d 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4d 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 44 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 46 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 3c 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 43 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4b 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 50 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4d 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4d 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4a 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4a 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4a 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4a 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 47 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 45 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 47 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 58 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 53 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 58 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 58 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 5a 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 58 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 53 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 52 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 54 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 57 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 54 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 57 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 55 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 56 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 50 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 53 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 54 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4c 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4f 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 53 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 50 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 50 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4c 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 48 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 49 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4e 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 49 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 45 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 48 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 48 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4b 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 48 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4a 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 4e 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff4 6b 6b 61 0 0 0 0 49 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 4d 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 44 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 48 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 ffffff91 0 0 0 74 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 52 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 52 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 50 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 54 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 7e 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 55 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 53 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 4f 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 53 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 50 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 4f 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 52 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 4d 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 4d 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 49 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 4c 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 48 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 49 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 4a 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 49 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 52 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 5c 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 75 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 60 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 62 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff5 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4e 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4b 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4e 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4d 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4c 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 46 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4b 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 3f 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4f 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4d 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 54 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4a 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4d 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4d 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4b 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 53 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 55 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 55 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 52 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 52 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 56 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 53 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4e 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4e 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 4f 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff6 6b 6b 61 0 0 0 0 52 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 4e 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 4a 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 4f 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 51 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 ffffff83 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 69 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 54 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 46 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 42 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 42 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 43 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 45 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 5e 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+-----SENDING AUDIO DATA----
+---------------------------
+fffffff7 6b 6b 61 0 0 0 0 42 0 0 0 fffffff4 
+-----READING AUDIO DATA----
+---------------------------
+GOTO - contact page
+
+page change request
+CONTACTPAGE = 
+---Infos---
+MyUsername:r#876
+PortTCP:5000
+myIp:10.19.234.34
+MyAudioPort:1234
+caller:evan#223
+callerIp:10.19.234.34
+callerAudioPort:4321
+currentData:evan#223
+10.19.234.34
+4321
+
+
+
+Sending packet of ask contact list to server
+------------J'ai Envoyé----------------
+packet.magic     : 5ed7a
+packet.code      : 4
+packet.data_size : 6
+packet.data      : [r#876]
+---------------------------------------
+------------- J'ai reçu ---------------
+packet.magic     : 5ed7a
+packet.code      : 4
+packet.data_size : 19
+packet.data      : [sim#75, evan#223, evan#808]
+---------------------------------------
+got a code : 4
+BabelClient détruit
+MainWindow détruit
+Client Disconnected
+Ending PortAudio API
+#### DESTROYING BUFFER
+#### DESTROYING BUFFER

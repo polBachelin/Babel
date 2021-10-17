@@ -8,7 +8,7 @@
 #ifndef CALLMANAGER_HPP_
 #define CALLMANAGER_HPP_
 
-#include <UdpClient.hpp>
+#include "UdpClient.hpp"
 #include "PortAudioManager.hpp"
 #include "OpusManager.hpp"
 #include <vector>
@@ -18,11 +18,29 @@
 #include <cstring>
 #include <netinet/in.h>
 #include <sys/types.h>
+#include <unordered_map>
+#include <vector>
 
 namespace Client
 {
     namespace Managers
     {
+
+                struct HexCharStruct
+        {
+            char c;
+            HexCharStruct(char _c) : c(_c) { }
+        };
+
+        inline std::ostream& operator<<(std::ostream& o, const HexCharStruct& hs)
+        {
+            return (o << std::hex << (int)hs.c);
+        }
+
+        inline HexCharStruct hex(char _c)
+        {
+            return HexCharStruct(_c);
+        }
         typedef std::unordered_map<std::string, std::pair<unsigned short, std::time_t>> callers_t;
         class CallManager : public QObject
         {
@@ -55,6 +73,7 @@ namespace Client
                 float *_outputBuffer;
                 int _frameSize;
                 int _inputBufferSize;
+                QTimer *_timer;
                 std::shared_ptr<OpusManager> _encoderManager;
                 std::shared_ptr<PortAudioManager> _soundManager;
         };
