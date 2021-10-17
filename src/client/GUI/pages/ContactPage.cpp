@@ -211,15 +211,7 @@ void Client::GUI::ContactPage::contactClicked(QListWidgetItem *item)
         _call->show();
         _writeMsg->show();
         _messageHistory->show();
-        // while (_messageHistory->count() > 0)
-        //     _messageHistory->takeItem(0);
         _messageHistory->clear();
-        for (auto &it : _history) {
-            // if (it.at(2) != _contactSelected.toStdString())
-            //     continue;
-            std::string msg(it.at(1) + " : " + it.at(3) + "\n");
-            new QListWidgetItem(tr(msg.c_str()), _messageHistory.get());
-        }
         _infos.currentData = _infos.username + "\n" + _contactSelected.toStdString() + "\n";
         emit checkCommand(_infos, EaskHistory);
     }
@@ -248,10 +240,6 @@ void Client::GUI::ContactPage::logOut()
     _call->hide();
     _writeMsg->hide();
     _messageHistory->hide();
-    // while (_contactList->count() > 0)
-    //     _contactList->takeItem(0);
-    // while (_messageHistory->count() > 0)
-    //     _messageHistory->takeItem(0);
     _contactList->clear();
     _messageHistory->clear();
     _history.clear();
@@ -271,7 +259,6 @@ void Client::GUI::ContactPage::sendMsg()
 {
     _infos.currentData = _infos.username + "\n" + _contactSelected.toStdString() + "\n" + _msg + "\n";
     std::cout << "SENDING -> " << _infos.currentData << std::endl;
-    // new QListWidgetItem(tr(_infos.currentData.c_str()), _contactList.get());
     _msg.clear();
     _writeMsg->setText("");
     emit checkCommand(_infos, EsendMsg);
@@ -333,8 +320,6 @@ void Client::GUI::ContactPage::fillContactList(ClientInfos_t info)
 {
     std::vector<std::string> contacts = convertCurrentData(info.currentData, '\n');
 
-    // while (_contactList->count() > 0)
-    //     _contactList->takeItem(0);
     _contactList->clear();
     for (auto &it : contacts)
         new QListWidgetItem(tr(it.c_str()), _contactList.get());
