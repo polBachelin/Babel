@@ -111,7 +111,9 @@ void CallManager::onReadAudioData()
 
 
     while (this->_udpClient->hasPendingDatagram()) {
-        dataPacket = this->_udpClient->getData();
+        _udpClient->recieveDatagram();
+    }
+    while ((dataPacket = _udpClient->getData()).magicNum != 0) {
         std::cout << "-----READING AUDIO DATA----\n";
         if (dataPacket.magicNum == 0) {
             std::cout << "WRONG MAGIC NUMBER\n";
@@ -146,7 +148,7 @@ void CallManager::onReadAudioData()
         average = average / (double)480;
         std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
         std::cout << "---------------------------\n";
-        _soundManager->feedBytesToOutput(_outputBuffer, 480);
+        _soundManager->feedBytesToOutput(outputBuffer, 480);
         delete [] outputBuffer;
     }
     //emit sendData();

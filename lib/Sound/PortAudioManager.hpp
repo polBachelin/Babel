@@ -17,7 +17,7 @@
 
 #define SAMPLE_RATE  (48000)
 #define FRAMES_PER_BUFFER (480)
-#define NUM_SECONDS     (3)
+#define NUM_SECONDS     (10)
 #define NUM_CHANNELS    (2)
 
 class PortAudioManager : public ISoundManager {

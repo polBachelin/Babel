@@ -55,11 +55,11 @@ packetUDP_t UDPClient::getData()
     QByteArray datagram;
     packetUDP_t new_packet;
 
-    recieveDatagram();
-    new_packet.magicNum = 0;
     if (!_data.empty()) {
         new_packet = _data.front();
         _data.pop();
+    } else {
+        new_packet.magicNum = 0;
     }
     return new_packet;
 }

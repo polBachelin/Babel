@@ -264,12 +264,13 @@ int PortAudioManager::getBytesInInput()
 int PortAudioManager::retrieveInputBytes(float *sample, size_t len)
 {
     if (!sample)
-        return 0;    
+        return 0;
     return _inputBuffer->read(sample, len * _inputChannels * sizeof(float));
 }
 
 void PortAudioManager::feedBytesToOutput(float *sample, unsigned long len)
 {
+    std::memcpy(_outputSample, sample, len * _outputChannels * sizeof(float));
     _outputBuffer->write(sample, len * _outputChannels * sizeof(float));
 }
 
@@ -290,8 +291,10 @@ int PortAudioManager::recordCallback(const void *inputBuffer, void *outputBuffer
     if (data->isMicMuted() || inputBuffer == NULL) {
         std::memset(data->_inputSample, 0, framesPerBuffer * data->_inputChannels * sizeof(float));
         data->_inputBuffer->write(data->_inputSample, framesPerBuffer * data->_inputChannels * sizeof(float));
-    } else
+    } else {
+        std::memcpy(data->_inputSample, rptr, framesPerBuffer * data->_inputChannels * sizeof(float));
         data->_inputBuffer->write(rptr, framesPerBuffer * data->_inputChannels * sizeof(float));
+    }
     return paContinue;
 }
 
@@ -303,7 +306,7 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
 {
     PortAudioManager *data = static_cast<PortAudioManager *>(userData);
     float *wptr = static_cast<float *>(outputBuffer);
-    size_t frameSize = FRAMES_PER_BUFFER * data->_outputChannels * sizeof(float);
+    size_t frameSize = framesPerBuffer * data->_outputChannels * sizeof(float);
     size_t outputSize = data->_outputBuffer->size();
     size_t toRead;
 
