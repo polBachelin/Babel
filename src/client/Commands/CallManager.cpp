@@ -81,7 +81,7 @@ void CallManager::onReadAudioData()
     unsigned char *compressed;
     unsigned char *ptr;
 
-    while (this->_udpClient->hasPendingDatagram() && _udpClient->getNbData() < 10) {
+    while (this->_udpClient->hasPendingDatagram()) {
         _udpClient->recieveDatagram();
     }
     while ((dataPacket = _udpClient->getData()).magicNum != 0) {
