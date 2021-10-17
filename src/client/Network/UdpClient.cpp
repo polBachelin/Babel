@@ -95,7 +95,6 @@ void UDPClient::recieveDatagram()
     //     std::cout << hex(buffer[i]);
     //     std::cout << " ";
     // }
-    std::cout << std::endl;
     _data.push(new_packet);
 }
 

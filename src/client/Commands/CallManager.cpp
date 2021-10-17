@@ -16,7 +16,7 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _soundManager = std::make_shared<PortAudioManager>();
     _encoderManager = std::make_shared<OpusManager>();
     _frameSize = _soundManager->getInputChannels() * sizeof(float);
-    _inputBufferSize =  3 * _soundManager->getSampleRate() * _frameSize;
+    _inputBufferSize =  10 * _soundManager->getSampleRate() * _frameSize;
     _inputBuffer = new float[_inputBufferSize];
     _outputBuffer = new float[_inputBufferSize];
     _encoderManager->setBitRate(64000);
@@ -59,13 +59,11 @@ void CallManager::sendAudioData()
         unsigned char *compressedBuffer = new unsigned char[_inputBufferSize];
         std::memset(compressedBuffer, 0, _inputBufferSize);
         _soundManager->retrieveInputBytes(_inputBuffer, 480);
-        std::cout << "-----SENDING AUDIO DATA----\n";
         int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
         audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
         dataPacket.port = _audioPort;
         dataPacket.host = _myIp;
         dataPacket.data = audioPacket;
-        std::cout << "---------------------------\n";
         for (auto &i : _pairs)
             _udpClient->send(dataPacket, i.first, i.second.first, compressedSize);
 
@@ -85,7 +83,6 @@ void CallManager::onReadAudioData()
         _udpClient->recieveDatagram();
     }
     while ((dataPacket = _udpClient->getData()).magicNum != 0) {
-        std::cout << "-----READING AUDIO DATA----\n";
         if (dataPacket.magicNum == 0) {
             std::cout << "WRONG MAGIC NUMBER\n";
             return;
@@ -107,7 +104,6 @@ void CallManager::onReadAudioData()
 
 void CallManager::connectToHost()
 {
-    std::cout << "UDP bind my IP : " << _myIp << std::endl;
     this->_udpClient->connectToHost(_myIp, _audioPort);
     this->_inCall = true;
     _timer->start();
@@ -118,8 +114,8 @@ void CallManager::beginCall()
     std::cout << "BEGIN CALL" << std::endl;
     std::cout << "Connect to client caller..." << _myIp << std::endl;
     this->connectToHost();
-    this->_soundManager->setOutputMute(false);
-    this->_soundManager->setMicMute(false);
+    // this->_soundManager->setOutputMute(false);
+    // this->_soundManager->setMicMute(false);
     //TODO: set UP audio ????
 }
 
@@ -130,8 +126,8 @@ void CallManager::endCall()
     _pairs.clear();
 
     //TODO: disable audio ????
-    this->_soundManager->setOutputMute(true);
-    this->_soundManager->setMicMute(true);
+    // this->_soundManager->setOutputMute(true);
+    // this->_soundManager->setMicMute(true);
     QObject::disconnect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
     QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
