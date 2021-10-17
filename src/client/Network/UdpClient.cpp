@@ -46,11 +46,7 @@ void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const uns
     //std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
     QHostAddress receiverIp;
 
-    //buf.append((const char *)packet.data);
     receiverIp.setAddress(QString::fromStdString(ip));
-    //std::cout << "Trying to send packet to : " << ip  << " : " << port << std::endl;
-    //std::cout << "PACKET DATA SIZE : " << packet.data.size() << std::endl;
-    std::cout << "[SEND] : Buffer[0] " << hex(packet.data[12]) << std::endl;
     if (_socket->writeDatagram((const char *)packet.data, 13, receiverIp, port) == -1)
         std::cout << "Send fail to :" << ip  << ":" << port << std::endl;
 }
@@ -64,7 +60,6 @@ packetUDP_t UDPClient::getData()
     new_packet.magicNum = 0;
     if (!_data.empty()) {
         new_packet = _data.front();
-        std::cout << "[GETDATA] : Buffer[0] " << hex(new_packet.data[12]) << std::endl;
         _data.pop();
     }
     return new_packet;
@@ -94,7 +89,6 @@ void UDPClient::recieveDatagram()
         std::cout << " ";
     }
     std::cout << std::endl;
-    std::cout << "Received Message: " << (char *)buffer << std::endl;
     _data.push(new_packet);
 }
 
