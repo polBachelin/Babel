@@ -135,9 +135,17 @@ void Client::GUI::LoginPage::signIn()
         _formError = true;
         _errorPassword->setText("password is empty");
     }
+   if (_password.size() > 16) {
+        _formError = true;
+        _errorPassword->setText("password must have a maximum of 16 char");
+    }
     if (_username.empty()) {
         _formError = true;
         _errorUsername->setText("username is empty");
+    }
+   if (_username.size() > 16) {
+        _formError = true;
+        _errorUsername->setText("username must have a maximum of 16 char");
     }
 
     if (_formError) {
