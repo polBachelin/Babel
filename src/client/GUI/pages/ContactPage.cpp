@@ -323,8 +323,11 @@ void Client::GUI::ContactPage::fillContactList(ClientInfos_t info)
     std::vector<std::string> contacts = convertCurrentData(info.currentData, '\n');
     static bool changed = true;
 
-    for (int i = 0; i < _contactList->count(); i++) {
-        if (_contactList->item(i)->text().toStdString() != contacts.at(i))
+    if (_contactList->count() != contacts.size())
+        changed = true;
+    for (std::size_t i = 0; i != _contactList->count() && i != contacts.size(); i++) {
+        if (_contactList->item(i)->text().toStdString()
+             != contacts.at(i))
             changed = true;
     }
     if (changed) {
