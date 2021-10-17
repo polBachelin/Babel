@@ -34,10 +34,10 @@ void Client::GUI::ContactPage::onPage()
 {
     std::cout << "CONTACTPAGE = " << _infos << std::endl;
     _labelContactName->setText(_infos.username.c_str());
-    // emit checkCommand(_infos, Easkcontactlist);
+    emit checkCommand(_infos, Easkcontactlist);
     if (_timer->isActive())
         _timer->stop();
-    // _timer->start();
+    _timer->start();
 }
 
 // LOARDERS
