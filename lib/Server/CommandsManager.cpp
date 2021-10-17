@@ -19,7 +19,7 @@ const std::unordered_map<std::size_t, cmd_ptr> CommandsManager::_cmdMap = {
     {NEW_MESSAGE, CommandsManager::newMessage}
 };
 
-std::vector<std::string> &split(const std::string &s, char delim,std::vector<std::string> &elems)
+std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems)
 {
     std::stringstream ss(s);
     std::string item;
@@ -35,7 +35,7 @@ std::vector<std::string> &split(const std::string &s, char delim,std::vector<std
 pck_list *CommandsManager::redirect(const packet_t &pck, std::deque<std::shared_ptr<ClientManager>> &clients, std::shared_ptr<ClientManager> currentClient)
 {
     try {
-        if (pck.code != 4 && pck.magic == MAGIC) {
+        if (pck.code != 4 && pck.magic == MAGIC && pck.code != 5) {
             std::cout << "---------Receive------------" << std::endl;
             std::cout << pck;
             std::cout << "----------------------------" << std::endl;
@@ -228,7 +228,7 @@ pck_list *CommandsManager::newMessage(const packet_t &pck, std::deque<std::share
     currentClient->_um.getMessageManager().newMessage(elem[0], elem[1], elem[2]);
     res = currentClient->_um.getMessageManager().getHistory(elem[0], elem[1]).back();
     for (auto it = clients.begin(); it != clients.end(); ++it) {
-        if ((*it)->_um.getName() == elem[0]) {
+        if ((*it)->_um.getName() == elem[1]) {
             CommandsManager::createPacket(*pack, currentClient->getSocket(), SEND_ONE_MESSAGE, res);
             CommandsManager::createPacket(*pack, (*it)->getSocket(), SEND_ONE_MESSAGE, res);
         }

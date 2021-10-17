@@ -46,7 +46,7 @@ void AsioTcpConnection::interpret()
     for (auto it = res->begin(); it != res->end(); it++) {
         auto tmp = it->second;
         if (tmp && tmp->code != 666) {
-            if (tmp->code != 4) {
+            if (tmp->code != 4 && tmp->code != 5) {
                 std::cout << "---------Sent------------" << std::endl;
                 std::cout << *tmp;
                 std::cout << "-------------------------" << std::endl;

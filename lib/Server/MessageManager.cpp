@@ -21,12 +21,12 @@ MessageManager::~MessageManager()
 
 std::deque<std::string> MessageManager::getHistory(const std::string &sender, const std::string &rec)
 {
-    auto tmp = _db.custom("SELECT * FROM Message WHERE SENDER=\'" + sender + "\' AND RECEIVER=\'" + rec + "\'");
+    auto tmp = _db.custom("SELECT * FROM Message WHERE (SENDER=\'" + sender + "\' AND RECEIVER=\'" + rec + "\') OR (SENDER=\'" + rec + "\' AND RECEIVER=\'" + sender + "\')");
     std::deque<std::string> res;
 
     for (int i = 0; i < tmp.ac; i++) {
         if (tmp.c_name[i] == "ID") {
-            res.push_back(tmp.av[0] + "\n" + tmp.av[1] + "\n" + tmp.av[2] + "\n" + tmp.av[3] + "\n");
+            res.push_back(tmp.av[i] + "\n" + tmp.av[i + 1] + "\n" + tmp.av[i + 2] + "\n" + tmp.av[i + 3] + "\n");
         }
     }
     return res;
