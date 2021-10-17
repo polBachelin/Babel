@@ -154,7 +154,6 @@ void Client::GUI::ContactPage::layoutLoader()
 
 void Client::GUI::ContactPage::initConnections()
 {
-    QObject::connect(_timer.get(), SIGNAL(timeout()), this, SLOT(updateTimer()));
     QObject::connect(_contactSearch.get(), SIGNAL(textChanged(QString)), this, SLOT(searchContact(QString)));
     QObject::connect(_writeMsg.get(), SIGNAL(textChanged(QString)), this, SLOT(changeMsg(QString)));
     QObject::connect(_writeMsg.get(), SIGNAL(returnPressed()), this, SLOT(sendMsg()));
@@ -162,6 +161,7 @@ void Client::GUI::ContactPage::initConnections()
     QObject::connect(_contactList.get(), SIGNAL(itemClicked(QListWidgetItem *)), SLOT(contactClicked(QListWidgetItem *)));
     QObject::connect(_call.get(), SIGNAL(clicked()), this, SLOT(callClicked()));
     QObject::connect(_addContactBtn.get(), SIGNAL(clicked()), this, SLOT(addContactClicked()));
+    QObject::connect(_timer.get(), SIGNAL(timeout()), this, SLOT(updateTimer()));
 }
 
 void Client::GUI::ContactPage::updateTimer()
@@ -203,9 +203,9 @@ void Client::GUI::ContactPage::contactClicked(QListWidgetItem *item)
         _call->show();
         _writeMsg->show();
         _messageHistory->show();
-        // while (_messageHistory->count() > 0)
-        //     _messageHistory->takeItem(0);
-        _messageHistory->clear();
+        while (_messageHistory->count() > 0)
+            _messageHistory->takeItem(0);
+        // _messageHistory->clear();
         for (auto &it : _history) {
             if (it.at(2) != _contactSelected.toStdString())
                 continue;
@@ -238,13 +238,13 @@ void Client::GUI::ContactPage::logOut()
     _username = "";
     _labelContactSelected->setText(_contactSelected);
     _call->hide();
-    // while (_contactList->count() > 0)
-    //     _contactList->takeItem(0);
-    // while (_messageHistory->count() > 0)
-    //     _messageHistory->takeItem(0);
-    _contactList->clear();
-    _messageHistory->clear();
-    _history.clear();
+    while (_contactList->count() > 0)
+        _contactList->takeItem(0);
+    while (_messageHistory->count() > 0)
+        _messageHistory->takeItem(0);
+    // _contactList->clear();
+    // _messageHistory->clear();
+    // _history.clear();
 
     if (_timer->isActive())
         _timer->stop();
@@ -323,9 +323,9 @@ void Client::GUI::ContactPage::fillContactList(ClientInfos_t info)
 {
     std::vector<std::string> contacts = convertCurrentData(info.currentData, '\n');
 
-    // while (_contactList->count() > 0)
-    //     _contactList->takeItem(0);
-    _contactList->clear();
+    while (_contactList->count() > 0)
+        _contactList->takeItem(0);
+    // _contactList->clear();
     for (auto &it : contacts)
         new QListWidgetItem(tr(it.c_str()), _contactList.get());
 }
