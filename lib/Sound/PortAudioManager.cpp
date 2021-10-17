@@ -321,7 +321,7 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
     (void) statusFlags;
     (void) userData;
 
-    if (data->_outputBuffer->size() == 0) {
+    if (data->_outputBuffer->size() == 0 || data->isOutputMuted()) {
         std::memset(wptr, 0, framesPerBuffer * (data->_outputChannels * sizeof(float)));
         return paContinue;
     }
