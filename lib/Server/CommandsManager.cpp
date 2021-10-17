@@ -213,6 +213,12 @@ pck_list *CommandsManager::listMessage(const packet_t &pck, std::deque<std::shar
     (void)clients;
     elem = split(pck.data.data(), '\n', elem);
     messageHistory = currentClient->_um.getMessageManager().getHistory(elem[0], elem[1]);
+    if (messageHistory.size() > 10) {
+        std::reverse(messageHistory.begin(), messageHistory.end());
+        while (messageHistory.size() > 10)
+            messageHistory.pop_back();
+        std::reverse(messageHistory.begin(), messageHistory.end());
+    }
     for (auto &it : messageHistory) {
         CommandsManager::createPacket(*pack, currentClient->getSocket(), SEND_ONE_MESSAGE, it);
     }
