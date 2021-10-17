@@ -79,6 +79,7 @@ void UDPClient::recieveDatagram()
         std::cout << "Could not read datagram" << std::endl;
         return;
     }
+    new_packet.magicNum = 1;
     new_packet.host = sender.toString().toStdString();
     new_packet.port = senderPort;
     new_packet.data = new unsigned char[bytesRead];

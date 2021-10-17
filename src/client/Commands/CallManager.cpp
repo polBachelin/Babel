@@ -97,10 +97,11 @@ void CallManager::onReadAudioData()
 
     while (this->_udpClient->hasPendingDatagram()) {
         dataPacket = this->_udpClient->getData();
+        std::cout << "-----READING AUDIO DATA----\n";
         if (dataPacket.magicNum == 0) {
+            std::cout << "WRONG MAGIC NUMBER\n";
             return;
         }
-        std::cout << "-----READING AUDIO DATA----\n";
         ptr = dataPacket.data;
         std::time_t timestamp;
         std::memcpy(&timestamp, ptr, sizeof(std::time_t));
