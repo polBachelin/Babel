@@ -34,6 +34,8 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
 
 CallManager::~CallManager()
 {
+    QObject::disconnect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
+    QObject::disconnect(_readTimer, SIGNAL(timeout()), this, SLOT(onReadAudioData()));
 }
 
 void CallManager::addPair(const std::string &ip, unsigned short port)
@@ -129,10 +131,10 @@ void CallManager::endCall()
     this->_udpClient->disconnect();
     _pairs.clear();
     _soundManager->setMicMute(true);
-    
-    QObject::disconnect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
-    QObject::disconnect(_readTimer, SIGNAL(timeout()), this, SLOT(onReadAudioData()));
-    QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
+    if (_timer->isActive())
+        _timer->stop();
+    if (_readTimer->isActive())
+        _readTimer->stop();
 }
 
 #include "moc_CallManager.cpp"

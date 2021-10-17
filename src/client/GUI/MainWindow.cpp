@@ -121,11 +121,9 @@ void MainWindow::receivedSomething(QByteArray msg)
         std::cout << *package;
         std::cout << "---------------------------------------" << std::endl;
     }
-
+    _infos.currentData = package->data;
     if (package->code == EloginSuccessful || package->code == EregisterSuccessful)
         _infos.username = package->data;
-    _infos.currentData = package->data;
-
     if (_signalPageMap.find((receivedSignal_e)package->code) != _signalPageMap.end())
         _signalPageMap.at((receivedSignal_e)package->code)(_infos);
 }
