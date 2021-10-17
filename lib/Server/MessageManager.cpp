@@ -34,5 +34,9 @@ std::deque<std::string> MessageManager::getHistory(const std::string &sender, co
 
 void MessageManager::newMessage(const std::string &sender, const std::string &rec, const std::string &data)
 {
-    _db.insert("Message", "SENDER, RECEIVER, DATA", "\'" + sender + "\', \'" + rec + "\', \'" + data + "\'");
+    std::string res = data;
+
+    res.replace(data.begin(), data.end(), '\'', ' ');
+    res.replace(data.begin(), data.end(), '\"', ' ');
+    _db.insert("Message", "SENDER, RECEIVER, DATA", "\'" + sender + "\', \'" + rec + "\', \'" + res + "\'");
 }
