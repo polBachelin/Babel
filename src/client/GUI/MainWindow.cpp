@@ -104,6 +104,8 @@ void MainWindow::signalReceivedLoader()
         emit MainWindow::contactList(info);};
     _signalPageMap[EreceiveMsg] = [&](ClientInfos_t info){
         emit MainWindow::receivedMessage(info);};
+    _signalPageMap[ECallAccepted] = [&](ClientInfos_t info){
+        emit MainWindow::callAccepted(info);};
 }
 
 void MainWindow::receivedSomething(QByteArray msg)

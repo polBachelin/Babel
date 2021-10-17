@@ -73,7 +73,6 @@ std::function<char *(ClientInfos_t, GUI::signal_e)>> CommandsFactory::_commands
 		// std::cout << "Sending packet of ask contact list to server" << std::endl;
 		return createBuffer(e, infos.username + "\n");
 	}},
-
 	{GUI::signal_e::EaskHistory,
 	[](ClientInfos_t infos, GUI::signal_e e) {
 		std::cout << "Sending packet of ask history to server" << std::endl;
@@ -84,7 +83,12 @@ std::function<char *(ClientInfos_t, GUI::signal_e)>> CommandsFactory::_commands
 	[](ClientInfos_t infos, GUI::signal_e e) {
 		std::cout << "Sending packet of sending Message to server" << std::endl;
 		return createBuffer(e, infos.currentData);
-	}}
+	}},
+	{GUI::signal_e::EAcceptIncomingCall,
+	[](ClientInfos_t infos, GUI::signal_e e) {
+		std::cout << "Sending accept call from " << infos.userToCall << " to server\n";
+		return createBuffer(e, infos.userToCall + "\n" + infos.myIp + "\n" + std::to_string(infos.audioPort) + "\n");
+	}},
 };
 
 char *CommandsFactory::callCommand(ClientInfos_t info, GUI::signal_e e)

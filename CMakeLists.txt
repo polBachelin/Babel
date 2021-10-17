@@ -50,7 +50,6 @@ include_directories(./src/Exception/Error)
 set(SRCS
     src/main.cpp
     src/Sound/CircularBuffer.cpp
-    src/Sound/DecodedSound.cpp
     src/Exception/Error/Error.cpp
     src/Parser/ConfigFileParser.cpp
     )

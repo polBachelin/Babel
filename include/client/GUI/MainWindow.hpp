@@ -45,6 +45,7 @@ namespace Client {
                 void invitationContactReceived(ClientInfos_t);
                 void callRefused(ClientInfos_t);
                 void receivedMessage(ClientInfos_t);
+                void callAccepted(ClientInfos_t);
 
             public slots:
                 void checkSignal(ClientInfos_t, signal_e);
