@@ -51,12 +51,14 @@ void AsioTcpConnection::interpret()
                 std::cout << *tmp;
                 std::cout << "-------------------------" << std::endl;
             }
+            usleep(10000);
             auto handler = std::bind(&AsioTcpConnection::handleWrite, shared_from_this(), std::placeholders::_1, std::placeholders::_2);
             it->first->async_send(asio::buffer(tmp, sizeof(packet_t)), handler);
         }
         if (tmp)
             delete tmp;
     }
+    delete res;
 }
 
 void AsioTcpConnection::handleWrite(const asio::error_code &e, size_t size)
