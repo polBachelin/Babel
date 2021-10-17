@@ -45,7 +45,7 @@ namespace Client
                 UDPClient();
                 ~UDPClient();
                 void connectToHost(const std::string &myIp, const unsigned short port) override;
-                void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port) override;
+                void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port, const int &size) override;
                 void disconnect() override;
                 packetUDP_t getData() override;
                 bool hasPendingDatagram() override;

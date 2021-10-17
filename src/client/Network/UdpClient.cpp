@@ -40,14 +40,13 @@ bool UDPClient::hasPendingDatagram()
     return _socket->hasPendingDatagrams();
 }
 
-void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const unsigned short port)
+void UDPClient::send(const packetUDP_t &packet, const std::string &ip, const unsigned short port, const int &size)
 {
     QByteArray buf;
-    //std::cout << "Trying to send packet to host : " << packet.host  << " : " << packet.port << std::endl;
     QHostAddress receiverIp;
 
     receiverIp.setAddress(QString::fromStdString(ip));
-    if (_socket->writeDatagram((const char *)packet.data, 13, receiverIp, port) == -1)
+    if (_socket->writeDatagram((const char *)packet.data, size, receiverIp, port) == -1)
         std::cout << "Send fail to :" << ip  << ":" << port << std::endl;
 }
 

@@ -45,7 +45,7 @@ namespace Client
                 virtual void disconnect() = 0;
                 virtual void connectToHost(const std::string &ip, const unsigned short port) = 0;
                 virtual bool hasPendingDatagram() = 0;
-                virtual void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port) = 0;
+                virtual void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port, const int &size) = 0;
         };
     }
 }

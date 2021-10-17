@@ -80,7 +80,7 @@ void CallManager::sendAudioData()
         //std::cout << "Checking data Packet networkBuffSize should be same as [createAudioPacket] one :  " << *ptrBuffSize << std::endl;
         //std::cout <<  "Infos from Caller: " << std::to_string(dataPacket.port) << std::endl;
         for (auto &i : _pairs)
-            _udpClient->send(dataPacket, i.first, i.second.first);
+            _udpClient->send(dataPacket, i.first, i.second.first, compressedSize);
 
         delete [] compressedBuffer;
         delete [] audioPacket;
