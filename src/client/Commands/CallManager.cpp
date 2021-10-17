@@ -23,6 +23,7 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _encoderManager->setSamplingRate(_soundManager->getSampleRate());
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
+    _soundManager->setMicMute(true);
     _timer = new QTimer();
     _timer->setInterval(1);
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
@@ -114,8 +115,7 @@ void CallManager::beginCall()
     std::cout << "BEGIN CALL" << std::endl;
     std::cout << "Connect to client caller..." << _myIp << std::endl;
     this->connectToHost();
-    _soundManager->startInputStream();
-    _soundManager->startOutputStream();
+    _soundManager->setMicMute(false);
 }
 
 void CallManager::endCall()
@@ -123,8 +123,6 @@ void CallManager::endCall()
     this->_inCall = false;
     this->_udpClient->disconnect();
     _pairs.clear();
-    _soundManager->abortInputStream();
-    _soundManager->abortOutputStream();
     
     QObject::disconnect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
     QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
