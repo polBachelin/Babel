@@ -339,7 +339,7 @@ void Client::GUI::ContactPage::messageReceived(ClientInfos_t info)
 
         new QListWidgetItem(tr(msg.c_str()), _messageHistory.get());
         _messageHistory->item(_messageHistory->count() - 1)->setForeground(
-            ((SENDER == _infos.username) ? Qt::darkGreen : Qt::darkBlue));
+            ((SENDER == _infos.username) ? Qt::black : Qt::darkBlue));
 
         _messageHistory->scrollToBottom();
         _history.push_back(messages);
