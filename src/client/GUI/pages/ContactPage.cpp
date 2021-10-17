@@ -336,10 +336,11 @@ void Client::GUI::ContactPage::messageReceived(ClientInfos_t info)
         std::string msg(SENDER + " : " + data + "\n");
 
         new QListWidgetItem(tr(msg.c_str()), _messageHistory.get());
+        _messageHistory->item(_messageHistory->count() - 1)->setForeground(
+            ((SENDER == _infos.username) ? Qt::darkGreen : Qt::darkBlue));
 
+        _messageHistory->scrollToBottom();
         _history.push_back(messages);
-        std::cout << "message ID " << IDMSG << " from " << SENDER << "to " << RECEIVER << std::endl;
-        std::cout << "with content : " << MESSAGE << std::endl;
     }
 }
 
