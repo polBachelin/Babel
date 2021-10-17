@@ -244,6 +244,7 @@ void Client::GUI::ContactPage::logOut()
     //     _messageHistory->takeItem(0);
     _contactList->clear();
     _messageHistory->clear();
+    _history.clear();
 
     if (_timer->isActive())
         _timer->stop();
