@@ -321,10 +321,19 @@ void Client::GUI::ContactPage::handleIncomingCall(ClientInfos_t info)
 void Client::GUI::ContactPage::fillContactList(ClientInfos_t info)
 {
     std::vector<std::string> contacts = convertCurrentData(info.currentData, '\n');
+    static bool changed = true;
 
-    _contactList->clear();
-    for (auto &it : contacts)
-        new QListWidgetItem(tr(it.c_str()), _contactList.get());
+    for (int i = 0; i < _contactList->count(); i++) {
+        if (_contactList->item(i)->text().toStdString() != contacts.at(i))
+            changed = true;
+    }
+    if (changed) {
+        std::cout << "refresh contact list" << std::endl;
+        _contactList->clear();
+        for (auto &it : contacts)
+            new QListWidgetItem(tr(it.c_str()), _contactList.get());
+        changed = false;
+    }
 }
 
 void Client::GUI::ContactPage::messageReceived(ClientInfos_t info)
@@ -339,7 +348,7 @@ void Client::GUI::ContactPage::messageReceived(ClientInfos_t info)
 
         new QListWidgetItem(tr(msg.c_str()), _messageHistory.get());
         _messageHistory->item(_messageHistory->count() - 1)->setForeground(
-            ((SENDER == _infos.username) ? Qt::black : Qt::darkBlue));
+            ((SENDER == _infos.username) ? Qt::black : Qt::blue));
 
         _messageHistory->scrollToBottom();
         _history.push_back(messages);
