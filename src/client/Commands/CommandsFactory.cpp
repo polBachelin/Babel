@@ -65,7 +65,7 @@ std::function<char *(ClientInfos_t, GUI::signal_e)>> CommandsFactory::_commands
 	{GUI::signal_e::EcallX,
 	[] (ClientInfos_t infos, GUI::signal_e e) {
 		std::cout << "Telling server to call X" << std::endl;
-		return createBuffer(e, infos.userToCall + "\n" + infos.myIp + "\n6000\n");
+		return createBuffer(e, infos.userToCall + "\n" + infos.myIp + "\n" + std::to_string(infos.audioPort) + "\n");
 	}},
 
 	{GUI::signal_e::Easkcontactlist,

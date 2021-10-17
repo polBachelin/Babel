@@ -135,8 +135,8 @@ void PortAudioManager::loadApi()
     loadDefaultDevices();
     openInputStream();
     openOutputStream();
-    startInputStream();
     startOutputStream();
+    startInputStream();
 }
 
 void PortAudioManager::loadDevices(const int &inputChannels, const int &outputChannels)
@@ -239,9 +239,7 @@ void PortAudioManager::closeOutputStream()
     PaError err;
 
     if (_outputStream) {
-        err = Pa_AbortStream(_outputStream);
-        if (err != paNoError)
-            std::cerr << "Could not abort output stream" << std::endl;
+        abortOutputStream();
         err = Pa_CloseStream(_outputStream);
         if (err != paNoError)
             std::cerr << "Could not close output stream" << std::endl;
@@ -253,12 +251,32 @@ void PortAudioManager::closeInputStream()
     PaError err;
 
     if (_inputStream) {
-        err = Pa_AbortStream(_inputStream);
-        if (err != paNoError)
-            std::cerr << "Could not abort input stream" << std::endl;
+        abortInputStream();
         err = Pa_CloseStream(_inputStream);
         if (err != paNoError)
             std::cerr << "Could not close input stream" << std::endl;
+    }
+}
+
+void PortAudioManager::abortInputStream()
+{
+    PaError err;
+
+    if (_inputStream) {
+        err = Pa_AbortStream(_inputStream);
+        if (err != paNoError)
+            std::cerr << "Could not abort input stream" << std::endl;
+    }
+}
+
+void PortAudioManager::abortOutputStream()
+{
+    PaError err;
+
+    if (_outputStream) {
+        err = Pa_AbortStream(_inputStream);
+        if (err != paNoError)
+            std::cerr << "Could not close output stream" << std::endl;
     }
 }
 
@@ -321,7 +339,7 @@ int PortAudioManager::playCallback(const void *inputBuffer, void *outputBuffer,
     (void) statusFlags;
     (void) userData;
 
-    if (data->_outputBuffer->size() == 0) {
+    if (data->_outputBuffer->size() == 0 || data->isOutputMuted()) {
         std::memset(wptr, 0, framesPerBuffer * (data->_outputChannels * sizeof(float)));
         return paContinue;
     }
