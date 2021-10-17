@@ -1,8 +1,6 @@
 @startuml Babel
 !define DARKBLUE
 !includeurl https://raw.githubusercontent.com/Drakemor/RedDress-PlantUML/master/style.puml
-
-namespace ClientSide {
      class Test<T> {
 
         -T _x;

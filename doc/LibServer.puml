@@ -1,0 +1,304 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+abstract class AAsioTcpConnection {
+	+AAsioTcpConnection()
+	+~AAsioTcpConnection()
+	#_um : UserManager
+	+{abstract} Login(const std::string &, const std::string &) : int
+	+{abstract} NewUser(const std::string &, const std::string &) : int
+	#_socket : std::shared_ptr<asio::ip::tcp::socket>
+	+{abstract} getSocket() : std::shared_ptr<asio::ip::tcp::socket> {query}
+	+{abstract} getUserContactList() : std::string& {query}
+	+{abstract} getUserName() : std::string& {query}
+	+{abstract} addContact(const std::string& new_c, const std::string& your_name) : void
+	+{abstract} start() : void
+}
+
+
+class AsioTcpConnection {
+	+AsioTcpConnection(asio::io_context& io_context, std::deque<std::shared_ptr<ClientManager>> &)
+	+AsioTcpConnection(const AsioTcpConnection &)
+	+~AsioTcpConnection()
+	-_isAlive : bool
+	+isAlive() : bool {query}
+	-_buffer : std::array<char, 2048>
+	-_clients : std::deque<std::shared_ptr<ClientManager>>&
+	-_clientManager : std::shared_ptr<ClientManager>
+	+getClientManager() : std::shared_ptr<ClientManager> {query}
+	-_socket : std::shared_ptr<asio::ip::tcp::socket>
+	+getSocket() : std::shared_ptr<asio::ip::tcp::socket> {query}
+	+handleReadData(const asio::error_code &, std::size_t) : void
+	+handleReadHeader(const asio::error_code &, std::size_t) : void
+	+handleWrite(const asio::error_code &, size_t) : void
+	+interpret() : void
+	+start() : void
+}
+
+
+class AsioTcpServer {
+	+AsioTcpServer()
+	+~AsioTcpServer()
+	-_port : int
+	-_clients : std::deque<std::shared_ptr<ClientManager>>
+	+getClientList() : std::deque<std::shared_ptr<ClientManager>>&
+	-_io : std::shared_ptr<asio::io_context>
+	-_acceptor : std::unique_ptr<asio::ip::tcp::acceptor>
+	+acceptConnection() : void
+	+handleAccept(std::shared_ptr<AsioTcpConnection> new_connection, const asio::error_code& error) : void
+	+initServer(int port) : void
+	+printLocalAdress() : void
+	+run() : void
+}
+
+
+class ClientManager {
+	+ClientManager(std::shared_ptr<asio::ip::tcp::socket> socket)
+	+~ClientManager()
+	+_um : UserManager
+	+getUserManager() : UserManager
+	-_packet : packet_t
+	+getPacket() : packet_t {query}
+	-_userSocket : std::shared_ptr<asio::ip::tcp::socket>
+	+getSocket() : std::shared_ptr<asio::ip::tcp::socket> {query}
+	+clearPacket() : void
+	+setPacket(const packet_t* packet) : void
+	+setPacketData(const std::array<char, 2048>& data) : void
+}
+
+
+class CommandsManager {
+	+CommandsManager()
+	+~CommandsManager()
+	+{static} addContact(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	+{static} callAccepted(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	+{static} callRefused(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	+{static} callX(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	+{static} createPacket(pck_list& l, std::shared_ptr<asio::ip::tcp::socket> s, int code, const std::string& data) : pck_list*
+	+{static} listContact(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	+{static} listMessage(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	+{static} login(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>> &, std::shared_ptr<ClientManager>) : pck_list*
+	+{static} logout(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	+{static} newMessage(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	+{static} redirect(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>> &, std::shared_ptr<ClientManager>) : pck_list*
+	+{static} registerUser(const packet_t& pck, std::deque<std::shared_ptr<ClientManager>>& clients, std::shared_ptr<ClientManager> currentClient) : pck_list*
+	-{static} _cmdMap : static const std::unordered_map<std::size_t, cmd_ptr>
+}
+
+
+class ContactManager {
+	+ContactManager()
+	+ContactManager(const std::string &)
+	+~ContactManager()
+	-_db : Database
+	-_myName : std::string
+	-_tableName : std::string
+	+getContactList() : std::string
+	+getContactList(const std::string& your_name) : std::string
+	+addContact(const std::string& new_c, const std::string& your_name) : void
+	+addContact(const std::string& new_c) : void
+	+setName(const std::string &) : void
+}
+
+
+class Database {
+	+Database()
+	+Database(const std::string& filename)
+	+~Database()
+	-_data : CallBackData_t
+	+custom(const std::string& req) : CallBackData_t
+	+getInfo(const std::string& t_name, const std::string& c_name) : CallBackData_t
+	-_errMsg : char*
+	+close() : int
+	+createTable(const std::string& name, const std::string& columns) : int
+	+deleteId(const std::string& t_name, const std::string& id) : int
+	+insert(const std::string& t_name, const std::string& c_name, const std::string& value) : int
+	+open(const std::string& filename) : int
+	+update(const std::string& t_name, const std::string& c_name, const std::string& id, const std::string& value) : int
+	-_db : sqlite3*
+}
+
+
+abstract class IDatabase {
+	+{abstract} custom(const std::string& req) : CallBackData_t
+	+{abstract} getInfo(const std::string& t_name, const std::string& c_name) : CallBackData_t
+	+{abstract} close() : int
+	+{abstract} createTable(const std::string& name, const std::string& columns) : int
+	+{abstract} deleteId(const std::string& t_name, const std::string& id) : int
+	+{abstract} insert(const std::string& t_name, const std::string& c_name, const std::string& value) : int
+	+{abstract} open(const std::string& filename) : int
+	+{abstract} update(const std::string& t_name, const std::string& c_name, const std::string& id, const std::string& value) : int
+}
+
+
+abstract class ITcpConnection {
+	+~ITcpConnection()
+	+{abstract} interpret() : void
+	+{abstract} start() : void
+}
+
+
+abstract class ITcpServer {
+	+~ITcpServer()
+	+{abstract} acceptConnection() : void
+	+{abstract} initServer(int port) : void
+	+{abstract} run() : void
+}
+
+
+class MessageManager {
+	+MessageManager()
+	+~MessageManager()
+	-_db : Database
+	+getHistory(const std::string& sender, const std::string& rec) : std::deque<std::string>
+	+newMessage(const std::string& sender, const std::string& rec, const std::string& data) : void
+}
+
+
+class UserManager {
+	+UserManager()
+	+~UserManager()
+	-_cm : ContactManager
+	+getContactManager() : ContactManager {query}
+	-_db : Database
+	-_mm : MessageManager
+	+getMessageManager() : MessageManager {query}
+	-_isLog : bool
+	+isLog() : bool
+	+login(const std::string &, const std::string &) : int
+	+newUser(const std::string &, const std::string &) : int
+	-_name : std::string
+	+getName() : std::string {query}
+	+logoutUser() : void
+}
+
+
+enum CommandsManager::requestCode {
+	ADD_CONTACT
+	ASK_CONTACT_LIST
+	ASK_MESSAGE_HISTORY
+	CALL
+	CALL_ACCEPTED
+	CALL_WAS_REFUSE
+	LOGIN
+	LOGOUT
+	NEW_MESSAGE
+	REGISTER
+}
+
+
+enum CommandsManager::responseCode {
+	CALL_ACCEPTED_SUCCESS
+	CALL_REFUSED
+	CONTACT_ADD_FAILED
+	CONTACT_EXIST
+	CONTACT_LIST
+	DONT_SEND
+	INCOMING_CALL
+	INVTATION_RECEIVE
+	LOGIN_FAILED
+	LOGIN_SUCCESS
+	REGISTER_FAILED
+	REGISTER_SUCCESS
+	SEND_ONE_MESSAGE
+	USER_NOT_FOUND
+}
+
+
+class CallBackData_t {
+	+ac : int
+	+av : std::deque<std::string>
+	+c_name : std::deque<std::string>
+}
+
+
+class packet_info_t {
+	+code : int
+	+data_size : int
+	+magic : int
+}
+
+
+class packet_t {
+	+code : int
+	+data_size : int
+	+magic : int
+	+data : std::array<char, 2048>
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+.IDatabase <|-- .Database
+
+
+.ITcpConnection <|-- .AAsioTcpConnection
+
+
+.ITcpConnection <|-- .AsioTcpConnection
+
+
+.ITcpServer <|-- .AsioTcpServer
+
+
+
+
+
+/' Aggregation relationships '/
+
+.AAsioTcpConnection *-- .UserManager
+
+
+.AsioTcpConnection "2" *-- .ClientManager
+
+
+.AsioTcpServer *-- .ClientManager
+
+
+.ClientManager *-- .UserManager
+
+
+.ClientManager *-- .packet_t
+
+
+.ContactManager *-- .Database
+
+
+.Database *-- .CallBackData_t
+
+
+.MessageManager *-- .Database
+
+
+.UserManager *-- .ContactManager
+
+
+.UserManager *-- .Database
+
+
+.UserManager *-- .MessageManager
+
+
+
+
+
+
+/' Nested objects '/
+
+.CommandsManager +-- .CommandsManager::requestCode
+
+
+.CommandsManager +-- .CommandsManager::responseCode
+
+
+
+
+@enduml
