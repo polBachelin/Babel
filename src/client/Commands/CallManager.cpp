@@ -67,7 +67,22 @@ void CallManager::sendAudioData()
         std::memset(compressedBuffer, 0, _inputBufferSize);
         _soundManager->retrieveInputBytes(_inputBuffer, 480);
         std::cout << "-----SENDING AUDIO DATA----\n";
-    //    std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+        double max = 0;
+        double average = 0.0;
+        double val = 0;
+        for(int i=0; i<480; i++ )
+        {
+            val = _inputBuffer[i];
+            if( val < 0 ) val = -val; /* ABS */
+            if( val > max )
+            {
+                max = val;
+            }
+            average += val;
+        }
+
+        average = average / (double)480;
+        std::cout << "[INPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
         int compressedSize = _encoderManager->encode(compressedBuffer, _inputBuffer, 480, _inputBufferSize);
         //std::cout << "[INPUT] COMPRESSED BUFFER IN HEXA " << hex((char)compressedBuffer[0]) << std::endl;
         audioPacket = createAudioPacket(compressedBuffer, compressedSize, std::time(nullptr));
@@ -112,10 +127,24 @@ void CallManager::onReadAudioData()
         compressed = new unsigned char[buffSize];
         std::memset(compressed, 0, buffSize);
         std::memcpy(compressed, (ptr + sizeof(std::time_t) + sizeof(buffSize)), buffSize * sizeof(unsigned char));
-        //std::cout << "[OUTPUT] COMPRESSED BUFFER IN HEXA " << hex((char)compressed[0]) << std::endl;
         auto outputBuffer = new float[_inputBufferSize];
-        _encoderManager->decode(compressed, outputBuffer, 480, buffSize);
-        //std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
+        std::cout << "DECODE SIZE = " << _encoderManager->decode(compressed, outputBuffer, 480, buffSize) << std::endl;
+        double max = 0;
+        double average = 0.0;
+        double val = 0;
+        for(int i=0; i<480; i++ )
+        {
+            val = _inputBuffer[i];
+            if( val < 0 ) val = -val; /* ABS */
+            if( val > max )
+            {
+                max = val;
+            }
+            average += val;
+        }
+
+        average = average / (double)480;
+        std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
         std::cout << "---------------------------\n";
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
         delete [] outputBuffer;
