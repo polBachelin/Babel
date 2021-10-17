@@ -38,6 +38,8 @@ class PortAudioManager : public ISoundManager {
         void startOutputStream() override;
         void setDefaultInputDevice() override;
         void setDefaultOutputDevice() override;
+        void abortOutputStream() override;
+        void abortInputStream() override;
         std::vector<std::string> getInputDeviceNames() const override;
         std::vector<std::string> getOutputDeviceNames() const override;
         bool isInputStreamActive() override;

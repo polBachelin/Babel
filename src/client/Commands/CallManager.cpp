@@ -114,9 +114,8 @@ void CallManager::beginCall()
     std::cout << "BEGIN CALL" << std::endl;
     std::cout << "Connect to client caller..." << _myIp << std::endl;
     this->connectToHost();
-    // this->_soundManager->setOutputMute(false);
-    // this->_soundManager->setMicMute(false);
-    //TODO: set UP audio ????
+    _soundManager->startInputStream();
+    _soundManager->startOutputStream();
 }
 
 void CallManager::endCall()
@@ -124,10 +123,9 @@ void CallManager::endCall()
     this->_inCall = false;
     this->_udpClient->disconnect();
     _pairs.clear();
-
-    //TODO: disable audio ????
-    // this->_soundManager->setOutputMute(true);
-    // this->_soundManager->setMicMute(true);
+    _soundManager->abortInputStream();
+    _soundManager->abortOutputStream();
+    
     QObject::disconnect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
     QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
 }
