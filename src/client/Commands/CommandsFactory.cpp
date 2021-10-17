@@ -14,6 +14,7 @@ static char *createBuffer(GUI::signal_e e, std::string data)
 	packet_t package;
 	char *buffTemp = new char[sizeof(package)];
 
+	std::memset(package.data, 0, 2048);
 	package.magic = MAGIC;
 	package.code = e;
 	package.data_size = data.size();
@@ -24,7 +25,6 @@ static char *createBuffer(GUI::signal_e e, std::string data)
 		std::cout << package;
 		std::cout << "---------------------------------------" << std::endl;
 	}
-
 	memcpy(buffTemp, &package, sizeof(package));
 	return buffTemp;
 }
