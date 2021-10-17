@@ -23,7 +23,6 @@ CallManager::CallManager(const std::string &myIp, const unsigned short audioPort
     _encoderManager->setSamplingRate(_soundManager->getSampleRate());
     _encoderManager->initDecoder();
     _encoderManager->initEncoder();
-    _soundManager->startInputStream();
     _timer = new QTimer();
     _timer->setInterval(1);
     QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
@@ -147,8 +146,6 @@ void CallManager::onReadAudioData()
         //std::cout << "[OUTPUT] : AVERAGE = " << average << " MAX : " << max << std::endl;
         //std::cout << "---------------------------\n";
         _soundManager->feedBytesToOutput(_outputBuffer, 480);
-        if (!_soundManager->isOutputStreamActive())
-            _soundManager->startOutputStream();
         delete [] outputBuffer;
 //    }
     //emit sendData();
@@ -167,6 +164,8 @@ void CallManager::beginCall()
     std::cout << "BEGIN CALL" << std::endl;
     std::cout << "Connect to client caller..." << _myIp << std::endl;
     this->connectToHost();
+    _soundManager->startInputStream();
+    _soundManager->startOutputStream();
     //TODO: set UP audio ????
 }
 

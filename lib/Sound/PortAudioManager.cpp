@@ -129,6 +129,8 @@ void PortAudioManager::loadApi()
     loadDefaultDevices();
     openInputStream();
     openOutputStream();
+    startInputStream();
+    startOutputStream();
 }
 
 void PortAudioManager::loadDevices(const int &inputChannels, const int &outputChannels)
@@ -156,13 +158,14 @@ int PortAudioManager::openInputStream()
     if (_inputStream) {
         closeInputStream();
     }
+    _inputStream = nullptr;
     Pa_OpenStream(
             &_inputStream,
             &_inputParameters,
             NULL,
             SAMPLE_RATE,
             FRAMES_PER_BUFFER,
-            paClipOff,
+            paNoFlag,
             recordCallback,
             this);
     return 0;
@@ -173,15 +176,19 @@ int PortAudioManager::openOutputStream()
     if (_outputStream) {
         closeOutputStream();
     }
-    Pa_OpenStream(
-            &_outputStream,
-            NULL, /* no input */
-            &_outputParameters,
-            SAMPLE_RATE,
-            FRAMES_PER_BUFFER,
-            paClipOff,      /* we won't output out of range samples so don't bother clipping them */
-            playCallback,
-            this);
+    _outputStream = nullptr;
+    PaError err = Pa_OpenStream(
+                    &_outputStream,
+                    NULL, /* no input */
+                    &_outputParameters,
+                    SAMPLE_RATE,
+                    FRAMES_PER_BUFFER,
+                    paNoFlag,      /* we won't output out of range samples so don't bother clipping them */
+                    playCallback,
+                    this);
+    if (err != paNoError) {
+        std::cout << "[PortAudio] : Could not open output stream" << std::endl;
+    }
     return 0;
 }
 
