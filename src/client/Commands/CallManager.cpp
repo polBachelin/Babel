@@ -97,6 +97,7 @@ void CallManager::onReadAudioData()
         _encoderManager->decode(compressed, outputBuffer, 480, buffSize);
         _soundManager->feedBytesToOutput(outputBuffer, 480);
         delete [] outputBuffer;
+        delete [] ptr;
     }
 }
 
@@ -120,6 +121,7 @@ void CallManager::endCall()
     this->_inCall = false;
     this->_udpClient->disconnect();
     _pairs.clear();
+    _soundManager->setMicMute(true);
     
     QObject::disconnect(_timer, SIGNAL(timeout()), this, SLOT(sendAudioData()));
     QObject::disconnect(this, SIGNAL(sendData()), this, SLOT(sendAudioData()));
