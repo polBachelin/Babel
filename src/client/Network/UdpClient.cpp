@@ -64,6 +64,11 @@ packetUDP_t UDPClient::getData()
     return new_packet;
 }
 
+int UDPClient::getNbData()
+{
+    return _data.size();
+}
+
 void UDPClient::recieveDatagram()
 {
     QHostAddress sender;

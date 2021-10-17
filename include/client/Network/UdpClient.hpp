@@ -48,6 +48,7 @@ namespace Client
                 void send(const packetUDP_t &packet, const std::string &ip, const unsigned short port, const int &size) override;
                 void disconnect() override;
                 packetUDP_t getData() override;
+                int getNbData();
                 bool hasPendingDatagram() override;
                 void recieveDatagram();
             signals:
